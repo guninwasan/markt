@@ -1,6 +1,6 @@
 import {
   NavbarContainer,
-  Brand,
+  MarktHeaderText,
   Menu,
   MenuItem,
   MenuLink,
@@ -9,9 +9,7 @@ import {
 const Navbar = () => {
   return (
     <NavbarContainer>
-      <Brand>
-        <a href="/">Markt</a>
-      </Brand>
+      <MarktHeaderText>Markt</MarktHeaderText>
       <Menu>
         <MenuItem>
           <MenuLink href="/" className="active">
@@ -19,13 +17,13 @@ const Navbar = () => {
           </MenuLink>
         </MenuItem>
         <MenuItem>
-          <MenuLink href="/buy">Buy</MenuLink>
+          <MenuLink href="/">Buy</MenuLink>
         </MenuItem>
         <MenuItem>
-          <MenuLink href="/sell">Sell</MenuLink>
+          <MenuLink href="/">Sell</MenuLink>
         </MenuItem>
         <MenuItem>
-          <MenuLink href="/login">Login/Register</MenuLink>
+          <MenuLink href="/">Login/Register</MenuLink>
         </MenuItem>
       </Menu>
     </NavbarContainer>

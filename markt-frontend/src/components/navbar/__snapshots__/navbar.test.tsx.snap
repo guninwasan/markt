@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Navbar should match the snapshot 1`] = `
+<nav
+  class="sc-blHHSb nIHai"
+>
+  <div
+    class="sc-gtLWhw dgXBwO"
+  >
+    Markt
+  </div>
+  <ul
+    class="sc-egkSDF fdVumV"
+  >
+    <li
+      class="sc-fAUdSK kycBV"
+    >
+      <a
+        class="sc-dntaoT lagFYI active"
+        href="/"
+      >
+        Home
+      </a>
+    </li>
+    <li
+      class="sc-fAUdSK kycBV"
+    >
+      <a
+        class="sc-dntaoT lagFYI"
+        href="/"
+      >
+        Buy
+      </a>
+    </li>
+    <li
+      class="sc-fAUdSK kycBV"
+    >
+      <a
+        class="sc-dntaoT lagFYI"
+        href="/"
+      >
+        Sell
+      </a>
+    </li>
+    <li
+      class="sc-fAUdSK kycBV"
+    >
+      <a
+        class="sc-dntaoT lagFYI"
+        href="/"
+      >
+        Login/Register
+      </a>
+    </li>
+  </ul>
+</nav>
+`;

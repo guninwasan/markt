@@ -4,13 +4,16 @@ const NavbarContainer = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  background-color: #333;
-  color: white;
+  padding: 1.5rem 2.5rem;
+  background-color: #d9d9d9;
 `;
 
-const Brand = styled.div`
+const MarktHeaderText = styled.div`
   font-size: 1.5rem;
+  font-weight: 1000;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 `;
 
 const Menu = styled.ul`
@@ -22,17 +25,19 @@ const Menu = styled.ul`
 
 const MenuItem = styled.li`
   margin-left: 1rem;
+  cursor: pointer;
 `;
 
 const MenuLink = styled.a`
-  color: white;
+  color: #000000;
   text-decoration: none;
   padding: 0.5rem 1rem;
 
   &.active {
     background-color: #555;
     border-radius: 4px;
+    color: #f9f9f9;
   }
 `;
 
-export { NavbarContainer, Brand, Menu, MenuItem, MenuLink };
+export { NavbarContainer, MarktHeaderText, Menu, MenuItem, MenuLink };
