@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExploreListings should match the snapshot 1`] = `
+<div
+  class="sc-blHHSb cDukss"
+>
+  <h1
+    class="sc-gtLWhw dmgHgk"
+  >
+    Explore Listings
+  </h1>
+  <div
+    class="sc-egkSDF iBOXeN"
+  >
+    <h2
+      class="sc-fAUdSK eqmDcO"
+    >
+      Featured Listings
+    </h2>
+    <h2
+      class="sc-fAUdSK kLZMcO"
+    >
+      New to the Market
+    </h2>
+    <h2
+      class="sc-fAUdSK kLZMcO"
+    >
+      Price Drops
+    </h2>
+  </div>
+  <div
+    class="sc-dntaoT dQtacQ"
+  >
+    <div
+      class="sc-ivxoEo jcwrqp"
+    >
+      Featured Listing 1
+    </div>
+    <div
+      class="sc-ivxoEo jcwrqp"
+    >
+      Featured Listing 2
+    </div>
+    <div
+      class="sc-ivxoEo jcwrqp"
+    >
+      Featured Listing 3
+    </div>
+    <div
+      class="sc-ivxoEo jcwrqp"
+    >
+      Featured Listing 4
+    </div>
+  </div>
+</div>
+`;
