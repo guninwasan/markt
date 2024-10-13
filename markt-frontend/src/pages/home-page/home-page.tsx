@@ -4,7 +4,7 @@ const HomePage = () => {
   return (
     <div>
       <Navbar />
-      <h1>Markt</h1>
+      <img src="/" alt="image" width={"100%"} height={400} />
       <ExploreListings />
     </div>
   );
