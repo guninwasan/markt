@@ -1,1 +1,5 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=15982079&assignment_repo_type=AssignmentRepo)
+# Markt by Mizzica
+
+## Description
+
+Markt is a second-hand marketplace exclusively for UofT students. It is a platform where students can buy and sell items such as textbooks, furniture, electronics, and more. Markt is a safe and secure platform that allows students to connect with other students on campus to buy and sell items.
