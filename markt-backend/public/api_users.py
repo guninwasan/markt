@@ -1,4 +1,3 @@
-import bcrypt
 from flask import Blueprint, jsonify, request
 
 from src.db import db
@@ -7,20 +6,14 @@ from .errors import ErrorRsp
 
 user_api_bp = Blueprint('user_api', __name__)
 
-VALID_EMAIL_DOMAINS = ["@mail.utoronto.ca", "@utoronto.ca"]
-
 @user_api_bp.route('/registerUser', methods=['POST'])
 def register():
     data = request.json
-
-    # Encrypt password
-    salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(data['password'], salt)
     
     # Validate email
-    if data['email'] not in VALID_EMAIL_DOMAINS:
+    if data['email'] not in ["@mail.utoronto.ca", "@utoronto.ca"]:
         return jsonify({"status": ErrorRsp.ERR_PARAM,
-                        "message": "Email must be a valid UofT email'!"}), 400
+                        "message": "Email must be a valid UofT email!"}), 400
 
     # Check if role specified is Buyer or Seller
     if data['role'] not in [User.UserRole.BUYER.value, User.UserRole.SELLER.value]:
@@ -29,7 +22,7 @@ def register():
 
     user = User(
         username=data['username'],
-        password=hashed_password,
+        password=data['password'],
         email=data['email'],
         role=data['role']
     )
@@ -37,3 +30,21 @@ def register():
     db.session.commit()
     return jsonify({"status": ErrorRsp.OK,
                     "message": "User registered successfully!"}), 201
+
+@user_api_bp.route('/login', methods=['POST'])
+def login():
+    data = request.json
+
+    # Check if user exists
+    user = User.query.filter_by(username=data['username']).first()
+    if user is None:
+        return jsonify({"status": ErrorRsp.ERR_NOT_FOUND,
+                        "message": "User does not exist"}), 404
+
+    # Validate user's password
+    if not user.validate_password(data['password']):
+        return jsonify({"status": ErrorRsp.ERR_PARAM,
+                        "message": "User does not exist"}), 401
+    
+    return jsonify({"status": ErrorRsp.OK,
+                    "message": "User logged in successfully!"}), 201

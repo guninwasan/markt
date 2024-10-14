@@ -1,3 +1,4 @@
+import bcrypt
 from enum import Enum
 from .db import db
 
@@ -6,7 +7,7 @@ class User(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    password_encryp = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
 
     class UserRole(Enum):
@@ -15,6 +16,22 @@ class User(db.Model):
     role = db.Column(db.Enum(UserRole), nullable=False)
     
     listings = db.relationship('Listing', backref='owner', lazy=True)
+
+    def __init__(self, username, password, email, role):
+        self.username = username
+        self.email = email
+        self.role = role
+
+        # Encrypt password
+        salt = bcrypt.gensalt()
+        self.password_encryp = bcrypt.hashpw(password, salt)
+
+    def set_password(self, password):
+        salt = bcrypt.gensalt()
+        self.password_encryp = bcrypt.hashpw(password, salt)
+
+    def validate_password(self, password):
+        return bcrypt.checkpw(password, self.password_encryp)
 
 class Listing(db.Model):
     __tablename__ = 'listings'
