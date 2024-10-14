@@ -1,25 +1,28 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from pathlib import Path
+from flask_sqlalchemy import SQLAlchemy
 import os
+from flask import Flask
 
-app = Flask(__name__)
+db = SQLAlchemy()
 
-basedir = Path(__file__).resolve().parent
-DATABASE = "markt.db"
-url = os.getenv("DATABASE_URL", f"sqlite:///{Path(basedir).joinpath(DATABASE)}")
+def create_app_db():
+    app = Flask(__name__)
 
-SQLALCHEMY_DATABASE_URI = url
-SQLALCHEMY_TRACK_MODIFICATIONS = False
-app.config.from_object(__name__)
+    basedir = Path(__file__).resolve().parent
+    DATABASE = "markt.db"
+    url = os.getenv("DATABASE_URL", f"sqlite:///{Path(basedir).joinpath(DATABASE)}")
 
-db = SQLAlchemy(app)
-db.app = app
+    app.config['SQLALCHEMY_DATABASE_URI'] = url
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-from .models import User, Listing
+    db.app = app
 
-with app.app_context():
-    db.create_all()
+    from .models import User, Listing
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    db.init_app(app)
+
+    with app.app_context():
+        db.create_all()
+
+    return app
+
