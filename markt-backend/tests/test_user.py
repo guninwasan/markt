@@ -4,8 +4,8 @@ from flask import jsonify
 
 from public.errors import ErrorRsp
 from public import create_app_api
-from src.db import db
-from src.models import User
+from database.db import db
+from database.models import User
 
 TEST_DB = "test_user.db"
 

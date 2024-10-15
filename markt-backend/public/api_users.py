@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
-from src.db import db
-from src.models import User
+from database.db import db
+from database.models import User
 from .errors import ErrorRsp
 
 user_api_bp = Blueprint('user_api', __name__)

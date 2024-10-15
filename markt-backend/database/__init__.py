@@ -7,7 +7,7 @@ def create_app_db():
     app = Flask(__name__)
 
     basedir = Path(__file__).resolve().parent
-    DATABASE = "markt.db"
+    DATABASE = "backend.db"
     url = os.getenv("DATABASE_URL", f"sqlite:///{Path(basedir).joinpath(DATABASE)}")
 
     app.config['SQLALCHEMY_DATABASE_URI'] = url
