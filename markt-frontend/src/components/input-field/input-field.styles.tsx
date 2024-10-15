@@ -10,4 +10,15 @@ const inputStyles = {
     fontSize: '1rem',
   };
 
+export const loginButtonStyles = {
+    width: '19.9375rem',
+    height: '4.125rem',
+    flexShrink: 0,
+    borderRadius: '0.3125rem',
+    background: '#A7A7A7',
+    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
+    border: 'none', // Remove default button borders
+    fontSize: '1.25rem', // Adjust font size for the text in the button
+    cursor: 'pointer', // Change cursor on hover
+  };
 export { inputStyles };

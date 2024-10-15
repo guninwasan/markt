@@ -2,6 +2,7 @@
 import React from 'react';
 import './cover.styles.tsx';
 import { coverContainerStyles, titleStyles, subtitleStyles, rightContainerStyles } from './cover.styles';
+import {loginButtonStyles }  from '../input-field/input-field.styles';
 import { InputField } from '../input-field';
 
 const Cover: React.FC = () => {
@@ -18,7 +19,7 @@ const Cover: React.FC = () => {
         <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <InputField type="email" placeholder="UofT Email Address" />
           <InputField type="password" placeholder="Password" />
-          <button type="submit" style={{ marginTop: '1rem' }}>
+          <button type="submit" style={loginButtonStyles}>
             Login
           </button>
         </form>

@@ -3,7 +3,7 @@
 export const coverContainerStyles = {
     display: 'flex',
     width: '55vw',
-    height: '91vh', // Set the height to 100% of the viewport
+    height: '100vh', // Set the height to 100% of the viewport
     // padding: '185px 116px', // Adjust padding to prevent overflow (removed bottom padding)
     flexDirection: 'column' as const,
     alignItems: 'center' as const,
@@ -17,7 +17,7 @@ export const coverContainerStyles = {
   export const rightContainerStyles = {
     display: 'flex',
     width: '45vw', // Take up the remaining part of the viewport width
-    height: '91vh', // Same height as the left container
+    height: '100vh', // Same height as the left container
     flexDirection: 'column' as const,
     justifyContent: 'center' as const,
     alignItems: 'flex-start' as const, // Align items to the left
