@@ -24,14 +24,14 @@ class User(db.Model):
 
         # Encrypt password
         salt = bcrypt.gensalt()
-        self.password_encryp = bcrypt.hashpw(password, salt)
+        self.password_encryp = bcrypt.hashpw(password.encode('utf-8'), salt)
 
     def set_password(self, password):
         salt = bcrypt.gensalt()
-        self.password_encryp = bcrypt.hashpw(password, salt)
+        self.password_encryp = bcrypt.hashpw(password.encode('utf-8'), salt)
 
     def validate_password(self, password):
-        return bcrypt.checkpw(password, self.password_encryp)
+        return bcrypt.checkpw(password.encode('utf-8'), self.password_encryp)
 
 class Listing(db.Model):
     __tablename__ = 'listings'
