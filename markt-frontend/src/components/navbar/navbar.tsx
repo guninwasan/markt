@@ -23,7 +23,7 @@ const Navbar = () => {
           <MenuLink href="/">Sell</MenuLink>
         </MenuItem>
         <MenuItem>
-          <MenuLink href="/">Login/Register</MenuLink>
+          <MenuLink href="/login">Login/Register</MenuLink>
         </MenuItem>
       </Menu>
     </NavbarContainer>

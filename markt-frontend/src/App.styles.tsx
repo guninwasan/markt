@@ -8,6 +8,7 @@ const AppContainer = styled.div`
   height: 100vh;
   background-color: #f9f9f9;
   color: #333;
+  overflow: hidden;
 `;
 
 export { AppContainer };
