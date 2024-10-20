@@ -94,8 +94,7 @@ const Backdrop = styled.div<{ isOpen: boolean }>`
 
 const Sidebar = styled.div<{ isOpen: boolean }>`
   height: 100vh;
-  width: 70vw;
-  max-width: 200px;
+  width: 90vw;
   background-color: #d9d9d9;
   position: fixed;
   top: 4.5rem;
