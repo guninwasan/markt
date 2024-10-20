@@ -1,12 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-type UserAuthType = {
-  userID: number;
-  name: string;
-  email: string;
-  phone: string;
-  jwt: string;
-};
+import { UserAuthType } from "../types";
 
 const initialState: UserAuthType = {
   userID: -1,

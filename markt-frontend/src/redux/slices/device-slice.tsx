@@ -1,9 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-type DeviceSliceType = {
-  isMobile: boolean;
-  isLoggedIn: boolean;
-};
+import { DeviceSliceType } from "../types";
 
 const initialState: DeviceSliceType = {
   isMobile: false,
