@@ -84,7 +84,7 @@ const ProductListingComponent = () => {
         </ProductDetails>
       </ProductListingContainer>
       {isMobile && (
-        <BottomTab isVisible={isBottomTabVisible}>
+        <BottomTab isVisible={isBottomTabVisible} test-id="bottom-tab">
           <SellerInfo>
             <SellerAvatar
               src="https://via.placeholder.com/50"
