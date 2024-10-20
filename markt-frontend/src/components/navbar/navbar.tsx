@@ -3,17 +3,23 @@ import { useIsMobile } from "../../hooks";
 import {
   NavbarContainer,
   MarktHeaderText,
-  HamburgerIcon,
+  Hamburger,
   MobileMenuContainer,
+  Backdrop,
+  Sidebar,
 } from "./navbar.styles";
 import { MenuItems } from "./menu-items";
 
 const Navbar = () => {
   const { isMobile } = useIsMobile();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const closeSidebar = () => {
+    setIsOpen(false);
   };
 
   return (
@@ -21,12 +27,15 @@ const Navbar = () => {
       <MarktHeaderText>Markt</MarktHeaderText>
       {isMobile ? (
         <>
-          <HamburgerIcon onClick={toggleMenu}>☰</HamburgerIcon>
-          {isMenuOpen && (
-            <MobileMenuContainer>
-              <MenuItems />
-            </MobileMenuContainer>
-          )}
+          <Hamburger onClick={toggleSidebar} isOpen={isOpen}>
+            <span />
+            <span />
+            <span />
+          </Hamburger>
+          <Backdrop isOpen={isOpen} onClick={closeSidebar} />
+          <Sidebar isOpen={isOpen}>
+            <MenuItems />
+          </Sidebar>
         </>
       ) : (
         <MenuItems />
