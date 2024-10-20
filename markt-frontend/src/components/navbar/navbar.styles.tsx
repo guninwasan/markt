@@ -40,4 +40,24 @@ const MenuLink = styled.a`
   }
 `;
 
-export { NavbarContainer, MarktHeaderText, Menu, MenuItem, MenuLink };
+const HamburgerIcon = styled.div`
+  font-size: 24px;
+  cursor: pointer;
+`;
+
+const MobileMenuContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: red;
+`;
+
+export {
+  NavbarContainer,
+  MarktHeaderText,
+  Menu,
+  MenuItem,
+  MenuLink,
+  HamburgerIcon,
+  MobileMenuContainer,
+};

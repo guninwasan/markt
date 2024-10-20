@@ -5,7 +5,7 @@ const HomePage = () => {
     <div>
       <Navbar />
       <img src="/" alt="image" width={"100%"} height={400} />
-      <ExploreListings />
+      {/* <ExploreListings /> */}
     </div>
   );
 };
