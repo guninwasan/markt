@@ -1,17 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-type DeviceSlice = {
+type DeviceSliceType = {
   isMobile: boolean;
   isLoggedIn: boolean;
 };
 
-const initialState: DeviceSlice = {
+const initialState: DeviceSliceType = {
   isMobile: false,
   isLoggedIn: false,
 };
 
-const userAuthSlice = createSlice({
-  name: "counter",
+const deviceSlice = createSlice({
+  name: "device",
   initialState,
   reducers: {
     setMobile: (state, action) => {
@@ -23,6 +23,6 @@ const userAuthSlice = createSlice({
   },
 });
 
-export const { setMobile, setLoggedIn } = userAuthSlice.actions;
+export const { setMobile, setLoggedIn } = deviceSlice.actions;
 
-export default userAuthSlice.reducer;
+export default deviceSlice.reducer;

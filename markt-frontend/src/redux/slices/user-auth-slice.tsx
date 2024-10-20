@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-type UserAuthState = {
+type UserAuthType = {
   userID: number;
   name: string;
   email: string;
@@ -8,7 +8,7 @@ type UserAuthState = {
   jwt: string;
 };
 
-const initialState: UserAuthState = {
+const initialState: UserAuthType = {
   userID: -1,
   name: "",
   email: "",
