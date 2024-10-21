@@ -4,8 +4,8 @@ from marshmallow import ValidationError
 
 from database.db import db
 from database.models import User
-from .errors import ErrorRsp
-from .api_schema import UserRegistrationSchema, UserLoginSchema
+from utils.errors import ErrorRsp
+from schemas.user_schema import UserRegistrationSchema, UserLoginSchema
 
 user_api_bp = Blueprint('user_api', __name__)
 swagger = Swagger()

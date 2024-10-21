@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
 
-from public.errors import ErrorRsp
+from utils.errors import ErrorRsp
 from public import create_app_api
 from database.db import db
 from database.models import User
