@@ -1,31 +1,25 @@
 // cover.tsx
 import React from 'react';
-import './cover.styles.tsx';
 import { coverContainerStyles, titleStyles, subtitleStyles, rightContainerStyles } from './cover.styles';
-import {loginButtonStyles }  from '../input-field/input-field.styles';
-import { InputField } from '../input-field';
 
-const Cover: React.FC = () => {
+interface CoverProps {
+  children: React.ReactNode;  // Accepts children for login or register form
+  title: string;              // Dynamic title for different forms
+}
+
+const Cover: React.FC<CoverProps> = ({ children, title }) => {
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
-        <div style={coverContainerStyles}>
+      <div style={coverContainerStyles}>
         <h1 style={titleStyles}>MARKT</h1>
         <p style={subtitleStyles}>Your Campus.<br />Your Marketplace.</p>
-        </div>
+      </div>
 
-        <div style={rightContainerStyles}>
-        {/* Right Container Content */}
-        <h2>Welcome Back to UofT's Secure Marketplace!</h2>
-        <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <InputField type="email" placeholder="UofT Email Address" />
-          <InputField type="password" placeholder="Password" />
-          <button type="submit" style={loginButtonStyles}>
-            Login
-          </button>
-        </form>
+      <div style={rightContainerStyles}>
+        <h2>{title}</h2>   {/* Dynamic title */}
+        {children}         {/* Dynamic form (Login or Register) */}
       </div>
     </div>
-    
   );
 };
 
