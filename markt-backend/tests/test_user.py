@@ -1,6 +1,5 @@
 import pytest
 from pathlib import Path
-from flask import jsonify
 
 from public.errors import ErrorRsp
 from public import create_app_api
@@ -23,61 +22,73 @@ def client():
         db.drop_all()  # teardown
 
 def test_register(client):
+    wrong_data = {"username": "hello"}
+    rsp = client.post('/api/user/register', json=wrong_data)
+    assert rsp.status_code != 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+
     non_UofT_user = {"username":"UserOne", "password":"abc123", "email":"user@gmail.com", "role":"buyer"}
-    rsp = client.post('/api/register_user', json=non_UofT_user)
+    rsp = client.post('/api/user/register', json=non_UofT_user)
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
     assert 'Email must be a valid UofT email!' in rsp["message"]
 
     UofT_user_invalid_role = {"username":"UserTwo", "password":"efg123", "email":"user@utoronto.ca", "role":"student"}
-    rsp = client.post('/api/register_user', json=UofT_user_invalid_role)
+    rsp = client.post('/api/user/register', json=UofT_user_invalid_role)
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
     assert "Role must be 'buyer' or 'seller'!" in rsp["message"]
 
     UofT_valid_buyer = {"username":"UserThree", "password":"hij23", "email":"user@utoronto.ca", "role":"buyer"}
-    rsp = client.post('/api/register_user', json=UofT_valid_buyer)
+    rsp = client.post('/api/user/register', json=UofT_valid_buyer)
     assert rsp.status_code == 201
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
     assert 'User registered successfully!' in rsp["message"]
 
-    rsp = client.post('/api/register_user', json=UofT_valid_buyer)
+    rsp = client.post('/api/user/register', json=UofT_valid_buyer)
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
     assert 'User already exists!' in rsp["message"]
 
     UofT_valid_seller = {"username":"UserFour", "password":"klm123", "email":"user@mail.utoronto.ca", "role":"seller"}
-    rsp = client.post('/api/register_user', json=UofT_valid_seller)
+    rsp = client.post('/api/user/register', json=UofT_valid_seller)
     assert rsp.status_code == 201
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
     assert 'User registered successfully!' in rsp["message"]
 
 def test_login(client):
+    wrong_data = {"username": "hello"}
+    rsp = client.post('/api/user/login', json=wrong_data)
+    assert rsp.status_code != 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+
     user = User("testUser", "mypassword", "user@mail.utoronto.ca", User.UserRole.BUYER)
     db.session.add(user)
     db.session.commit()
 
     invalid_username = {"username":"UserOne", "password":"abc123"}
-    rsp = client.post('/api/login', json=invalid_username)
+    rsp = client.post('/api/user/login', json=invalid_username)
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
     assert 'User does not exist!' in rsp["message"]
 
     invalid_password = {"username":"testUser", "password":"iamwrong"}
-    rsp = client.post('/api/login', json=invalid_password)
+    rsp = client.post('/api/user/login', json=invalid_password)
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
     assert 'Incorrect password!' in rsp["message"]
 
     valid_user = {"username":"testUser", "password":"mypassword"}
-    rsp = client.post('/api/login', json=valid_user)
+    rsp = client.post('/api/user/login', json=valid_user)
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]

@@ -1,14 +1,51 @@
 from flask import Blueprint, jsonify, request
+from flasgger import Swagger, swag_from
+from marshmallow import ValidationError
 
 from database.db import db
 from database.models import User
 from .errors import ErrorRsp
+from .api_schema import UserRegistrationSchema, UserLoginSchema
 
 user_api_bp = Blueprint('user_api', __name__)
+swagger = Swagger()
 
-@user_api_bp.route('/register_user', methods=['POST'])
+@user_api_bp.route('/register', methods=['POST'])
+@swag_from({
+    'responses': {
+        201: {
+            'description': 'User registered',
+        },
+        400: {
+            'description': 'Invalid input',
+        },
+    },
+    'parameters': [
+        {
+            'name': 'user',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'username': {'type': 'string'},
+                    'password': {'type': 'string'},
+                    'email': {'type': 'string'},
+                    'role': {'type': 'string'},
+                },
+            },
+        }
+    ],
+})
 def register():
     data = request.get_json()
+    schema = UserRegistrationSchema()
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "message": "Missing parameters",
+                        "errors": err.messages}), 400
 
     # Check if user already exists
     user = User.query.filter_by(username=data['username']).first()
@@ -38,9 +75,44 @@ def register():
     return jsonify({"status": ErrorRsp.OK.value,
                     "message": "User registered successfully!"}), 201
 
+
 @user_api_bp.route('/login', methods=['POST'])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'User logged in',
+        },
+        404: {
+            'description': 'User not found',
+        },
+        401: {
+            'description': 'Incorrect password',
+        },
+    },
+    'parameters': [
+        {
+            'name': 'user',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'username': {'type': 'string'},
+                    'password': {'type': 'string'},
+                },
+            },
+        }
+    ],
+})
 def login():
     data = request.get_json()
+    schema = UserLoginSchema()
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "message": "Missing parameters",
+                        "errors": err.messages}), 400
 
     # Check if user exists
     user = User.query.filter_by(username=data['username']).first()
