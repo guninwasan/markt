@@ -2,13 +2,25 @@ import React from 'react';
 
 import { inputStyles } from './input-field.styles';
 
-interface InputFieldProps {
+interface LoginInputFieldProps {
     type: string;
     placeholder: string;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ type, placeholder }) => {
+interface RegisterInputFieldProps {
+    type: string;
+    placeholder: string;
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+}
+
+const LoginInputField: React.FC<LoginInputFieldProps> = ({ type, placeholder }) => {
     return <input type={type} placeholder={placeholder} style={inputStyles} />;
 };
 
-export { InputField };
+const RegisterInputField: React.FC<RegisterInputFieldProps> = ({ type, placeholder, onChange, onBlur }) => {
+    return <input type={type} placeholder={placeholder} style={inputStyles} onChange={onChange} onBlur={onBlur} />;
+};
+
+export { LoginInputField, RegisterInputField };

@@ -1,6 +1,6 @@
 // LoginForm.tsx
 import React, { useState } from 'react';
-import { InputField } from '../input-field';
+import { LoginInputField } from '../input-field';
 import { loginButtonStyles } from '../input-field/input-field.styles';
 
 const LoginForm: React.FC = () => {
@@ -26,8 +26,8 @@ const LoginForm: React.FC = () => {
 
   return (
     <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <InputField type="email" placeholder="UofT Email Address" />
-      <InputField type="password" placeholder="Password" />
+      <LoginInputField type="email" placeholder="UofT Email Address" />
+      <LoginInputField type="password" placeholder="Password" />
       <button type="submit" style={loginButtonStyles}>
         Login
       </button>
