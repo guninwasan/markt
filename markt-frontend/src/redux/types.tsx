@@ -7,8 +7,9 @@ type UserAuthType = {
 };
 
 type DeviceSliceType = {
-  isMobile: boolean;
+  isMobile: null | boolean;
   isLoggedIn: boolean;
+  isLoading: boolean;
 };
 
 export type { UserAuthType, DeviceSliceType };
