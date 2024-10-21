@@ -10,33 +10,14 @@ from .api_schema import UserRegistrationSchema, UserLoginSchema
 user_api_bp = Blueprint('user_api', __name__)
 swagger = Swagger()
 
+"""
+    Endpoint: Registering users
+    Route: 'api/user/register'
+"""
 @user_api_bp.route('/register', methods=['POST'])
-@swag_from({
-    'responses': {
-        201: {
-            'description': 'User registered',
-        },
-        400: {
-            'description': 'Invalid input',
-        },
-    },
-    'parameters': [
-        {
-            'name': 'user',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'username': {'type': 'string'},
-                    'password': {'type': 'string'},
-                    'email': {'type': 'string'},
-                    'role': {'type': 'string'},
-                },
-            },
-        }
-    ],
-})
+# Endpoint parameter specification
+@swag_from('../docs/user_docs.yml', endpoint='register')
+# API implementation
 def register():
     data = request.get_json()
     schema = UserRegistrationSchema()
@@ -76,34 +57,14 @@ def register():
                     "message": "User registered successfully!"}), 201
 
 
+"""
+    Endpoint: Logging in users
+    Route: 'api/user/login'
+"""
 @user_api_bp.route('/login', methods=['POST'])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'User logged in',
-        },
-        404: {
-            'description': 'User not found',
-        },
-        401: {
-            'description': 'Incorrect password',
-        },
-    },
-    'parameters': [
-        {
-            'name': 'user',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'username': {'type': 'string'},
-                    'password': {'type': 'string'},
-                },
-            },
-        }
-    ],
-})
+# Endpoint parameter specification
+@swag_from('../docs/user_docs.yml', endpoint='login')
+# API implementation
 def login():
     data = request.get_json()
     schema = UserLoginSchema()

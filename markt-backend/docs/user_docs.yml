@@ -1,0 +1,41 @@
+register:
+  responses:
+    201:
+      description: "User registered"
+    400:
+      description: "Invalid input"
+  parameters:
+    - name: "user"
+      in: "body"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          username:
+            type: "string"
+          password:
+            type: "string"
+          email:
+            type: "string"
+          role:
+            type: "string"
+
+login:
+  responses:
+    200:
+      description: "User logged in"
+    404:
+      description: "User not found"
+    401:
+      description: "Incorrect password"
+  parameters:
+    - name: "user"
+      in: "body"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          username:
+            type: "string"
+          password:
+            type: "string"
