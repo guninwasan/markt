@@ -1,1 +1,1 @@
-export { InputField } from "./input-field";
+export { LoginInputField } from "./input-field";
