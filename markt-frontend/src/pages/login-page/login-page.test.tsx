@@ -17,7 +17,7 @@ jest.mock('../../components/Cover', () => ({
   ),
 }));
 
-jest.mock('../../components/LoginForm', () => ({
+jest.mock('../../components/login-form/login-form', () => ({
   LoginForm: () => (
     <form>
       <input type="email" placeholder="UofT Email Address" />
