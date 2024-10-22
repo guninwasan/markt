@@ -17,7 +17,7 @@ const SearchBar = () => {
       <InnerSearchBarContainer>
         <SearchInput
           type="text"
-          placeholder="Type here to search..."
+          placeholder="Search for an item or category..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleSearchSubmit()} // Optional: Submit with Enter key
