@@ -49,6 +49,7 @@ def register():
         username=data['username'],
         password=data['password'],
         email=data['email'],
+        phone=data['phone'],
         role=user_role
     )
     db.session.add(user)

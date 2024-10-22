@@ -8,6 +8,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password_encryp = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(15), nullable=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
 
     class UserRole(Enum):
@@ -17,9 +18,10 @@ class User(db.Model):
     
     listings = db.relationship('Listing', backref='owner', lazy=True)
 
-    def __init__(self, username, password, email, role):
+    def __init__(self, username, password, email, phone, role):
         self.username = username
         self.email = email
+        self.phone = phone
         self.role = role
 
         # Encrypt password

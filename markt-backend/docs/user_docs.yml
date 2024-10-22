@@ -17,6 +17,8 @@ register:
             type: "string"
           email:
             type: "string"
+          phone:
+            type: "string"
           role:
             type: "string"
 
