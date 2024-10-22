@@ -10,19 +10,13 @@ class User(db.Model):
     password_encryp = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(15), nullable=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
-
-    class UserRole(Enum):
-        BUYER = 'buyer'
-        SELLER = 'seller'
-    role = db.Column(db.Enum(UserRole), nullable=False)
     
     listings = db.relationship('Listing', backref='owner', lazy=True)
 
-    def __init__(self, username, password, email, phone, role):
+    def __init__(self, username, password, email, phone):
         self.username = username
         self.email = email
         self.phone = phone
-        self.role = role
 
         # Encrypt password
         salt = bcrypt.gensalt()

@@ -39,18 +39,11 @@ def register():
         return jsonify({"status": ErrorRsp.ERR_PARAM.value,
                         "data": "Email must be a valid UofT email!"}), 400
 
-    # Check if role specified is Buyer or Seller
-    if data['role'] not in [User.UserRole.BUYER.value, User.UserRole.SELLER.value]:
-        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
-                        "data": "Role must be 'buyer' or 'seller'!"}), 400
-
-    user_role = User.UserRole.BUYER if data['role'] == 'buyer' else User.UserRole.SELLER
     user = User(
         username=data['username'],
         password=data['password'],
         email=data['email'],
         phone=data['phone'],
-        role=user_role
     )
     db.session.add(user)
     db.session.commit()

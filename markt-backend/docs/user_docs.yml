@@ -19,8 +19,6 @@ register:
             type: "string"
           phone:
             type: "string"
-          role:
-            type: "string"
 
 login:
   responses:
