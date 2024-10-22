@@ -33,34 +33,34 @@ def test_register(client):
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
-    assert 'Email must be a valid UofT email!' in rsp["message"]
+    assert 'Email must be a valid UofT email!' in rsp["data"]
 
     UofT_user_invalid_role = {"username":"UserTwo", "password":"efg123", "email":"user@utoronto.ca", "role":"student"}
     rsp = client.post('/api/user/register', json=UofT_user_invalid_role)
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
-    assert "Role must be 'buyer' or 'seller'!" in rsp["message"]
+    assert "Role must be 'buyer' or 'seller'!" in rsp["data"]
 
     UofT_valid_buyer = {"username":"UserThree", "password":"hij23", "email":"user@utoronto.ca", "role":"buyer"}
     rsp = client.post('/api/user/register', json=UofT_valid_buyer)
     assert rsp.status_code == 201
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
-    assert 'User registered successfully!' in rsp["message"]
+    assert 'User registered successfully!' in rsp["data"]
 
     rsp = client.post('/api/user/register', json=UofT_valid_buyer)
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
-    assert 'User already exists!' in rsp["message"]
+    assert 'User already exists!' in rsp["data"]
 
     UofT_valid_seller = {"username":"UserFour", "password":"klm123", "email":"user@mail.utoronto.ca", "role":"seller"}
     rsp = client.post('/api/user/register', json=UofT_valid_seller)
     assert rsp.status_code == 201
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
-    assert 'User registered successfully!' in rsp["message"]
+    assert 'User registered successfully!' in rsp["data"]
 
 def test_login(client):
     wrong_data = {"username": "hello"}
@@ -78,18 +78,18 @@ def test_login(client):
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
-    assert 'User does not exist!' in rsp["message"]
+    assert 'User does not exist!' in rsp["data"]
 
     invalid_password = {"username":"testUser", "password":"iamwrong"}
     rsp = client.post('/api/user/login', json=invalid_password)
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
-    assert 'Incorrect password!' in rsp["message"]
+    assert 'Incorrect password!' in rsp["data"]
 
     valid_user = {"username":"testUser", "password":"mypassword"}
     rsp = client.post('/api/user/login', json=valid_user)
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
-    assert 'User logged in successfully!' in rsp["message"]
+    assert 'User logged in successfully!' in rsp["data"]
