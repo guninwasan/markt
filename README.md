@@ -17,7 +17,7 @@ Markt is a second-hand marketplace exclusively for UofT students. It is a platfo
 - User authentication (only UofT students can register)
 - Allow users to list products for sale
 - Allow users to buy second-hand products
-- Users cn filter products based on various criterias including campus, price, category
+- Users can filter products based on various criterias including campus, price, category
 - Users can sort products based on price (lowest/highest first), date added (oldest/newest)
 
 ### Project Management
