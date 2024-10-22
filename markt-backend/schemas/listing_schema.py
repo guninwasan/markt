@@ -5,5 +5,6 @@ class ListingInformationSchema(Schema):
     description = fields.Str(required=True)
     price = fields.Int(required=True)
     quantity = fields.Int(required=True)
+    sold = fields.Bool(load_default=False)
     condition = fields.Str(required=True)
     seller_id = fields.Int(required=True)

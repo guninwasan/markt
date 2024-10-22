@@ -23,6 +23,9 @@ create:
             minimum: 1
           condition:
             type: "string"
+          sold:
+            type: "boolean"
+            default: false
           seller_id:
             type: "integer"
 
@@ -69,6 +72,8 @@ update:
           quantity:
             type: "integer"
             minimum: 1
+          sold:
+            type: "boolean"
           condition:
             type: "string"
           seller_id:

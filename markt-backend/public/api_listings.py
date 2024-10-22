@@ -40,6 +40,7 @@ def create():
         description=data['description'],
         price=data['price'],
         quantity=data['quantity'],
+        sold=data['sold'],
         condition=data['condition'],
         seller_id=data['seller_id']
     )
@@ -70,6 +71,7 @@ def get(id):
         "description": listing.description,
         "price": listing.price,
         "quantity": listing.quantity,
+        "sold": listing.sold,
         "condition": listing.condition,
         "seller": {
             "id": listing.owner.id,
@@ -102,6 +104,7 @@ def get_all():
             "price": listing.price,
             "quantity": listing.quantity,
             "condition": listing.condition,
+            "sold": listing.sold,
             "seller": {
                 "id": listing.owner.id,
                 "username": listing.owner.username,
@@ -139,6 +142,8 @@ def update(id):
         listing.title = data['quantity']
     if 'condition'in data:
         listing.title = data['condition']
+    if 'sold'in data:
+        listing.title = data['sold']
     db.session.commit()
 
     return jsonify({"status": ErrorRsp.OK.value,

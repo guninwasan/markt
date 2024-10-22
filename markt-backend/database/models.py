@@ -41,5 +41,6 @@ class Listing(db.Model):
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
+    sold = db.Column(db.Boolean, default=False)
     condition = db.Column(db.String(50), nullable=False)
     seller_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
