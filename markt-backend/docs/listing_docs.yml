@@ -1,0 +1,80 @@
+create:
+  responses:
+    201:
+      description: "Listing created"
+    400:
+      description: "Invalid input"
+  parameters:
+    - name: "listing"
+      in: "body"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          title:
+            type: "string"
+          description:
+            type: "string"
+          price:
+            type: "integer"
+            minimum: 0
+          quantity:
+            type: "integer"
+            minimum: 1
+          condition:
+            type: "string"
+          sold:
+            type: "boolean"
+            default: false
+          seller_id:
+            type: "integer"
+
+listing_by_id:
+  responses:
+    200:
+      description: JSON response
+    404:
+      description: "Listing not found"
+  parameters:
+    - name: "user"
+      in: "query"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          id: "integer"
+
+get_all:
+  responses:
+    200:
+      description: JSON response
+
+update:
+  responses:
+    200:
+      description: "Listing updated"
+    400:
+      description: "Invalid listing id"
+  parameters:
+    - name: "listing"
+      in: "body"
+      required: False
+      schema:
+        type: "object"
+        properties:
+          title:
+            type: "string"
+          description:
+            type: "string"
+          price:
+            type: "integer"
+            minimum: 0
+          quantity:
+            type: "integer"
+            minimum: 1
+          sold:
+            type: "boolean"
+          condition:
+            type: "string"
+          seller_id:
+            type: "integer"

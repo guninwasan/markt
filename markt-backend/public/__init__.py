@@ -16,7 +16,7 @@ def create_app_api():
     
     init_db(app)
 
-    app.register_blueprint(user_api_bp, url_prefix='/api')
-    app.register_blueprint(listing_api_bp, url_prefix='/api')
+    app.register_blueprint(user_api_bp, url_prefix='/api/user')
+    app.register_blueprint(listing_api_bp, url_prefix='/api/listing')
 
     return app
