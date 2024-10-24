@@ -1,0 +1,43 @@
+name: Run Tests and Check Coverage
+
+on:
+  pull_request:
+    paths:
+      - "markt-frontend/**"
+
+jobs:
+  test-and-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Tests with Coverage
+        run: npm run test-coverage
+
+      - name: Check Coverage Percentage
+        run: |
+          coverage=$(jq '.total.lines.pct' < coverage/coverage-summary.json)
+          threshold=80 
+          echo "Coverage: $coverage%"
+          if (( $(echo "$coverage < $threshold" | bc -l) )); then
+            echo "Code coverage ($coverage%) is below the threshold ($threshold%). Failing the job."
+            exit 1
+          else
+            echo "Code coverage ($coverage%) meets the threshold ($threshold%)."
+          fi
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage/
