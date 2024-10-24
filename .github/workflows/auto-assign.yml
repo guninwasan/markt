@@ -1,0 +1,16 @@
+name: Auto-Assign PR Creator
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign PR to Creator
+        uses: kenshohq/auto-assign-action@v1.2.0
+        with:
+          assignees: ${{ github.actor }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
