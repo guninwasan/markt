@@ -1,0 +1,29 @@
+name: Run Frontend Tests
+
+on:
+  pull_request:
+    paths:
+      - "markt-frontend/**"
+
+jobs:
+  frontend-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Install dependencies
+        run: |
+          cd markt-frontend
+          npm install
+
+      - name: Run tests
+        run: |
+          cd markt-frontend
+          npm run test
