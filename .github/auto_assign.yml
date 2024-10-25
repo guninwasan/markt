@@ -1,0 +1,10 @@
+addAssignees: true
+addReviewers: false
+assignees:
+  - ${{ github.actor }}
+reviewers:
+  - lavanyamehn
+  - shikharchaurasia
+  - guninwasan
+  - guptave2
+  - RishistavRay
