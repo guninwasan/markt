@@ -13,11 +13,12 @@ const SubheaderContainer = styled.div`
   display: flex;
   margin-bottom: 1rem;
   gap: 5rem;
+  width: 70%;
 `;
 
 const Subheader = styled.h2<{ isSelected: boolean }>`
   cursor: pointer;
-  font-size: 20px;
+  font-size: 1rem;
   font-weight: normal;
   color: ${({ isSelected }) => (isSelected ? "black" : "#8F8F8F")};
   border-bottom: ${({ isSelected }) =>
