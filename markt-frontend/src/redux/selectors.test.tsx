@@ -13,6 +13,7 @@ describe("Selectors", () => {
     device: {
       isMobile: true,
       isLoggedIn: false,
+      isLoading: false
     },
     _persist: {
       version: 1,
