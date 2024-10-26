@@ -3,8 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { HomePage } from "./pages/home-page";
 import { ProductListingPage } from "./pages";
 import { useIsMobile } from "./hooks";
-import { HomePage } from "./pages/home-page";
-
 
 function App() {
   useIsMobile();
