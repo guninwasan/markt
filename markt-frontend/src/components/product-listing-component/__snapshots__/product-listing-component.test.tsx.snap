@@ -141,3 +141,145 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
   </div>
 </div>
 `;
+
+exports[`ProductListingComponent renders correctly on mobile 1`] = `
+<div
+  class="sc-dntaoT itDxOn"
+>
+  <div
+    class="sc-ivxoEo fdjjXu"
+  >
+    <div
+      class="sc-blHHSb iAZfxc"
+    >
+      <div
+        class="sc-gtLWhw Kyoay"
+      >
+        <img
+          alt="Image 1"
+          class="sc-fAUdSK eTRGma"
+          src="https://via.placeholder.com/150"
+        />
+      </div>
+      <div
+        class="sc-gtLWhw Kyoay"
+      >
+        <img
+          alt="Image 2"
+          class="sc-fAUdSK eTRGma"
+          src="https://via.placeholder.com/150"
+        />
+      </div>
+      <div
+        class="sc-gtLWhw Kyoay"
+      >
+        <img
+          alt="Image 3"
+          class="sc-fAUdSK eTRGma"
+          src="https://via.placeholder.com/150"
+        />
+      </div>
+      <div
+        class="sc-gtLWhw Kyoay"
+      >
+        <img
+          alt="Image 4"
+          class="sc-fAUdSK eTRGma"
+          src="https://via.placeholder.com/150"
+        />
+      </div>
+      <div
+        class="sc-gtLWhw Kyoay"
+      >
+        <img
+          alt="Image 5"
+          class="sc-fAUdSK eTRGma"
+          src="https://via.placeholder.com/150"
+        />
+      </div>
+      <div
+        class="sc-gtLWhw Kyoay"
+      >
+        <img
+          alt="Image 6"
+          class="sc-fAUdSK eTRGma"
+          src="https://via.placeholder.com/150"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="sc-ghWlax dxtQXs"
+  >
+    <div
+      class="sc-kLhKbu eocVKy"
+    >
+      <div
+        class="sc-ixGGxD XXNEF"
+      >
+        <h1>
+          Product Title
+        </h1>
+        <p>
+          Description description description description description description description description description description description description description description description description description description
+        </p>
+      </div>
+      <div
+        class="sc-khLCKb ikiXMJ"
+      >
+        <div
+          class="sc-dstKZu cqYejV"
+        >
+          CAD $$$
+        </div>
+        <div>
+          Negotiable / Non-negotiable
+        </div>
+        <div
+          class="sc-keTIit kYGxmp"
+        >
+          <img
+            alt="Seller Avatar"
+            class="sc-dpBQxM eOXdc"
+            src="https://via.placeholder.com/50"
+          />
+          <div>
+            <div>
+              NAME BLURRED
+            </div>
+            <div>
+              SELLER ID # 1234
+            </div>
+            <a
+              href="#"
+            >
+              See all seller reviews
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="sc-jwIPbr hmWefI"
+    >
+      <h2>
+        Product Specifications
+      </h2>
+      <ul>
+        <li>
+          Specification 1
+        </li>
+        <li>
+          Specification 2
+        </li>
+        <li>
+          Specification 3
+        </li>
+        <li>
+          Specification 4
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+`;

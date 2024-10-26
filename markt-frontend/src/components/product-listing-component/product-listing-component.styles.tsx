@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 type ProductListingComponentProps = {
-  isMobile: boolean | null;
+  isMobile?: boolean; // Optional to prevent direct DOM pass-through
 };
 
 const ProductListingContainer = styled.div<ProductListingComponentProps>`
@@ -15,7 +15,7 @@ const ProductImages = styled.div`
   flex: 1;
 `;
 
-const ProductDetails = styled.div<ProductListingComponentProps>`
+const ProductDetails = styled.div`
   flex: 2;
   display: flex;
   flex-direction: column;
@@ -68,14 +68,14 @@ const ProductSpecsContainer = styled.div`
   background-color: #f9f9f9;
 `;
 
-const BottomTab = styled.div<{ isVisible: boolean }>`
+const BottomTab = styled.div<{ $isVisible: boolean }>` /* Prefix prop with $ to avoid React warning */
   position: fixed;
   bottom: 0;
   width: 100%;
   background-color: white;
   border-top: 1px solid #ddd;
   padding: 1rem;
-  display: ${({ isVisible }) => (isVisible ? "flex" : "none")};
+  display: ${({ $isVisible }) => ($isVisible ? "flex" : "none")};
   justify-content: center;
   align-items: center;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);

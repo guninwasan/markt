@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { ProductListingComponent } from "./product-listing-component";
 import { useIsMobile } from "../../hooks";
 
@@ -11,7 +11,7 @@ describe("ProductListingComponent", () => {
   const mockUseIsMobile = useIsMobile as jest.Mock;
 
   beforeEach(() => {
-    mockUseIsMobile.mockReturnValue({ isMobile: false });
+    mockUseIsMobile.mockReturnValue(false); // Updated to directly return a boolean
   });
 
   afterEach(() => {
@@ -24,8 +24,9 @@ describe("ProductListingComponent", () => {
   });
 
   it("renders correctly on mobile", () => {
-    mockUseIsMobile.mockReturnValue({ isMobile: true });
-    render(<ProductListingComponent />);
+    mockUseIsMobile.mockReturnValue(true); // Update to reflect mobile view
+    const { container } = render(<ProductListingComponent />);
+    expect(container.firstChild).toMatchSnapshot();
     expect(screen.getByText("Product Title")).toBeInTheDocument();
     expect(screen.getByText("CAD $$$")).toBeInTheDocument();
     expect(screen.getByText("Specification 1")).toBeInTheDocument();
