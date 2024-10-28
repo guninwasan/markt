@@ -1,20 +1,14 @@
 import pytest
-from pathlib import Path
 
 from utils.errors import ErrorRsp
 from public import create_app_api
 from database.db import db
 from database.models import Listing, User
 
-TEST_DB = "test_user.db"
-
 @pytest.fixture
 def client():
-    BASE_DIR = Path(__file__).resolve().parent.parent
-    app = create_app_api()
-    app.config["TESTING"] = True
-    app.config["DATABASE"] = BASE_DIR.joinpath(TEST_DB)
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{BASE_DIR.joinpath(TEST_DB)}"
+    test_db = "test_user.db"
+    app = create_app_api(test_db, testing=True)
 
     with app.app_context():
         db.create_all()  # setup
@@ -25,7 +19,7 @@ def client():
 def test_create_listing(client):
     # Create a test user
     test_user = User(
-        username="testuser", password="abc",
+        utorid="testuser", password="abc",
         email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
@@ -75,7 +69,7 @@ def test_create_listing(client):
 def test_get_listing(client):
     # Create a test user
     test_user = User(
-        username="testuser", password="abc",
+        utorid="testuser", password="abc",
         email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
@@ -118,7 +112,7 @@ def test_get_all_listings(client):
 
     # Create a test user
     test_user = User(
-        username="testuser", password="abc",
+        utorid="testuser", password="abc",
         email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
@@ -146,7 +140,7 @@ def test_get_all_listings(client):
 def test_update_listing(client):
     # Create a test user
     test_user = User(
-        username="testuser", password="abc",
+        utorid="testuser", password="abc",
         email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
@@ -186,7 +180,7 @@ def test_update_listing(client):
 def test_delete_listing(client):
     # Create a test user
     test_user = User(
-        username="testuser", password="abc",
+        utorid="testuser", password="abc",
         email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
