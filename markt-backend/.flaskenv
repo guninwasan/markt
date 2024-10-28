@@ -1,0 +1,2 @@
+FLASK_APP=public.__init__:create_app_api
+FLASK_DEBUG=True

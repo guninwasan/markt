@@ -19,4 +19,8 @@ def create_app_api():
     app.register_blueprint(user_api_bp, url_prefix='/api/user')
     app.register_blueprint(listing_api_bp, url_prefix='/api/listing')
 
+    @app.route('/')
+    def home():
+        return "Welcome to Mizzica Backend, hope you enjoy your stay!"
+
     return app
