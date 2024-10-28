@@ -6,7 +6,6 @@ import ReactDOM from "react-dom/client";
 import { ProductListingPage } from "./pages";
 import { useIsMobile } from "./hooks";
 
-
 function App() {
   useIsMobile();
   return (
