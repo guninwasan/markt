@@ -1,2 +1,2 @@
-FLASK_APP=public.__init__:create_app_api
+FLASK_APP=public
 FLASK_DEBUG=True
