@@ -17,6 +17,21 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: welcome1234
+          POSTGRES_DB: MizzicaBackendTest
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.10
@@ -37,6 +52,8 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
+      env:
+        DATABASE_URL: postgresql://postgres:welcome1234@localhost/MizzicaBackendTest
       run: |
         cd markt-backend
         pytest
