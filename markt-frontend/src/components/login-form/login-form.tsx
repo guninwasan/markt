@@ -59,14 +59,42 @@ const LoginForm: React.FC = () => {
   }, [email, password]);
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+  
     // Mark all fields as touched when submitting the form
     setTouchedFields({
       email: true,
       password: true,
     });
+  
+    if (Object.keys(errors).length === 0) {
+      // No errors, proceed with login logic
+      try {
+        const response = await fetch('http://localhost:5000/api/user/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            password
+          }),
+        });
+  
+        const result = await response.json();
+  
+        if (response.ok) {
+          alert("Login successful!");
+        } else if (response.status === 404) {
+          alert("Error: User not found!");
+        } else if (response.status === 401) {
+          alert("Error: Incorrect password!");
+        } else {
+          alert(`Error: ${result.data}`);
+        }
+      } catch (error) {
+        console.error("Login failed:", error);
+      }
+    }
   };
 
   return (
