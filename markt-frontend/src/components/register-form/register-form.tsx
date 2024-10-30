@@ -83,7 +83,7 @@ const RegisterForm: React.FC = () => {
   }, [fullName, email, password, phone, studentID]);
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Mark all fields as touched when submitting the form
@@ -97,7 +97,28 @@ const RegisterForm: React.FC = () => {
 
     if (Object.keys(errors).length === 0) {
       // No errors, proceed with registration logic
-      console.log('Registering with:', { fullName, email, password, phone, studentID });
+      try {
+        const response = await fetch('http://your-backend-url/api/user/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            utorid: studentID,
+            password,
+            email,
+            phone
+          }),
+        });
+  
+        const result = await response.json();
+  
+        if (response.ok) {
+          alert("Registration successful!");
+        } else {
+          alert(`Error: ${result.data}`);
+        }
+      } catch (error) {
+        console.error("Registration failed:", error);
+      }
     }
   };
 
