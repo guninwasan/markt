@@ -12,6 +12,7 @@ const MenuItems = () => {
 
   return (
     <Menu isMobile={isMobile}>
+      {/* Common items for both logged-in and logged-out users */}
       <MenuItem>
         <MenuLink as={NavLink} to="/" className={({ isActive }) => (isActive ? "active" : "")}>
           Home
@@ -27,17 +28,41 @@ const MenuItems = () => {
           Sell
         </MenuLink>
       </MenuItem>
-      <MenuItem>
-        <MenuLink as={NavLink} to="/wishlist" className={({ isActive }) => (isActive ? "active" : "")}>
-          Wishlist
-        </MenuLink>
-      </MenuItem>
-      <MenuItem>
-        {/* Conditionally render Login or Register based on isLoggedIn */}
-        <MenuLink as={NavLink} to={isLoggedIn ? "/register" : "/login"} className={({ isActive }) => (isActive ? "active" : "")}>
-          {isLoggedIn ? "Register" : "Login"}
-        </MenuLink>
-      </MenuItem>
+
+      {isLoggedIn ? (
+        <>
+          {/* Items only for logged-in users */}
+          <MenuItem>
+            <MenuLink as={NavLink} to="/wishlist" className={({ isActive }) => (isActive ? "active" : "")}>
+              Wishlist
+            </MenuLink>
+          </MenuItem>
+          <MenuItem>
+            <MenuLink as={NavLink} to="/profile" className={({ isActive }) => (isActive ? "active" : "")}>
+              Profile
+            </MenuLink>
+          </MenuItem>
+          <MenuItem>
+            <MenuLink as={NavLink} to="/logout" className={({ isActive }) => (isActive ? "active" : "")}>
+              Logout
+            </MenuLink>
+          </MenuItem>
+        </>
+      ) : (
+        <>
+          {/* Items only for logged-out users */}
+          <MenuItem>
+            <MenuLink as={NavLink} to="/login" className={({ isActive }) => (isActive ? "active" : "")}>
+              Login
+            </MenuLink>
+          </MenuItem>
+          <MenuItem>
+            <MenuLink as={NavLink} to="/register" className={({ isActive }) => (isActive ? "active" : "")}>
+              Register
+            </MenuLink>
+          </MenuItem>
+        </>
+      )}
     </Menu>
   );
 };
