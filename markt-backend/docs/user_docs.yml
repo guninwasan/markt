@@ -47,7 +47,16 @@ login:
 update:
   responses:
     200:
-      description: "JSON Updated user info"
+      description:
+        password:
+            type: "string"
+            details: "Updated", "Not updated"
+        email:
+          type: "string"
+          details: User's associated email
+        phone:
+          type: "string"
+          details: User's associated phone
     404:
       description: "User does not exist"
   parameters:

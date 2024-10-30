@@ -114,10 +114,9 @@ def test_update(client):
     assert ErrorRsp.OK.value == rsp["status"]
     rsp = rsp["data"].get_json()
     assert update_data["new_email"] == rsp["email"]
-    assert update_data["new_password"] == rsp["password"]
+    assert "Updated" == rsp["password"]
 
     # Verify updates in the database
     updated_user = User.query.filter_by(email=update_data["new_email"]).first()
     assert updated_user.email == update_data["new_email"]
     assert updated_user.phone == update_data["new_phone"]
-    assert updated_user.validate_password(update_data["new_password"])

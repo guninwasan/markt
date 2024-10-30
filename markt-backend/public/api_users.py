@@ -136,16 +136,26 @@ def update():
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
 
+    # If password is changed, set the API rsp
+    rsp_password = "Not updated"
+
     if 'new_email'in data:
         user.email = data['new_email']
     if 'new_phone'in data:
         user.phone = data['new_phone']
-    if 'new_password'in data:
+    if 'new_password' in data:
         user.set_password(data['new_password'])
+        rsp_password = "Updated"
     db.session.commit()
 
+    # Sanity check for password since it is not secure to send the updated password
+    # in the API rsp
+    if 'new_password' in data and not user.validate_password(data['new_password']):
+        return jsonify({"status": ErrorRsp.ERR.value,
+                        "data": "User data not updated"}), 400
+
     rsp = {
-        "password": user.password_encryp,
+        "password": rsp_password, # string indicating whether or not password was updated
         "email": user.email,
         "phone": user.phone
     }
