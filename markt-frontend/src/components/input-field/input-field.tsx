@@ -5,6 +5,9 @@ import { inputStyles } from './input-field.styles';
 interface LoginInputFieldProps {
     type: string;
     placeholder: string;
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 interface RegisterInputFieldProps {
@@ -15,8 +18,8 @@ interface RegisterInputFieldProps {
     onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
-const LoginInputField: React.FC<LoginInputFieldProps> = ({ type, placeholder }) => {
-    return <input type={type} placeholder={placeholder} style={inputStyles} />;
+const LoginInputField: React.FC<LoginInputFieldProps> = ({ type, placeholder, onChange, onBlur }) => {
+    return <input type={type} placeholder={placeholder} style={inputStyles} onChange={onChange} onBlur={onBlur} />;
 };
 
 const RegisterInputField: React.FC<RegisterInputFieldProps> = ({ type, placeholder, onChange, onBlur }) => {
