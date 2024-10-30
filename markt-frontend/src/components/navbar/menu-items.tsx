@@ -1,9 +1,14 @@
 import { useIsMobile } from "../../hooks";
+import { useSelector } from "react-redux"; // Import useSelector
+import { selectors } from "../../redux"; // Import selectors
 import { Menu, MenuItem, MenuLink } from "./navbar.styles";
 import { NavLink } from "react-router-dom";
 
 const MenuItems = () => {
   const { isMobile } = useIsMobile();
+  
+  // Retrieve isLoggedIn from Redux
+  const isLoggedIn = useSelector(selectors.getIsLoggedIn);
 
   return (
     <Menu isMobile={isMobile}>
@@ -28,8 +33,9 @@ const MenuItems = () => {
         </MenuLink>
       </MenuItem>
       <MenuItem>
-        <MenuLink as={NavLink} to="/register" className={({ isActive }) => (isActive ? "active" : "")}>
-          Login/Register
+        {/* Conditionally render Login or Register based on isLoggedIn */}
+        <MenuLink as={NavLink} to={isLoggedIn ? "/register" : "/login"} className={({ isActive }) => (isActive ? "active" : "")}>
+          {isLoggedIn ? "Register" : "Login"}
         </MenuLink>
       </MenuItem>
     </Menu>
@@ -37,5 +43,3 @@ const MenuItems = () => {
 };
 
 export { MenuItems };
-
-// Used GPT to change from href to navlink
