@@ -3,7 +3,7 @@ register:
     201:
       description: "User registered"
     400:
-      description: "Invalid input"
+      description: "Invalid input parameters"
   parameters:
     - name: "user"
       in: "body"
@@ -11,23 +11,26 @@ register:
       schema:
         type: "object"
         properties:
-          utorid:
-            type: "string"
           password:
             type: "string"
+            required: true
           email:
             type: "string"
+            required: true
           phone:
             type: "string"
+            required: true
 
 login:
   responses:
     200:
       description: "User logged in"
     404:
-      description: "User not found"
+      description: "User does not exist"
     401:
       description: "Incorrect password"
+    400:
+      description: "Invalid input parameters"
   parameters:
     - name: "user"
       in: "body"
@@ -37,5 +40,29 @@ login:
         properties:
           email:
             type: "string"
+            required: true
           password:
+            type: "string"
+            required: true
+update:
+  responses:
+    200:
+      description: "JSON Updated user info"
+    404:
+      description: "User does not exist"
+  parameters:
+    - name: "user"
+      in: "body"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          verify_email:
+            type: "string"
+            required: true
+          new_password:
+            type: "string"
+          new_email:
+            type: "string"
+          new_phone:
             type: "string"

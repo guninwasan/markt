@@ -122,7 +122,7 @@ def get_all():
 """
 @listing_api_bp.route('/update/<int:id>/', methods=['PUT'])
 # Endpoint parameter specification
-@swag_from('../docs/listing_docs.yml', endpoint='listing_by_id')
+@swag_from('../docs/listing_docs.yml', endpoint='update')
 # API implementation
 def update(id):
     data = request.get_json()
@@ -143,7 +143,7 @@ def update(id):
     if 'title'in data:
         listing.title = str(data['title'])
     if 'description'in data:
-        listing.description = str(data['description'])
+        listing.description = data['description']
     if 'price'in data:
         listing.price = data['price']
     if 'quantity'in data:

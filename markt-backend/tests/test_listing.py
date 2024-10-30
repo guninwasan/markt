@@ -19,8 +19,7 @@ def client():
 def test_create_listing(client):
     # Create a test user
     test_user = User(
-        utorid="testuser", password="abc",
-        email="test@utoronto.ca", phone="6478290835")
+        password="abc", email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 
@@ -83,8 +82,7 @@ def test_create_listing(client):
 def test_get_listing(client):
     # Create a test user
     test_user = User(
-        utorid="testuser", password="abc",
-        email="test@utoronto.ca", phone="6478290835")
+        password="abc", email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 
@@ -124,8 +122,7 @@ def test_get_all_listings(client):
 
     # Create a test user
     test_user = User(
-        utorid="testuser", password="abc",
-        email="test@utoronto.ca", phone="6478290835")
+        password="abc", email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 
@@ -151,8 +148,7 @@ def test_get_all_listings(client):
 def test_update_listing(client):
     # Create a test user
     test_user = User(
-        utorid="testuser", password="abc",
-        email="test@utoronto.ca", phone="6478290835")
+        password="abc", email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 
@@ -192,8 +188,7 @@ def test_update_listing(client):
 def test_delete_listing(client):
     # Create a test user
     test_user = User(
-        utorid="testuser", password="abc",
-        email="test@utoronto.ca", phone="6478290835")
+        password="abc", email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 

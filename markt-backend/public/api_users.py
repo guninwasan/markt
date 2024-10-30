@@ -6,7 +6,7 @@ from marshmallow import ValidationError
 from database.db import db
 from database.models import User
 from utils.errors import ErrorRsp
-from schemas.user_schema import UserRegistrationSchema, UserLoginSchema
+from schemas.user_schema import UserRegistrationSchema, UserLoginSchema, UserUpdateSchema
 
 user_api_bp = Blueprint('user_api', __name__)
 swagger = Swagger()
@@ -69,7 +69,6 @@ def register():
                         "data": validation_errors}), 400
 
     user = User(
-        utorid=data['utorid'],
         password=data['password'],
         email=data['email'],
         phone=data['phone'],
@@ -111,3 +110,45 @@ def login():
 
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": "User logged in successfully!"}), 200
+
+
+"""
+    Endpoint: Updating user details
+    Route: 'api/user/update'
+"""
+@user_api_bp.route('/update', methods=['POST'])
+# Endpoint parameter specification
+@swag_from('../docs/user_docs.yml', endpoint='update')
+# API implementation
+def update():
+    data = request.get_json()
+    schema = UserUpdateSchema()
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "data": "Missing parameters",
+                        "errors": err.messages}), 400
+
+    # Check if user exists
+    user = User.query.filter_by(email=data['verify_email']).first()
+    if user is None:
+        return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
+                        "data": "User does not exist!"}), 404
+
+    if 'new_email'in data:
+        user.email = data['new_email']
+    if 'new_phone'in data:
+        user.phone = data['new_phone']
+    if 'new_password'in data:
+        user.set_password(data['new_password'])
+    db.session.commit()
+
+    rsp = {
+        "password": user.password_encryp,
+        "email": user.email,
+        "phone": user.phone
+    }
+    
+    return jsonify({"status": ErrorRsp.OK.value,
+                    "data": rsp}), 200

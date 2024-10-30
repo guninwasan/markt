@@ -18,15 +18,14 @@ def client():
 
 def test_register(client):
     # Not enough parameters
-    wrong_data = {"utorid": "hello"}
+    wrong_data = {"email": "hello"}
     rsp = client.post('/api/user/register', json=wrong_data)
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
 
     # Invalid email, phone number, and password
-    non_UofT_user = {"utorid":"UserOne", "password":"abc123C$",
-                     "email":"user@gmail.com", "phone":"835"}
+    non_UofT_user = {"password":"abc123", "email":"user@gmail.com", "phone":"6478290835"}
     rsp = client.post('/api/user/register', json=non_UofT_user)
     assert rsp.status_code != 200
     rsp = rsp.get_json()
@@ -34,8 +33,7 @@ def test_register(client):
     assert 'Email must be a valid UofT email!' in rsp["data"]
 
     # Valid data
-    UofT_valid_buyer = {"utorid":"UserThree", "password":"hiJ23jsu$",
-                        "email":"user@utoronto.ca", "phone":"6478290835"}
+    UofT_valid_buyer = {"password":"hij23", "email":"user@utoronto.ca", "phone":"6478290835"}
     rsp = client.post('/api/user/register', json=UofT_valid_buyer)
     assert rsp.status_code == 201
     rsp = rsp.get_json()
@@ -58,7 +56,7 @@ def test_login(client):
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
 
     # Create a user in the database
-    user = User(utorid="testUser", email="user@mail.utoronto.ca", phone="6478290835", password="myPass%wor3")
+    user = User("mypassword", "user@mail.utoronto.ca", "6478290835")
     db.session.add(user)
     db.session.commit()
 
@@ -85,4 +83,41 @@ def test_login(client):
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
     assert 'User logged in successfully!' in rsp["data"]
-    assert user.validate_password(valid_user["password"])
+
+def test_update(client):
+    # Create a user
+    user = User("mypassword", "user@mail.utoronto.ca", "6478290835")
+    db.session.add(user)
+    db.session.commit()
+
+    # Invalid user
+    non_existent_user = {
+        "verify_email": "invalid@mail.utoronto.ca",
+        "new_phone": "8394039291"
+    }
+    rsp = client.post('/api/user/update', json=non_existent_user)
+    assert rsp.status_code == 404
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
+    assert 'User does not exist!' in rsp["data"]
+
+    # Valid update data
+    update_data = {
+        "verify_email": user.email,
+        "new_email": "new_email@mail.utoronto.ca",
+        "new_phone": "1234567890",
+        "new_password": "newpassword"
+    }
+    rsp = client.post('/api/user/update', json=update_data)
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    rsp = rsp["data"].get_json()
+    assert update_data["new_email"] == rsp["email"]
+    assert update_data["new_password"] == rsp["password"]
+
+    # Verify updates in the database
+    updated_user = User.query.filter_by(email=update_data["new_email"]).first()
+    assert updated_user.email == update_data["new_email"]
+    assert updated_user.phone == update_data["new_phone"]
+    assert updated_user.validate_password(update_data["new_password"])
