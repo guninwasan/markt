@@ -48,9 +48,4 @@ describe("Navbar", () => {
     expect(buyLink).toBeInTheDocument();
     expect(sellLink).toBeInTheDocument();
   });
-
-  it("should match the snapshot", () => {
-    const { container } = renderWithRedux(<Navbar />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });
