@@ -16,7 +16,10 @@ exports[`Navbar should match the snapshot 1`] = `
       class="sc-fAUdSK kycBV"
     >
       <a
-        class="sc-dntaoT lagFYI active"
+        aria-current="page"
+        class="sc-dntaoT lagFYI ({
+          isActive
+        }) => isActive ? \\"active\\" : \\"\\" active"
         href="/"
       >
         Home
@@ -26,8 +29,10 @@ exports[`Navbar should match the snapshot 1`] = `
       class="sc-fAUdSK kycBV"
     >
       <a
-        class="sc-dntaoT lagFYI"
-        href="/"
+        class="sc-dntaoT lagFYI ({
+          isActive
+        }) => isActive ? \\"active\\" : \\"\\""
+        href="/buy"
       >
         Buy
       </a>
@@ -36,8 +41,10 @@ exports[`Navbar should match the snapshot 1`] = `
       class="sc-fAUdSK kycBV"
     >
       <a
-        class="sc-dntaoT lagFYI"
-        href="/"
+        class="sc-dntaoT lagFYI ({
+          isActive
+        }) => isActive ? \\"active\\" : \\"\\""
+        href="/sell"
       >
         Sell
       </a>
@@ -46,8 +53,22 @@ exports[`Navbar should match the snapshot 1`] = `
       class="sc-fAUdSK kycBV"
     >
       <a
-        class="sc-dntaoT lagFYI"
-        href="/"
+        class="sc-dntaoT lagFYI ({
+          isActive
+        }) => isActive ? \\"active\\" : \\"\\""
+        href="/wishlist"
+      >
+        Wishlist
+      </a>
+    </li>
+    <li
+      class="sc-fAUdSK kycBV"
+    >
+      <a
+        class="sc-dntaoT lagFYI ({
+          isActive
+        }) => isActive ? \\"active\\" : \\"\\""
+        href="/register"
       >
         Login/Register
       </a>

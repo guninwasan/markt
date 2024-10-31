@@ -11,17 +11,17 @@ exports[`HomePage should match the snapshot 1`] = `
     class="sc-blHHSb enqoXX"
   >
     <div
-      class="sc-gtLWhw jqViEL"
+      class="sc-gtLWhw itwYZc"
     >
       <input
-        class="sc-egkSDF bXCkAE"
+        class="sc-egkSDF ajbVn"
         placeholder="Search for an item or category..."
         type="text"
         value=""
       />
       <button
         aria-label="Submit search"
-        class="sc-fAUdSK cxqVif"
+        class="sc-fAUdSK gQXHRh"
       >
         <svg
           fill="currentColor"
