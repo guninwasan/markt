@@ -4,6 +4,7 @@ import { MemoryRouter } from "react-router-dom"; // Import MemoryRouter
 import { Navbar } from "./navbar";
 import { store } from "../../redux/store";
 import { useIsMobile } from "../../hooks";
+import { renderWithRedux } from "../../utils/render-with-redux";
 
 jest.mock("../../hooks", () => ({
   useIsMobile: jest.fn(),
@@ -19,14 +20,6 @@ describe("Navbar", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-
-  const renderWithRedux = (component: React.ReactNode) => {
-    return render(
-      <Provider store={store}>
-        <MemoryRouter>{component}</MemoryRouter> {/* Wrap in MemoryRouter */}
-      </Provider>
-    );
-  };
 
   it("should render the navbar properly", () => {
     renderWithRedux(<Navbar />);

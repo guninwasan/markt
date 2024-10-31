@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProductListingPage matches snapshot 1`] = `
+<div>
+  <nav
+    data-testid="navbar"
+  >
+    nav
+  </nav>
+  <div
+    data-testid="product-listing-component"
+  />
+</div>
+`;
