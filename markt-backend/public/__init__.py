@@ -5,7 +5,11 @@ from .api_users import user_api_bp
 from .api_listings import listing_api_bp
 from database.db import init_db, db
 
+from flask_cors import CORS
+
 app = Flask(__name__)
+
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 def create_app_api():
     basedir = Path(__file__).resolve().parent
