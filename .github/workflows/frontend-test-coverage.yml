@@ -23,14 +23,13 @@ jobs:
         working-directory: markt-frontend
 
       - name: Run Tests with Coverage
-        id: test-coverage
-        run: npm run test-coverage
+        run: |
+          npm run test-coverage | tee coverage_output.txt
         working-directory: markt-frontend
 
-      - name: Extract Coverage from Console Output
-        id: coverage-check
+      - name: Check Coverage Percentage
         run: |
-          coverage=$(grep -oP 'All files\s*\|\s*\K[0-9]+\.[0-9]+' <<< "${{ steps.test-coverage.outputs.stdout }}")
+          coverage=$(grep -oP 'All files\s*\|\s*\K[0-9]+\.[0-9]+' coverage_output.txt)
           threshold=80
           echo "Coverage: $coverage%"
           if (( $(echo "$coverage < $threshold" | bc -l) )); then
@@ -39,6 +38,7 @@ jobs:
           else
             echo "Code coverage ($coverage%) meets the threshold ($threshold%)."
           fi
+        working-directory: markt-frontend
 
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
