@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RegisterInputField } from '../input-field';
 import { loginButtonStyles } from '../input-field/input-field.styles';
 import { ErrorRsp } from '../../errorCodes';
@@ -19,6 +19,8 @@ const RegisterForm: React.FC = () => {
     studentID: false,
   });
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
+
+  const navigate = useNavigate();
 
   // Validation functions for each field
   const validatePassword = (password: string) => /^(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/.test(password);
@@ -106,7 +108,8 @@ const RegisterForm: React.FC = () => {
         const result = await response.json();
 
         if (response.ok) {
-          alert("Registration successful!");
+          alert("Registration successful - redirecting to Login!");
+          navigate('/login');
           setErrors({}); // Clear errors on successful registration
         } else {
           console.error("Registration failed:", result);
