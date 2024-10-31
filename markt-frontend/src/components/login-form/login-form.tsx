@@ -72,7 +72,7 @@ const LoginForm: React.FC = () => {
 
         if (response.ok) {
           alert("Login successful! Redirecting to Home...");
-          navigate('/home'); // Redirect to home
+          navigate('/'); // Redirect to home
         } else {
           // Handle specific backend errors
           switch (result.status) {
