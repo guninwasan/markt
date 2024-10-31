@@ -31,12 +31,12 @@ def register():
     # Check if user already exists
     user = User.query.filter_by(email=data['email']).first()
     if user is not None:
-        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+        return jsonify({"status": ErrorRsp.ERR_PARAM_DUP.value,
                         "data": "User already exists!"}), 400
     
     # Validate email
     if ("@mail.utoronto.ca" not in data['email']) and ("@utoronto.ca" not in data['email']):
-        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+        return jsonify({"status": ErrorRsp.ERR_PARAM_EMAIL.value,
                         "data": "Email must be a valid UofT email!"}), 400
 
     user = User(
