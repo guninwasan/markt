@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link } from 'react-router-dom';
 import { RegisterInputField } from '../input-field';
 import { loginButtonStyles } from '../input-field/input-field.styles';
+import { ErrorRsp } from '../../errorCodes';
 
 const RegisterForm: React.FC = () => {
-  // State to handle all form inputs
   const [fullName, setFullName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [studentID, setStudentID] = useState<string>('');
-
-  // State to handle validation errors
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
-  // State to track if fields have been "touched" (blurred)
   const [touchedFields, setTouchedFields] = useState<{ [key: string]: boolean }>({
     fullName: false,
     email: false,
@@ -22,70 +18,61 @@ const RegisterForm: React.FC = () => {
     phone: false,
     studentID: false,
   });
-
-  // Track whether the button should be disabled
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 
-  // Handle input changes
-  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setFullName(e.target.value);
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value.replace(/\D/g, ''); // Remove non-digit characters
-    setPhone(input);
-  };
-  const handleStudentIDChange = (e: React.ChangeEvent<HTMLInputElement>) => setStudentID(e.target.value);
+  // Validation functions for each field
+  const validatePassword = (password: string) => /^(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/.test(password);
+  const validateEmail = (email: string) => /^[^\s@]+@(mail\.)?utoronto\.ca$/.test(email);
 
-  // Validate the input field when it loses focus (onBlur event)
-  const validateField = (name: string, value: string) => {
-    const newErrors: { [key: string]: string } = { ...errors };
-
-    if (name === 'fullName' && !value) {
-      newErrors.fullName = 'Full Name is required';
-    } else if (name === 'email' && (!value)) {
-      newErrors.email = 'A valid email is required';
-    } else if (name === 'password' && (!value)) {
-      newErrors.password = 'Password must be at least 8 characters long and contain at least one special character';
-    } else if (name === 'phone' && (!value || value.length !== 10)) {
-      newErrors.phone = 'Phone number must be exactly 10 digits';
-    } else if (name === 'studentID' && !value) {
-      newErrors.studentID = 'Student ID is required';
-    } else {
-      delete newErrors[name]; // Remove the error if the field is valid
-    }
-
-    setErrors(newErrors);
+  // Handle input changes and clear specific field errors on change
+  const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>, fieldName: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setter(e.target.value);
+    setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: '' })); // Clear the error for this field
   };
 
-  // Mark a field as "touched" when it loses focus
-  const handleBlur = (name: string) => {
+  // Mark a field as "touched" when it loses focus and validate
+  const handleBlur = (fieldName: string) => {
     setTouchedFields((prevState) => ({
       ...prevState,
-      [name]: true,
+      [fieldName]: true,
     }));
+    validateField(fieldName); // Validate on blur
   };
 
-  // Validate the entire form whenever any input changes and update the button state
-  useEffect(() => {
-    const newErrors: { [key: string]: string } = {};
-
-    // To Do: Once backend is integrated, use the response codes to replace these error messages
-    if (!fullName) newErrors.fullName = 'Full Name is required';
-    if (!email) newErrors.email = 'A valid UofT email ID is required';
-    if (!password) newErrors.password = 'Password must be at least 8 characters long and contain at least one special character';
-    if (!phone || phone.length !== 10) newErrors.phone = 'Phone number must be exactly 10 digits';
-    if (!studentID) newErrors.studentID = 'Student ID is required';
-
+  // Validate a single field based on its name
+  const validateField = (name: string) => {
+    let newErrors = { ...errors };
+    switch (name) {
+      case 'fullName':
+        newErrors.fullName = fullName ? '' : 'Full Name is required';
+        break;
+      case 'email':
+        newErrors.email = email && validateEmail(email) ? '' : 'A valid UofT email is required';
+        break;
+      case 'password':
+        newErrors.password = password && validatePassword(password) ? '' : 'Password must be at least 8 characters long and contain at least one special character';
+        break;
+      case 'phone':
+        newErrors.phone = phone && phone.length === 10 ? '' : 'Phone number must be exactly 10 digits';
+        break;
+      case 'studentID':
+        newErrors.studentID = studentID ? '' : 'Student ID is required';
+        break;
+      default:
+        break;
+    }
     setErrors(newErrors);
+  };
 
-    // Dynamically enable/disable the button based on errors
-    setIsButtonDisabled(Object.keys(newErrors).length > 0);
+  // Enable/disable the submit button based on form completeness
+  useEffect(() => {
+    setIsButtonDisabled(!(fullName && email && password && phone && studentID));
   }, [fullName, email, password, phone, studentID]);
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    
     // Mark all fields as touched when submitting the form
     setTouchedFields({
       fullName: true,
@@ -95,29 +82,56 @@ const RegisterForm: React.FC = () => {
       studentID: true,
     });
 
-    if (Object.keys(errors).length === 0) {
-      // No errors, proceed with registration logic
+    // Validate all fields on submit
+    validateField('fullName');
+    validateField('email');
+    validateField('password');
+    validateField('phone');
+    validateField('studentID');
+
+    // Only submit if there are no client-side validation errors
+    if (!Object.values(errors).some((error) => error)) {
       try {
-        const response = await fetch('http://your-backend-url/api/user/register', {
+        const response = await fetch('http://localhost:5000/api/user/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             utorid: studentID,
             password,
             email,
-            phone
+            phone,
           }),
         });
-  
+
         const result = await response.json();
-  
+
         if (response.ok) {
           alert("Registration successful!");
+          setErrors({}); // Clear errors on successful registration
         } else {
-          alert(`Error: ${result.data}`);
+          console.error("Registration failed:", result);
+          // Interpret backend error code and set appropriate field error
+          switch (result.status) {
+            case ErrorRsp.ERR_PARAM_EMAIL:
+              setErrors({ email: result.data });
+              break;
+            case ErrorRsp.ERR_PARAM_PWD:
+              setErrors({ password: result.data });
+              break;
+            case ErrorRsp.ERR_PARAM_PHONE:
+              setErrors({ phone: result.data });
+              break;
+            case ErrorRsp.ERR_PARAM:
+              setErrors({ form: "Some parameters are missing or invalid." });
+              break;
+            default:
+              setErrors({ form: "An unexpected error occurred. Please try again later." });
+              break;
+          }
         }
       } catch (error) {
         console.error("Registration failed:", error);
+        setErrors({ form: "An unexpected error occurred. Please try again later." });
       }
     }
   };
@@ -128,8 +142,9 @@ const RegisterForm: React.FC = () => {
         type="text"
         placeholder="Full Name"
         value={fullName}
-        onChange={handleFullNameChange}
-        onBlur={() => { validateField('fullName', fullName); handleBlur('fullName'); }} // Validate on blur and mark field as touched
+        onChange={handleInputChange(setFullName, 'fullName')}
+        onBlur={() => handleBlur('fullName')}
+        style={{ borderColor: errors.fullName ? 'red' : undefined }}
       />
       {touchedFields.fullName && errors.fullName && <p style={{ color: 'red' }}>{errors.fullName}</p>}
 
@@ -137,8 +152,9 @@ const RegisterForm: React.FC = () => {
         type="email"
         placeholder="UofT Email Address"
         value={email}
-        onChange={handleEmailChange}
-        onBlur={() => { validateField('email', email); handleBlur('email'); }} // Validate on blur and mark field as touched
+        onChange={handleInputChange(setEmail, 'email')}
+        onBlur={() => handleBlur('email')}
+        style={{ borderColor: errors.email ? 'red' : undefined }}
       />
       {touchedFields.email && errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
 
@@ -146,8 +162,9 @@ const RegisterForm: React.FC = () => {
         type="password"
         placeholder="Password"
         value={password}
-        onChange={handlePasswordChange}
-        onBlur={() => { validateField('password', password); handleBlur('password'); }} // Validate on blur and mark field as touched
+        onChange={handleInputChange(setPassword, 'password')}
+        onBlur={() => handleBlur('password')}
+        style={{ borderColor: errors.password ? 'red' : undefined }}
       />
       {touchedFields.password && errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
 
@@ -155,8 +172,9 @@ const RegisterForm: React.FC = () => {
         type="tel"
         placeholder="Phone No."
         value={phone}
-        onChange={handlePhoneChange}
-        onBlur={() => { validateField('phone', phone); handleBlur('phone'); }} // Validate on blur and mark field as touched
+        onChange={handleInputChange(setPhone, 'phone')}
+        onBlur={() => handleBlur('phone')}
+        style={{ borderColor: errors.phone ? 'red' : undefined }}
       />
       {touchedFields.phone && errors.phone && <p style={{ color: 'red' }}>{errors.phone}</p>}
 
@@ -164,8 +182,9 @@ const RegisterForm: React.FC = () => {
         type="text"
         placeholder="UofT Student ID (for verification)"
         value={studentID}
-        onChange={handleStudentIDChange}
-        onBlur={() => { validateField('studentID', studentID); handleBlur('studentID'); }} // Validate on blur and mark field as touched
+        onChange={handleInputChange(setStudentID, 'studentID')}
+        onBlur={() => handleBlur('studentID')}
+        style={{ borderColor: errors.studentID ? 'red' : undefined }}
       />
       {touchedFields.studentID && errors.studentID && <p style={{ color: 'red' }}>{errors.studentID}</p>}
 
@@ -177,9 +196,9 @@ const RegisterForm: React.FC = () => {
         Already have an account? <Link to="/login" style={{ color: '#000000' }}><b>Sign In</b></Link>
       </div>
 
+      {/* General form error */}
+      {errors.form && <p style={{ color: 'red' }}>{errors.form}</p>}
     </form>
-
-    
   );
 };
 
