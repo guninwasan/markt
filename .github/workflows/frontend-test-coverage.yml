@@ -34,6 +34,8 @@ jobs:
           echo "Coverage: $coverage%"
           if (( $(echo "$coverage < $threshold" | bc -l) )); then
             echo "Code coverage ($coverage%) is below the threshold ($threshold%). Failing the job."
+            echo "Coverage Report:"
+            cat coverage_output.txt
             exit 1
           else
             echo "Code coverage ($coverage%) meets the threshold ($threshold%)."
