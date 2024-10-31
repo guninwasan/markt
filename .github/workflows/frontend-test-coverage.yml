@@ -20,9 +20,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: markt-frontend
 
       - name: Run Tests with Coverage
         run: npm run test-coverage
+        working-directory: markt-frontend
 
       - name: Check Coverage Percentage
         run: |
@@ -35,9 +37,10 @@ jobs:
           else
             echo "Code coverage ($coverage%) meets the threshold ($threshold%)."
           fi
+        working-directory: markt-frontend
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: coverage/
+          path: markt-frontend/coverage/
