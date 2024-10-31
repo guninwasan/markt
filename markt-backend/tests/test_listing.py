@@ -12,8 +12,8 @@ def client():
 
     with app.app_context():
         db.create_all()  # setup
-
         yield app.test_client()  # tests run here
+        db.session.remove()  # Clear session to prevent dirty reads
         db.drop_all()  # teardown
 
 def test_create_listing(client):
