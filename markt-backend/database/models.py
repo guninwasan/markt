@@ -17,17 +17,18 @@ class User(db.Model):
         self.utorid = utorid
         self.email = email
         self.phone = phone
-
+        
         # Encrypt password
-        salt = bcrypt.gensalt()
-        self.password_encryp = bcrypt.hashpw(password.encode('utf-8'), salt)
+        passwordHash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        self.password_encryp = passwordHash.decode('utf-8') #prevent dublicate encoding from PSQL
 
     def set_password(self, password):
-        salt = bcrypt.gensalt()
-        self.password_encryp = bcrypt.hashpw(password.encode('utf-8'), salt)
+        passwordHash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        self.password_encryp = passwordHash.decode('utf-8') #prevent dublicate encoding from PSQL
 
     def validate_password(self, password):
-        return bcrypt.checkpw(password.encode('utf-8'), self.password_encryp)
+        # Convert the stored hash back to bytes
+        return bcrypt.checkpw(password.encode('utf-8'), self.password_encryp.encode('utf-8'))
 
 class Listing(db.Model):
     __tablename__ = 'listings'

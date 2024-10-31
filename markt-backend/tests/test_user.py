@@ -13,6 +13,7 @@ def client():
     with app.app_context():
         db.create_all()  # setup
         yield app.test_client()  # tests run here
+        db.session.remove()  # Clear session to prevent dirty reads
         db.drop_all()  # teardown
 
 def test_register(client):
@@ -51,27 +52,28 @@ def test_login(client):
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
 
-    user = User("testUser", "mypassword", "user@mail.utoronto.ca", "6478290835")
+    user = User(utorid="testUser", email="user@mail.utoronto.ca", phone="6478290835", password="mypassword")
     db.session.add(user)
     db.session.commit()
 
-    non_existant_user = {"email":"wrong_email@mail.utoronto.ca", "password":"abc123"}
+    non_existant_user = {"email": "wrong_email@mail.utoronto.ca", "password": "abc123"}
     rsp = client.post('/api/user/login', json=non_existant_user)
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
     assert 'User does not exist!' in rsp["data"]
 
-    invalid_password = {"email":"user@mail.utoronto.ca", "password":"iamwrong"}
+    invalid_password = {"email": "user@mail.utoronto.ca", "password": "iamwrong"}
     rsp = client.post('/api/user/login', json=invalid_password)
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
     assert 'Incorrect password!' in rsp["data"]
 
-    valid_user = {"email":"user@mail.utoronto.ca", "password":"mypassword"}
+    valid_user = {"email": "user@mail.utoronto.ca", "password": "mypassword"}
     rsp = client.post('/api/user/login', json=valid_user)
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
     assert 'User logged in successfully!' in rsp["data"]
+    assert user.validate_password(valid_user["password"])
