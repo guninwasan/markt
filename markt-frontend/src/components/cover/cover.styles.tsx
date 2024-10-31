@@ -1,11 +1,12 @@
+// cover.styles.tsx
 import styled from "styled-components";
 
-const MainContainer = styled.div`
+export const MainContainer = styled.div`
   display: flex;
   height: 100vh;
 `;
 
-const CoverContainer = styled.div`
+export const CoverContainer = styled.div`
   display: flex;
   width: 55vw;
   height: 100vh;
@@ -18,16 +19,16 @@ const CoverContainer = styled.div`
   overflow: hidden;
 `;
 
-const Title = styled.h1`
+export const Title = styled.h1`
   font-size: 2.5rem;
 `;
 
-const Subtitle = styled.p`
+export const Subtitle = styled.p`
   font-size: 1.5rem;
   text-align: center;
 `;
 
-const RightContainer = styled.div`
+export const RightContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -35,5 +36,3 @@ const RightContainer = styled.div`
   width: 45vw;
   padding: 2rem;
 `;
-
-export { MainContainer, CoverContainer, Title, Subtitle, RightContainer };

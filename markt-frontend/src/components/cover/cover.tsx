@@ -1,10 +1,10 @@
+// cover.tsx
 import React from "react";
 import {
-  MainContainer,
-  CoverContainer,
-  Title,
-  Subtitle,
-  RightContainer,
+  coverContainerStyles,
+  titleStyles,
+  subtitleStyles,
+  rightContainerStyles,
 } from "./cover.styles";
 
 interface CoverProps {
@@ -14,21 +14,21 @@ interface CoverProps {
 
 const Cover = ({ children, title }: CoverProps) => {
   return (
-    <MainContainer>
-      <CoverContainer>
-        <Title>MARKT</Title>
-        <Subtitle>
+    <div style={{ display: "flex", height: "100vh" }}>
+      <div style={coverContainerStyles}>
+        <h1 style={titleStyles}>MARKT</h1>
+        <p style={subtitleStyles}>
           Your Campus.
           <br />
           Your Marketplace.
-        </Subtitle>
-      </CoverContainer>
+        </p>
+      </div>
 
-      <RightContainer>
+      <div style={rightContainerStyles}>
         <h2>{title}</h2> {/* Dynamic title */}
         {children} {/* Dynamic form (Login or Register) */}
-      </RightContainer>
-    </MainContainer>
+      </div>
+    </div>
   );
 };
 
