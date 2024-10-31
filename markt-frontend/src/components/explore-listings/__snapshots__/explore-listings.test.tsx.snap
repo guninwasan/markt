@@ -10,20 +10,20 @@ exports[`ExploreListings should match the snapshot 1`] = `
     Explore Listings
   </h1>
   <div
-    class="sc-egkSDF iBOXeN"
+    class="sc-egkSDF kdzCJS"
   >
     <h2
-      class="sc-fAUdSK eqmDcO"
+      class="sc-fAUdSK Cvtar"
     >
       Featured Listings
     </h2>
     <h2
-      class="sc-fAUdSK kLZMcO"
+      class="sc-fAUdSK fLAMcP"
     >
       New to the Market
     </h2>
     <h2
-      class="sc-fAUdSK kLZMcO"
+      class="sc-fAUdSK fLAMcP"
     >
       Price Drops
     </h2>

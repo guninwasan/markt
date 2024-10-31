@@ -1,10 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { HomePage } from "./pages/home-page";
+import { LoginPage } from "./pages/login-page";
+import { RegisterPage } from "./pages/register-page";
+import ReactDOM from "react-dom/client";
 import { ProductListingPage } from "./pages";
 import { useIsMobile } from "./hooks";
-import { HomePage } from "./pages/home-page";
-
 
 function App() {
   useIsMobile();
@@ -12,6 +13,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/listing" element={<ProductListingPage />} />
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>

@@ -75,7 +75,7 @@ def get(id):
         "condition": listing.condition,
         "seller": {
             "id": listing.owner.id,
-            "username": listing.owner.username,
+            "phone": listing.owner.phone,
             "email": listing.owner.email
         }
     }
@@ -107,7 +107,7 @@ def get_all():
             "sold": listing.sold,
             "seller": {
                 "id": listing.owner.id,
-                "username": listing.owner.username,
+                "phone": listing.owner.phone,
                 "email": listing.owner.email
             }
         })

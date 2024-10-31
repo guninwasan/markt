@@ -17,9 +17,13 @@ jobs:
         with:
           node-version: "16"
 
+      - name: Navigate to frontend directory
+        run: cd markt-frontend
+
       - name: Install dependencies
         run: npm install
+        working-directory: markt-frontend
 
       - name: Run ESLint
-        run: |
-          npm run lint || echo "Linting issues found"
+        run: npm run lint || echo "Linting issues found"
+        working-directory: markt-frontend
