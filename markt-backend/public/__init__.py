@@ -11,7 +11,7 @@ def create_app_api():
     basedir = Path(__file__).resolve().parent
     DATABASE = "api.db"
 
-    app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres:welcome1234@localhost/MizzicaBackend'
+    app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres:root@localhost/MizzicaBackend'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     init_db(app)
