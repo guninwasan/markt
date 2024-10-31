@@ -32,7 +32,7 @@ def register():
     # Check if user already exists
     user = User.query.filter_by(email=data['email']).first()
     if user is not None:
-        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+        return jsonify({"status": ErrorRsp.ERR_PARAM_DUP.value,
                         "data": "User already exists!"}), 400
 
     # Store all validation errors
