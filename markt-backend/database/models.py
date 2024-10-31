@@ -37,4 +37,4 @@ class Listing(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     sold = db.Column(db.Boolean, default=False)
     condition = db.Column(db.String(50), nullable=False)
-    seller_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

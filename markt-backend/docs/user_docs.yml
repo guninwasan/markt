@@ -47,10 +47,10 @@ login:
 update:
   responses:
     200:
-      description:
+      description: JSON response
         password:
-            type: "string"
-            details: "Updated", "Not updated"
+          type: "string"
+          details: "Updated", "Not updated"
         email:
           type: "string"
           details: User's associated email

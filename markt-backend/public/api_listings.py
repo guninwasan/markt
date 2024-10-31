@@ -30,7 +30,7 @@ def create():
                         "errors": err.messages}), 400
 
     # Check if user exists
-    user = db.session.get(User, data['seller_id'])
+    user = db.session.get(User, data['owner_id'])
     if user is None:
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
@@ -43,7 +43,7 @@ def create():
         quantity=data['quantity'],
         sold=data['sold'],
         condition=data['condition'],
-        seller_id=data['seller_id']
+        owner_id=data['owner_id']
     )
     db.session.add(listing)
     db.session.commit()
@@ -56,7 +56,7 @@ def create():
 """
 @listing_api_bp.route('/get/<int:id>/', methods=['GET'])
 # Endpoint parameter specification
-@swag_from('../docs/listing_docs.yml', endpoint='listing_by_id')
+@swag_from('../docs/listing_docs.yml', endpoint='get')
 # API implementation
 def get(id):
     # Check if listing exists
@@ -154,8 +154,17 @@ def update(id):
         listing.sold = data['sold']
     db.session.commit()
 
+    rsp = {
+        "title": listing.title,
+        "description": listing.description,
+        "price": listing.price,
+        "quantity": listing.quantity,
+        "condition": listing.condition,
+        "sold": listing.sold
+    }
+
     return jsonify({"status": ErrorRsp.OK.value,
-                    "data": "Listing updated successfully"}), 200
+                    "data": rsp}), 200
 
 """
     Endpoint: Delete a listing
@@ -163,7 +172,7 @@ def update(id):
 """
 @listing_api_bp.route('/delete/<int:id>/', methods=['DELETE'])
 # Endpoint parameter specification
-@swag_from('../docs/listing_docs.yml', endpoint='listing_by_id')
+@swag_from('../docs/listing_docs.yml', endpoint='delete')
 # API implementation
 def delete(id):
     # Check if listing exists

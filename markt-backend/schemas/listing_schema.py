@@ -7,7 +7,7 @@ class ListingInformationSchema(Schema):
     quantity = fields.Int(required=True)
     sold = fields.Bool(load_default=False)
     condition = fields.Str(required=True)
-    seller_id = fields.Int(required=True)
+    owner_id = fields.Int(required=True)
 
 class ListingUpdate(Schema):
     title = fields.Str(required=False)
@@ -16,4 +16,4 @@ class ListingUpdate(Schema):
     quantity = fields.Int(required=False)
     sold = fields.Bool(required=False, load_default=False)
     condition = fields.Str(required=False)
-    seller_id = fields.Int(required=False)
+    owner_id = fields.Int(required=False)
