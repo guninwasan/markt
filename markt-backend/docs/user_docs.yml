@@ -1,9 +1,12 @@
 register:
   responses:
     201:
-      description: "User registered"
+      description: "User registered successfully!"
     400:
-      description: "Invalid input parameters"
+      description:
+        "Missing parameters",
+        "User already exists!",
+        "Email must be a valid UofT email!"
   parameters:
     - name: "user"
       in: "body"
@@ -24,13 +27,13 @@ register:
 login:
   responses:
     200:
-      description: "User logged in"
+      description: "User logged in successfully!"
     404:
-      description: "User does not exist"
+      description: "User does not exist!"
     401:
-      description: "Incorrect password"
+      description: "Incorrect password!"
     400:
-      description: "Invalid input parameters"
+      description: "Missing parameters"
   parameters:
     - name: "user"
       in: "body"
@@ -57,8 +60,12 @@ update:
         phone:
           type: "string"
           details: User's associated phone
+    400:
+      description:
+        "Missing parameters",
+        "User data not updated" # sanity check on password
     404:
-      description: "User does not exist"
+      description: "User does not exist!"
   parameters:
     - name: "user"
       in: "body"
