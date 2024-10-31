@@ -1,20 +1,46 @@
 import { render, screen } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { MemoryRouter } from "react-router-dom"; // Import MemoryRouter
 import { Navbar } from "./navbar";
+import { store } from "../../redux/store";
+import { useIsMobile } from "../../hooks";
+
+jest.mock("../../hooks", () => ({
+  useIsMobile: jest.fn(),
+}));
 
 describe("Navbar", () => {
+  const mockUseIsMobile = useIsMobile as jest.Mock;
+
+  beforeEach(() => {
+    mockUseIsMobile.mockReturnValue({ isMobile: false });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const renderWithRedux = (component: React.ReactNode) => {
+    return render(
+      <Provider store={store}>
+        <MemoryRouter>{component}</MemoryRouter> {/* Wrap in MemoryRouter */}
+      </Provider>
+    );
+  };
+
   it("should render the navbar properly", () => {
-    render(<Navbar />);
+    renderWithRedux(<Navbar />);
     expect(document.querySelector("nav")).toBeInTheDocument();
   });
 
   it("should render the Markt name", () => {
-    render(<Navbar />);
+    renderWithRedux(<Navbar />);
     const marktText = screen.getByText(/Markt/i);
     expect(marktText).toBeInTheDocument();
   });
 
   it("should render the Home, Buy, Sell link", () => {
-    render(<Navbar />);
+    renderWithRedux(<Navbar />);
     const homeLink = screen.getByText(/Home/i);
     const buyLink = screen.getByText(/Buy/i);
     const sellLink = screen.getByText(/Sell/i);
@@ -24,7 +50,7 @@ describe("Navbar", () => {
   });
 
   it("should match the snapshot", () => {
-    const { container } = render(<Navbar />);
+    const { container } = renderWithRedux(<Navbar />);
     expect(container.firstChild).toMatchSnapshot();
   });
 });
