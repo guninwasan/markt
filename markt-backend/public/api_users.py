@@ -29,7 +29,7 @@ def register():
                         "errors": err.messages}), 400
 
     # Check if user already exists
-    user = User.query.filter_by(username=data['username']).first()
+    user = User.query.filter_by(email=data['email']).first()
     if user is not None:
         return jsonify({"status": ErrorRsp.ERR_PARAM.value,
                         "data": "User already exists!"}), 400
@@ -40,7 +40,7 @@ def register():
                         "data": "Email must be a valid UofT email!"}), 400
 
     user = User(
-        username=data['username'],
+        utorid=data['utorid'],
         password=data['password'],
         email=data['email'],
         phone=data['phone'],
@@ -70,7 +70,7 @@ def login():
                         "errors": err.messages}), 400
 
     # Check if user exists
-    user = User.query.filter_by(username=data['username']).first()
+    user = User.query.filter_by(email=data['email']).first()
     if user is None:
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
