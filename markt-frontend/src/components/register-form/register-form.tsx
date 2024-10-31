@@ -112,6 +112,9 @@ const RegisterForm: React.FC = () => {
           console.error("Registration failed:", result);
           // Interpret backend error code and set appropriate field error
           switch (result.status) {
+            case ErrorRsp.ERR_PARAM_DUP:
+              setErrors({ email: result.data });
+              break;
             case ErrorRsp.ERR_PARAM_EMAIL:
               setErrors({ email: result.data });
               break;
