@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Navbar should match the snapshot on desktop 1`] = `
+<nav
+  class="sc-blHHSb nIHai"
+>
+  <div
+    class="sc-gtLWhw dgXBwO"
+  >
+    Markt
+  </div>
+</nav>
+`;
+
+exports[`Navbar should match the snapshot on mobile 1`] = `
+<nav
+  class="sc-blHHSb nIHai"
+>
+  <div
+    class="sc-gtLWhw dgXBwO"
+  >
+    Markt
+  </div>
+  <div
+    class="sc-ivxoEo cMOWMP"
+  >
+    <span />
+    <span />
+    <span />
+  </div>
+  <div
+    class="sc-kLhKbu dJZIMR"
+  />
+  <div
+    class="sc-ixGGxD fJVTaW"
+  />
+</nav>
+`;
