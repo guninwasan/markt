@@ -8,7 +8,6 @@ import {
   Sidebar,
 } from "./navbar.styles";
 import { MenuItems } from "./menu-items";
-import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   const { isMobile } = useIsMobile();

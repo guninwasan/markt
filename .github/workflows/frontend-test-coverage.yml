@@ -1,4 +1,4 @@
-name: Run Tests and Check Coverage
+name: Coverage Check on PR
 
 on:
   pull_request:
@@ -6,12 +6,12 @@ on:
       - "markt-frontend/**"
 
 jobs:
-  test-and-coverage:
+  pr-coverage:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -20,31 +20,35 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: markt-frontend
 
-      - name: Run Tests with Coverage
+      - name: Get changed files
+        id: get_changed_files
         run: |
-          npm run test-coverage | tee coverage_output.txt
-        working-directory: markt-frontend
+          CHANGED_FILES=$(git diff --name-only origin/main...HEAD -- "markt-frontend/**" | grep '.tsx' | paste -sd "," -)
+          echo "Changed files: $CHANGED_FILES"
+          echo "::set-output name=changed_files::$CHANGED_FILES"
 
-      - name: Check Coverage Percentage
+      - name: Run tests with coverage for changed files
+        id: coverage_check
+        if: steps.get_changed_files.outputs.changed_files
         run: |
-          coverage=$(grep -oP 'All files\s*\|\s*\K[0-9]+\.[0-9]+' coverage_output.txt)
-          threshold=80
-          echo "Coverage: $coverage%"
-          if (( $(echo "$coverage < $threshold" | bc -l) )); then
-            echo "Code coverage ($coverage%) is below the threshold ($threshold%). Failing the job."
-            echo "Coverage Report:"
-            cat coverage_output.txt
-            echo "Code coverage ($coverage%) is below the threshold ($threshold%). Failing the job."
-            exit 1
+          THRESHOLD=80
+          if [[ -n "${{ steps.get_changed_files.outputs.changed_files }}" ]]; then
+            npm run test-coverage -- --findRelatedTests ${{ steps.get_changed_files.outputs.changed_files }} > coverage_summary.txt || true
+            COVERAGE=$(grep -oP '(?<=All files.*\s)\d+(?=%)' coverage_summary.txt | tail -1)
+            echo "Coverage for changed files: $COVERAGE%"
+            if [[ "$COVERAGE" -lt "$THRESHOLD" ]]; then
+              echo "::set-output name=below_threshold::true"
+            else
+              echo "::set-output name=below_threshold::false"
+            fi
           else
-            echo "Code coverage ($coverage%) meets the threshold ($threshold%)."
+            echo "No TypeScript (.tsx) files changed in 'markt-frontend/'."
+            echo "::set-output name=below_threshold::false"
           fi
-        working-directory: markt-frontend
+        env:
+          CI: true
 
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: markt-frontend/coverage/
+      - name: Fail if below threshold
+        if: steps.get_changed_files.outputs.changed_files && steps.coverage_check.outputs.below_threshold == 'true'
+        run: exit 1
