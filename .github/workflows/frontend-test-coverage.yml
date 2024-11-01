@@ -20,6 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: markt-frontend
 
       - name: Get changed files
         id: get_changed_files
@@ -46,6 +47,7 @@ jobs:
             echo "No TypeScript (.tsx) files changed in 'markt-frontend/'."
             echo "::set-output name=below_threshold::false"
           fi
+        working-directory: markt-frontend
         env:
           CI: true
 
