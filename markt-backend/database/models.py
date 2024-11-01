@@ -10,8 +10,8 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
 
     # Relationships
-    sell_listings = db.relationship('Listing', back_populates='owner', foreign_keys='Listing.owner_id', lazy='dynamic')
-    buy_listings = db.relationship('Listing', back_populates='buyer', foreign_keys='Listing.buyer_id', lazy='dynamic')
+    listings_for_selling = db.relationship('Listing', back_populates='owner', foreign_keys='Listing.owner_id', lazy='dynamic')
+    listings_bought = db.relationship('Listing', back_populates='buyer', foreign_keys='Listing.buyer_id', lazy='dynamic')
 
     def __init__(self, password, email, phone):
         self.email = email
@@ -43,5 +43,5 @@ class Listing(db.Model):
     buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
 
     # Relationships
-    owner = db.relationship('User', back_populates='sell_listings', foreign_keys=[owner_id])
-    buyer = db.relationship('User', back_populates='buy_listings', foreign_keys=[buyer_id])
+    owner = db.relationship('User', back_populates='listings_for_selling', foreign_keys=[owner_id])
+    buyer = db.relationship('User', back_populates='listings_bought', foreign_keys=[buyer_id])

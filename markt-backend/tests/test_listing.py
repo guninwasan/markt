@@ -249,7 +249,8 @@ def test_buy_item(client):
 
     # Invalid buyer
     invalid_buyer = {
-        "buyer_email": "invalid@utoronto.ca"
+        "buyer_email": "invalid@utoronto.ca",
+        "sold": True
     }
     rsp = client.put(f'/api/listing/update/{listing.id}/', json=invalid_buyer)
     assert rsp.status_code == 404
@@ -259,10 +260,12 @@ def test_buy_item(client):
 
     # Test_buyer
     buy_data = {
-        "buyer_email": test_buyer.email
+        "buyer_email": test_buyer.email,
+        "sold": True
     }
     rsp = client.put(f'/api/listing/update/{listing.id}/', json=buy_data)
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
-    assert test_buyer.buy_listings[0].id == listing.id
+    assert rsp['data']['sold'] == True
+    assert test_buyer.listings_bought[0].id == listing.id
