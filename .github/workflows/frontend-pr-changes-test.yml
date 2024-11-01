@@ -1,4 +1,4 @@
-name: Frontend Coverage Test for File Changes only
+name: Frontend Coverage Test for File Changes Only
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - "markt-frontend/**"
 
 jobs:
-  pr-test:
+  frontend-pr-changes-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -38,12 +38,11 @@ jobs:
         working-directory: markt-frontend
 
       - name: Check Coverage Threshold
-        if: success() # Only if tests were run successfully
+        if: success()
         run: |
-          coverage=$(grep -oP 'All files\s*\|\s*\K[0-9]+\.[0-9]+' coverage_output.txt)
+          coverage=$(grep -oP 'All files\s*\|\s*\K[0-9]+\.[0-9]+' coverage_output.txt || echo "0")
           threshold=80
-          echo "Coverage for affected files: $coverage%"
-          if (( $(echo "$coverage < $threshold" | bc -l) )); then
+          if [ -z "$coverage" ] || (( $(echo "$coverage < $threshold" | bc -l) )); then
             echo "Code coverage ($coverage%) is below the threshold ($threshold%). Failing the job."
             cat coverage_output.txt
             exit 1
