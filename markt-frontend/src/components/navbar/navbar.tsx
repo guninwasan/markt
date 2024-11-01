@@ -27,15 +27,25 @@ const Navbar = () => {
       <MarktHeaderText>Markt</MarktHeaderText>
       {isMobile ? (
         <>
-          <Hamburger onClick={toggleSidebar} isOpen={isOpen}>
+          <Hamburger
+            onClick={toggleSidebar}
+            isOpen={isOpen}
+            data-testid="hamburger"
+          >
             <span />
             <span />
             <span />
           </Hamburger>
-          <Backdrop isOpen={isOpen} onClick={closeSidebar} />
-          <Sidebar isOpen={isOpen}>
-            <MenuItems />
-          </Sidebar>
+          <Backdrop
+            data-testid="backdrop"
+            isOpen={isOpen}
+            onClick={closeSidebar}
+          />
+          {isOpen && (
+            <Sidebar data-testid="sidebar" isOpen={isOpen}>
+              <MenuItems />
+            </Sidebar>
+          )}
         </>
       ) : (
         <MenuItems />
