@@ -33,7 +33,7 @@ describe("ImageGallery", () => {
     expect(container).toMatchSnapshot();
   });
 
-  it.only("should navigate to next image", () => {
+  it("should navigate to next image", () => {
     render(<ImageGallery mediaUrls={mediaUrls} />);
     fireEvent.click(screen.getAllByRole("img")[0]);
 
@@ -46,5 +46,20 @@ describe("ImageGallery", () => {
 
     const getSecondImageIndex = screen.getByText("2/2");
     expect(getSecondImageIndex).toBeInTheDocument();
+  });
+
+  it("should navigate to previous image", () => {
+    render(<ImageGallery mediaUrls={mediaUrls} />);
+    fireEvent.click(screen.getAllByRole("img")[1]);
+
+    const prevButton = screen.getByTestId("prev");
+    expect(prevButton).toBeInTheDocument();
+
+    const getSecondImageIndex = screen.getByText("2/2");
+    expect(getSecondImageIndex).toBeInTheDocument();
+    fireEvent.click(prevButton);
+
+    const getFirstImageIndex = screen.getByText("1/2");
+    expect(getFirstImageIndex).toBeInTheDocument();
   });
 });
