@@ -50,7 +50,6 @@ jobs:
           if [ "$fail" = true ]; then
             exit 1
           fi
-        working-directory: markt-frontend
 
       - name: Upload Full Coverage Report
         if: success() || failure()
