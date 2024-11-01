@@ -29,28 +29,21 @@ jobs:
           npm run test-coverage | tee coverage_output.txt
         working-directory: markt-frontend
 
-      - name: Identify Changed Files
-        id: changes
-        run: |
-          git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$" > markt-frontend/changed_files.txt
-          echo "Changed files:"
-          cat markt-frontend/changed_files.txt
-        working-directory: markt-frontend
-
       - name: Filter Coverage Report for Changed Files
         if: success()
         run: |
           threshold=80
-          echo "Coverage report for changed files:"
+          echo "Identifying changed files and filtering coverage report:"
           fail=false
-          while IFS= read -r file; do
+          changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$")
+          for file in $changed_files; do
             coverage=$(grep -A 1 "$file" coverage_output.txt | tail -n 1 | awk '{print $4}' | sed 's/%//')
             echo "$file: $coverage%"
             if (( $(echo "$coverage < $threshold" | bc -l) )); then
               fail=true
               echo "Code coverage for $file ($coverage%) is below the threshold ($threshold%)"
             fi
-          done < markt-frontend/changed_files.txt
+          done
           if [ "$fail" = true ]; then
             exit 1
           fi
