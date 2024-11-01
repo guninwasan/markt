@@ -32,9 +32,10 @@ jobs:
       - name: Identify Changed Files
         id: changes
         run: |
-          git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$" > changed_files.txt
+          git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$" > markt-frontend/changed_files.txt
           echo "Changed files:"
-          cat changed_files.txt
+          cat markt-frontend/changed_files.txt
+        working-directory: markt-frontend
 
       - name: Filter Coverage Report for Changed Files
         if: success()
@@ -49,7 +50,7 @@ jobs:
               fail=true
               echo "Code coverage for $file ($coverage%) is below the threshold ($threshold%)"
             fi
-          done < changed_files.txt
+          done < markt-frontend/changed_files.txt
           if [ "$fail" = true ]; then
             exit 1
           fi
