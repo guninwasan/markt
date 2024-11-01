@@ -17,6 +17,7 @@ import {
   SpecItem,
   BottomTab,
 } from "./product-listing-component.styles";
+import { ProductSpecs } from "./product-specifications";
 
 const ProductListingComponent = () => {
   const { isMobile } = useIsMobile();
@@ -94,59 +95,7 @@ const ProductListingComponent = () => {
               </SellerInfo>
             </PriceBox>
           </TitleAndPriceContainer>
-
-          <ProductSpecsContainer>
-            <h2>Product Specifications</h2>
-            <SpecGrid>
-              <SpecCategory>
-                <h3>Basic Information</h3>
-                <SpecItem>
-                  Condition: {dummySpecifications.basicInfo.condition}
-                </SpecItem>
-                <SpecItem>
-                  Brand: {dummySpecifications.basicInfo.brand}
-                </SpecItem>
-                <SpecItem>
-                  Model: {dummySpecifications.basicInfo.model}
-                </SpecItem>
-                <SpecItem>
-                  Year: {dummySpecifications.basicInfo.yearOfManufacture}
-                </SpecItem>
-              </SpecCategory>
-              <SpecCategory>
-                <h3>Appearance</h3>
-                <SpecItem>
-                  Color: {dummySpecifications.appearance.color}
-                </SpecItem>
-                <SpecItem>
-                  Dimensions: {dummySpecifications.appearance.dimensions}
-                </SpecItem>
-                <SpecItem>
-                  Weight: {dummySpecifications.appearance.weight}
-                </SpecItem>
-                <SpecItem>
-                  Material: {dummySpecifications.appearance.material}
-                </SpecItem>
-              </SpecCategory>
-              <SpecCategory>
-                <h3>Performance</h3>
-                <SpecItem>
-                  Battery Life: {dummySpecifications.performance.batteryLife}
-                </SpecItem>
-                <SpecItem>
-                  Storage Capacity:{" "}
-                  {dummySpecifications.performance.storageCapacity}
-                </SpecItem>
-                <SpecItem>
-                  Features: {dummySpecifications.performance.additionalFeatures}
-                </SpecItem>
-              </SpecCategory>
-              <SpecCategory>
-                <h3>Warranty</h3>
-                <SpecItem>{dummySpecifications.warranty}</SpecItem>
-              </SpecCategory>
-            </SpecGrid>
-          </ProductSpecsContainer>
+          <ProductSpecs specs={dummySpecifications} />
         </ProductDetails>
       </ProductListingContainer>
 
