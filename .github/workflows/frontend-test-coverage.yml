@@ -31,9 +31,12 @@ jobs:
         run: |
           threshold=80
           failed=0
+          echo "Checking coverage for changed files..."
           git fetch origin ${{ github.base_ref }} --depth=1
           for file in $(git diff --name-only origin/${{ github.base_ref }} -- "markt-frontend/**/*.tsx"); do
-            coverage=$(grep -oP "${file}\s*\|\s*\K[0-9]+\.[0-9]+" coverage_output.txt || echo "0")
+            echo "Processing file: $file"
+            relative_file=${file#markt-frontend/}
+            coverage=$(grep -oP "(^${file}|${relative_file})\s*\|\s*\K[0-9]+\.[0-9]+" coverage_output.txt || echo "0")
             echo "Coverage for ${file}: $coverage%"
             if (( $(echo "$coverage < $threshold" | bc -l) )); then
               echo "Code coverage for ${file} ($coverage%) is below the threshold ($threshold%)."
