@@ -45,27 +45,24 @@ const ImageWrapper = styled.div`
 
 const MediaWrapper = styled.div`
   width: 100%;
-  height: 60vh;
+  height: 100%;
   overflow: hidden;
   position: relative;
-  cursor: zoom-in;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
 const ZoomedImage = styled.img<{
-  isZoomed: boolean;
-  offsetX: number;
-  offsetY: number;
+  offsetX?: number;
+  offsetY?: number;
 }>`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 70vw;
+  height: 70vh;
+  object-fit: contain;
   transition: transform 0.3s ease;
-  transform: ${({ isZoomed, offsetX, offsetY }) =>
-    isZoomed ? `scale(1.8) translate(${offsetX}%, ${offsetY}%)` : "scale(1)"};
-  cursor: ${({ isZoomed }) => (isZoomed ? "zoom-out" : "zoom-in")};
+  // transform: scale(1.5)
+  //   translate(${({ offsetX }) => offsetX}%, ${({ offsetY }) => offsetY}%);
 `;
 
 const ThumbnailContainer = styled.div`
@@ -156,7 +153,6 @@ interface ImageGalleryProps {
 const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
 
   const mediaItems = mediaUrls.map((url) => ({
@@ -167,33 +163,31 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
   const handleMediaClick = (index: number) => {
     setCurrentIndex(index);
     setIsModalOpen(true);
+    setZoomPosition({ x: 0, y: 0 });
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setIsZoomed(false);
   };
 
   const goToNextMedia = (e: React.MouseEvent) => {
     e.stopPropagation();
     setCurrentIndex((prev) => (prev + 1) % mediaUrls.length);
+    setZoomPosition({ x: 0, y: 0 });
   };
 
   const goToPrevMedia = (e: React.MouseEvent) => {
     e.stopPropagation();
     setCurrentIndex((prev) => (prev === 0 ? mediaUrls.length - 1 : prev - 1));
+    setZoomPosition({ x: 0, y: 0 });
   };
 
-  const toggleZoom = () => setIsZoomed(!isZoomed);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isZoomed) {
-      const { offsetX, offsetY, target } = e.nativeEvent;
-      const { width, height } = target as any;
-      const offsetXPercent = ((offsetX / width) * 2 - 1) * 25;
-      const offsetYPercent = ((offsetY / height) * 2 - 1) * 25;
-      setZoomPosition({ x: offsetXPercent, y: offsetYPercent });
-    }
+  const handleMouseMove = (e: any) => {
+    const { offsetX, offsetY, target } = e.nativeEvent;
+    const { width, height } = target;
+    const offsetXPercent = ((offsetX / width) * 2 - 1) * 25;
+    const offsetYPercent = ((offsetY / height) * 2 - 1) * 25;
+    setZoomPosition({ x: offsetXPercent, y: offsetYPercent });
   };
 
   return (
@@ -215,11 +209,10 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
           <CloseButton onClick={closeModal}>✕</CloseButton>
           <CarouselContent>
             <PrevButton onClick={goToPrevMedia}>❮</PrevButton>
-            <MediaWrapper onClick={toggleZoom} onMouseMove={handleMouseMove}>
+            <MediaWrapper onMouseMove={handleMouseMove}>
               {mediaItems[currentIndex].type === "image" ? (
                 <ZoomedImage
                   src={mediaItems[currentIndex].src}
-                  isZoomed={isZoomed}
                   offsetX={zoomPosition.x}
                   offsetY={zoomPosition.y}
                 />
