@@ -26,3 +26,5 @@ const deviceSlice = createSlice({
 export const { setIsMobile, setIsLoggedIn, setIsLoading } = deviceSlice.actions;
 
 export default deviceSlice.reducer;
+
+export { deviceSlice };
