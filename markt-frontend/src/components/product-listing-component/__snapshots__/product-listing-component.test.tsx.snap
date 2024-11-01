@@ -2,10 +2,10 @@
 
 exports[`ProductListingComponent renders correctly on desktop 1`] = `
 <div
-  class="sc-cHqXqK eFEVWr"
+  class="sc-jtQUzJ iPjHER"
 >
   <div
-    class="sc-jtQUzJ hqKZmq"
+    class="sc-cEzcPc gRqlWM"
   >
     <div
       class="sc-blHHSb kscHbD"
@@ -46,13 +46,13 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
     </div>
   </div>
   <div
-    class="sc-cEzcPc cNTqzZ"
+    class="sc-ovuCP ehjNBO"
   >
     <div
-      class="sc-ovuCP iSuOpi"
+      class="sc-eOzmre bFDodf"
     >
       <div
-        class="sc-eOzmre etmnQO"
+        class="sc-eauhAA ezoNKZ"
       >
         <h1>
           Product Title
@@ -62,10 +62,10 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
         </p>
       </div>
       <div
-        class="sc-eauhAA hkBWtB"
+        class="sc-fFoeYl eTBqH"
       >
         <div
-          class="sc-fFoeYl clTZdp"
+          class="sc-gQaihK cnwMNn"
         >
           CAD $$$
         </div>
@@ -73,11 +73,11 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
           Negotiable / Non-negotiable
         </div>
         <div
-          class="sc-gQaihK cIDCuS"
+          class="sc-iuUfFv hhLigg"
         >
           <img
             alt="Seller Avatar"
-            class="sc-iuUfFv dKOmuZ"
+            class="sc-dprtRQ blkaRr"
             src="https://via.placeholder.com/50"
           />
           <div>
@@ -97,7 +97,7 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
       </div>
     </div>
     <div
-      class="sc-dprtRQ fehuut"
+      class="sc-eUlrpB dVjxmo"
     >
       <h2>
         Product Specifications
