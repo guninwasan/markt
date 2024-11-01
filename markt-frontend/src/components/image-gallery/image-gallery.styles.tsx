@@ -51,7 +51,8 @@ const ImageWrapper = styled.div`
 const MediaWrapper = styled.div`
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  max-height: 70vh;
+  object-fit: contain;
   position: relative;
   display: flex;
   align-items: center;
@@ -74,7 +75,6 @@ const ThumbnailContainer = styled.div`
   display: flex;
   gap: 10px;
   margin-top: 20px;
-  overflow-x: auto;
   justify-content: center;
   user-select: none;
   user-drag: none;
