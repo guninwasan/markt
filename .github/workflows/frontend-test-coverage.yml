@@ -27,29 +27,20 @@ jobs:
           npm run test-coverage | tee coverage_output.txt
         working-directory: markt-frontend
 
-      - name: Check Coverage for Changed Files
+      - name: Check Coverage Percentage
         run: |
+          coverage=$(grep -oP 'All files\s*\|\s*\K[0-9]+\.[0-9]+' coverage_output.txt)
           threshold=80
-          failed=0
-          echo "Checking coverage for changed files..."
-          git fetch origin ${{ github.base_ref }} --depth=1
-          for file in $(git diff --name-only origin/${{ github.base_ref }} -- "markt-frontend/**/*.tsx"); do
-            echo "Processing file: $file"
-            relative_file=${file#markt-frontend/}
-            coverage=$(grep -oP "(^${file}|${relative_file})\s*\|\s*\K[0-9]+\.[0-9]+" coverage_output.txt || echo "0")
-            echo "Coverage for ${file}: $coverage%"
-            if (( $(echo "$coverage < $threshold" | bc -l) )); then
-              echo "Code coverage for ${file} ($coverage%) is below the threshold ($threshold%)."
-              failed=1
-            fi
-          done
-          if [ $failed -eq 1 ]; then
-            echo "Some files do not meet the required coverage threshold. Failing the job."
+          echo "Coverage: $coverage%"
+          if (( $(echo "$coverage < $threshold" | bc -l) )); then
+            echo "Code coverage ($coverage%) is below the threshold ($threshold%). Failing the job."
+            echo "Coverage Report:"
+            cat coverage_output.txt
+            echo "Code coverage ($coverage%) is below the threshold ($threshold%). Failing the job."
             exit 1
           else
-            echo "All changed files meet the required coverage threshold."
+            echo "Code coverage ($coverage%) meets the threshold ($threshold%)."
           fi
-        shell: bash
         working-directory: markt-frontend
 
       - name: Upload Coverage Report
