@@ -12,12 +12,36 @@ import {
   SellerInfo,
   SellerAvatar,
   ProductSpecsContainer,
+  SpecGrid,
+  SpecCategory,
+  SpecItem,
   BottomTab,
 } from "./product-listing-component.styles";
 
 const ProductListingComponent = () => {
   const { isMobile } = useIsMobile();
   const [isBottomTabVisible, setBottomTabVisible] = useState(false);
+
+  const dummySpecifications = {
+    basicInfo: {
+      condition: "Good",
+      brand: "Brand Name",
+      model: "Model X",
+      yearOfManufacture: "2022",
+    },
+    appearance: {
+      color: "Black",
+      dimensions: "100 x 100 x 100 cm",
+      weight: "500g",
+      material: "Aluminum",
+    },
+    performance: {
+      batteryLife: "10 hours",
+      storageCapacity: "256GB",
+      additionalFeatures: "Water-resistant, Bluetooth-enabled",
+    },
+    warranty: "No warranty",
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -70,19 +94,65 @@ const ProductListingComponent = () => {
               </SellerInfo>
             </PriceBox>
           </TitleAndPriceContainer>
+
           <ProductSpecsContainer>
             <h2>Product Specifications</h2>
-            <ul>
-              <li>Specification 1</li>
-              <li>Specification 2</li>
-              <li>Specification 3</li>
-              <li>Specification 4</li>
-            </ul>
+            <SpecGrid>
+              <SpecCategory>
+                <h3>Basic Information</h3>
+                <SpecItem>
+                  Condition: {dummySpecifications.basicInfo.condition}
+                </SpecItem>
+                <SpecItem>
+                  Brand: {dummySpecifications.basicInfo.brand}
+                </SpecItem>
+                <SpecItem>
+                  Model: {dummySpecifications.basicInfo.model}
+                </SpecItem>
+                <SpecItem>
+                  Year: {dummySpecifications.basicInfo.yearOfManufacture}
+                </SpecItem>
+              </SpecCategory>
+              <SpecCategory>
+                <h3>Appearance</h3>
+                <SpecItem>
+                  Color: {dummySpecifications.appearance.color}
+                </SpecItem>
+                <SpecItem>
+                  Dimensions: {dummySpecifications.appearance.dimensions}
+                </SpecItem>
+                <SpecItem>
+                  Weight: {dummySpecifications.appearance.weight}
+                </SpecItem>
+                <SpecItem>
+                  Material: {dummySpecifications.appearance.material}
+                </SpecItem>
+              </SpecCategory>
+              <SpecCategory>
+                <h3>Performance</h3>
+                <SpecItem>
+                  Battery Life: {dummySpecifications.performance.batteryLife}
+                </SpecItem>
+                <SpecItem>
+                  Storage Capacity:{" "}
+                  {dummySpecifications.performance.storageCapacity}
+                </SpecItem>
+                <SpecItem>
+                  Features: {dummySpecifications.performance.additionalFeatures}
+                </SpecItem>
+              </SpecCategory>
+              <SpecCategory>
+                <h3>Warranty</h3>
+                <SpecItem>{dummySpecifications.warranty}</SpecItem>
+              </SpecCategory>
+            </SpecGrid>
           </ProductSpecsContainer>
         </ProductDetails>
       </ProductListingContainer>
+
       {isMobile && (
         <BottomTab isVisible={isBottomTabVisible} test-id="bottom-tab">
+          <PriceText>CAD $$$</PriceText>
           <SellerInfo>
             <SellerAvatar
               src="https://via.placeholder.com/50"
