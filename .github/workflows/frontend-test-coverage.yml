@@ -28,7 +28,7 @@ jobs:
            echo "$coverage_output"
            if echo "$coverage_output" | grep -q "menu-items.tsx"; then
             echo "menu-items.tsx found"
-            echo "$coverage_output" | awk '/menu-items.tsx/{getline; print}'
+            echo "$coverage_output" | awk '/menu-items.tsx/{print $3}'
             else
             echo "menu-items.tsx not found"
           fi
