@@ -91,6 +91,8 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
               {"❮"}
             </PrevButton>
             {/* <MediaWrapper onMouseMove={handleMouseMove}> */}
+            {/*  we can use this if we want to zoom and pan the image. Currently it works but it is not that stable*/}
+            {/* might make a new ticket for this if required */}
             <MediaWrapper>
               {mediaItems[currentIndex].type === "image" ? (
                 <ZoomedImage
