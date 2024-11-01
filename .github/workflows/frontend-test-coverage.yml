@@ -21,42 +21,37 @@ jobs:
         run: npm install
         working-directory: markt-frontend
 
-      - name: Identify Changed Files and Run Test Coverage
+      - name: Run Test Coverage
         run: |
           threshold=80
           fail=false
 
-          # Run test coverage and save to a temporary file
           npm run test-coverage --silent --coverageReporters=text > coverage_output.txt
-          cat coverage_output.txt
 
-          # Identify changed files
           changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$")
 
           for file in $changed_files; do
-            filename=$(basename "$file")
-            # Check if the filename exists in the coverage report and extract coverage
-            coverage=$(grep -A 1 "$filename" coverage_output.txt | awk '/[0-9]+%/{gsub("%","",$4); print $4}')
+            coverage_line=$(grep -A 1 "$file" coverage_output.txt | tail -n 1)
+            coverage=$(echo "$coverage_line" | awk '{gsub("%","",$4); print $4}')
             
             if [ -n "$coverage" ]; then
-              echo "$filename: $coverage%"
+              echo "$file: $coverage%"
               if (( $(echo "$coverage < $threshold" | bc -l) )); then
                 fail=true
-                echo "Code coverage for $filename ($coverage%) is below the threshold ($threshold%)"
+                echo "Code coverage for $file ($coverage%) is below the threshold ($threshold%)"
               fi
             else
-              echo "Coverage data not found for $filename in report, skipping."
+              echo "Skipping $file as no coverage data is found."
             fi
           done
 
-          # Exit with failure if any file coverage is below threshold
           if [ "$fail" = true ]; then
             exit 1
           fi
         working-directory: markt-frontend
 
       - name: Upload Full Coverage Report
-        if: success() || failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: full-coverage-report
