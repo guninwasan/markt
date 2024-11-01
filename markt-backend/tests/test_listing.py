@@ -153,7 +153,7 @@ def test_update_listing(client):
     db.session.add(test_user)
     db.session.commit()
 
-    # Create a listing
+    # Create a test listing
     listing = Listing(
         title="Old Laptop",
         description="Old Laptop",
@@ -223,3 +223,46 @@ def test_delete_listing(client):
     # Make sure the listing is deleted
     listing_in_db = db.session.get(Listing, listing.id)
     assert listing_in_db is None
+
+def test_buy_item(client):
+    # Create test users
+    test_seller = User(
+        password="ab1234c", email="test@utoronto.ca", phone="6478290835")
+
+    test_buyer = User(
+        password="09uhnk", email="hello@utoronto.ca", phone="4167892038")
+    db.session.add(test_seller)
+    db.session.add(test_buyer)
+    db.session.commit()
+
+    # Create a test listing
+    listing = Listing(
+        title="Old Laptop",
+        description="Old Laptop",
+        price=400,
+        quantity=1,
+        condition="used",
+        owner_id=test_seller.id
+    )
+    db.session.add(listing)
+    db.session.commit()
+
+    # Invalid buyer
+    invalid_buyer = {
+        "buyer_email": "invalid@utoronto.ca"
+    }
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=invalid_buyer)
+    assert rsp.status_code == 404
+    rsp = rsp.get_json()
+    assert rsp['status'] == ErrorRsp.ERR_NOT_FOUND.value
+    assert rsp['data'] == "User does not exist!"
+
+    # Test_buyer
+    buy_data = {
+        "buyer_email": test_buyer.email
+    }
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=buy_data)
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert rsp['status'] == ErrorRsp.OK.value
+    assert test_buyer.buy_listings[0].id == listing.id

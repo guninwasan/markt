@@ -91,8 +91,8 @@ update:
           condition:
             type: "string"
             required: False
-          owner_id:
-            type: "integer"
+          buyer_email:
+            type: "string"
             required: False
 
 delete:
