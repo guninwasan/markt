@@ -53,6 +53,14 @@ const MenuItems = () => {
   const MobileMenu = () => (
     <>
       <MenuItem>
+        <MenuLink
+          to="/sell"
+          className={({ isActive }) => (isActive ? "active" : "")}
+        >
+          Sell
+        </MenuLink>
+      </MenuItem>
+      <MenuItem>
         <MenuLink to="/account">My Account</MenuLink>
       </MenuItem>
       <MenuItem>
@@ -65,31 +73,7 @@ const MenuItems = () => {
   );
 
   const DesktopMenu = () => (
-    <MenuItem ref={dropdownRef}>
-      <ProfileContainer>
-        <ProfileButton onClick={toggleDropdown} aria-expanded={showDropdown}>
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.33 0-10 1.671-10 5v1h20v-1c0-3.329-6.67-5-10-5z" />
-          </svg>
-        </ProfileButton>
-        {name.length <= 10 && <ProfileIconText>{name}</ProfileIconText>}
-      </ProfileContainer>
-      {showDropdown && (
-        <Dropdown>
-          <DropdownItem as={NavLink} to="/account">
-            My Account
-          </DropdownItem>
-          <DropdownItem as={NavLink} to="/wishlist">
-            Wishlist
-          </DropdownItem>
-          <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
-        </Dropdown>
-      )}
-    </MenuItem>
-  );
-
-  return (
-    <Menu isMobile={isMobile}>
+    <>
       <MenuItem>
         <MenuLink
           to="/sell"
@@ -98,6 +82,32 @@ const MenuItems = () => {
           Sell
         </MenuLink>
       </MenuItem>
+      <MenuItem ref={dropdownRef}>
+        <ProfileContainer>
+          <ProfileButton onClick={toggleDropdown} aria-expanded={showDropdown}>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.33 0-10 1.671-10 5v1h20v-1c0-3.329-6.67-5-10-5z" />
+            </svg>
+          </ProfileButton>
+          {name.length <= 10 && <ProfileIconText>{name}</ProfileIconText>}
+        </ProfileContainer>
+        {showDropdown && (
+          <Dropdown>
+            <DropdownItem as={NavLink} to="/account">
+              My Account
+            </DropdownItem>
+            <DropdownItem as={NavLink} to="/wishlist">
+              Wishlist
+            </DropdownItem>
+            <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
+          </Dropdown>
+        )}
+      </MenuItem>
+    </>
+  );
+
+  return (
+    <Menu isMobile={isMobile}>
       {isLoggedIn ? (
         isMobile ? (
           <MobileMenu />
