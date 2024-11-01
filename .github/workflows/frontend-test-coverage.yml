@@ -10,10 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -23,34 +22,41 @@ jobs:
         run: npm install
         working-directory: markt-frontend
 
-      - name: Run tests with coverage for changed files
+      - name: Run Tests with Coverage
         run: |
-          # Get changed files
-          CHANGED_FILES=$(git diff --name-only origin/main...HEAD -- "markt-frontend/**" | grep '.tsx' | paste -sd "," -)
-          echo "Changed files: $CHANGED_FILES"
-
-          # Set coverage threshold
-          THRESHOLD=80
-
-          # If there are changed files, run the tests
-          if [[ -n "$CHANGED_FILES" ]]; then
-            # Run test coverage on changed files only
-            npm run test-coverage -- --findRelatedTests $CHANGED_FILES > coverage_summary.txt || true
-
-            # Extract coverage percentage
-            COVERAGE=$(grep -oP '(?<=All files.*\s)\d+(?=%)' coverage_summary.txt | tail -1)
-            echo "Coverage for changed files: $COVERAGE%"
-            
-            # Fail if coverage is below threshold
-            if [[ "$COVERAGE" -lt "$THRESHOLD" ]]; then
-              echo "Test coverage is below the threshold of $THRESHOLD%."
-              exit 1
-            else
-              echo "Test coverage meets the threshold of $THRESHOLD%."
-            fi
-          else
-            echo "No TypeScript (.tsx) files changed in 'markt-frontend/'. Skipping coverage check."
-          fi
+          npm run test-coverage | tee coverage_output.txt
         working-directory: markt-frontend
-        env:
-          CI: true
+
+      - name: Get Changed Files
+        id: changed-files
+        run: |
+          git fetch origin ${{ github.base_ref }} --depth=1
+          git diff --name-only origin/${{ github.base_ref }} | grep "^markt-frontend/.*\\.tsx$" > changed_files.txt
+        shell: bash
+
+      - name: Filter Coverage for Changed Files
+        run: |
+          threshold=80
+          failed=0
+          while IFS= read -r file; do
+            file_coverage=$(grep -oP "${file}\s*\|\s*\K[0-9]+\.[0-9]+" coverage_output.txt || echo "0")
+            echo "Coverage for ${file}: $file_coverage%"
+            if (( $(echo "$file_coverage < $threshold" | bc -l) )); then
+              echo "Code coverage for ${file} ($file_coverage%) is below the threshold ($threshold%)."
+              failed=1
+            fi
+          done < changed_files.txt
+          if [ $failed -eq 1 ]; then
+            echo "Some files do not meet the required coverage threshold. Failing the job."
+            exit 1
+          else
+            echo "All changed files meet the required coverage threshold."
+          fi
+        shell: bash
+        working-directory: markt-frontend
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: markt-frontend/coverage/
