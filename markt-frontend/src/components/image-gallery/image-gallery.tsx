@@ -57,7 +57,7 @@ const ZoomedImage = styled.img<{
   offsetX?: number;
   offsetY?: number;
 }>`
-  width: 70vw;
+  width: 100%;
   height: 70vh;
   object-fit: contain;
   transition: transform 0.3s ease;
@@ -122,11 +122,11 @@ const NavButton = styled.button`
 `;
 
 const PrevButton = styled(NavButton)`
-  left: -50px;
+  left: -100px;
 `;
 
 const NextButton = styled(NavButton)`
-  right: -50px;
+  right: -100px;
 `;
 
 const CloseButton = styled.button`
