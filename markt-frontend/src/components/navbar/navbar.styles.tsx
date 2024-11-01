@@ -28,6 +28,7 @@ const Menu = styled.ul<{ isMobile?: boolean | null }>`
 const MenuItem = styled.li`
   margin-left: 1rem;
   cursor: pointer;
+  position: relative;
 `;
 
 const MenuLink = styled.a`
@@ -46,14 +47,14 @@ const Hamburger = styled.div<{ isOpen: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width: 1.5rem; // Reduced size
-  height: 1.5rem; // Reduced size
+  width: 1.5rem;
+  height: 1.5rem;
   cursor: pointer;
 
   span {
-    width: 1.5rem; // Reduced size
-    height: 0.2rem; // Reduced size
-    background: #000000; // Lighter color for less boldness
+    width: 1.5rem;
+    height: 0.2rem;
+    background: #000000;
     border-radius: 10px;
     transition: all 0.3s linear;
     position: relative;
@@ -89,7 +90,7 @@ const Backdrop = styled.div<{ isOpen: boolean }>`
   width: 100%;
   height: 100%;
   display: ${({ isOpen }) => (isOpen ? "block" : "none")};
-  z-index: 999; /* Ensure the backdrop is below the sidebar */
+  z-index: 999;
 `;
 
 const Sidebar = styled.div<{ isOpen: boolean }>`
@@ -107,6 +108,57 @@ const Sidebar = styled.div<{ isOpen: boolean }>`
   flex-direction: column;
 `;
 
+// Updated ProfileButton and Dropdown styles
+
+const ProfileButton = styled.button`
+  background: none;
+  border: none;
+  color: #333;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  position: relative;
+
+  &:hover {
+    background-color: #e0e0e0;
+    border-radius: 4px;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+  }
+`;
+
+const Dropdown = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  transform: translateX(calc(0%)); /* Positions dropdown to the left */
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  padding: 0.5rem 0;
+  width: 150px;
+`;
+
+const DropdownItem = styled.a`
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #333;
+  text-decoration: none;
+
+  &:hover {
+    background-color: #f0f0f0;
+    color: #000;
+  }
+`;
+
 export {
   NavbarContainer,
   MarktHeaderText,
@@ -117,4 +169,7 @@ export {
   MobileMenuContainer,
   Backdrop,
   Sidebar,
+  ProfileButton,
+  Dropdown,
+  DropdownItem,
 };
