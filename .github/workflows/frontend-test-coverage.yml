@@ -21,22 +21,22 @@ jobs:
         run: npm install
         working-directory: markt-frontend
 
-      - name: Run Test Coverage and Capture JSON Output
+      - name: Run Test Coverage and Parse Output
         id: coverage_json
         run: |
           threshold=80
           fail=false
 
-          npm run test-coverage --silent --coverageReporters=json --outputFile=coverage-summary.json
+          coverage_output=$(npm run test-coverage --silent --coverageReporters=json-summary | jq -r '.total.lines.pct')
 
-          coverage_output=$(cat coverage-summary.json)
+          declare -A coverages
+          coverages=$(echo "$coverage_output" | jq -r 'to_entries | map("\(.key)=\(.value.lines.pct)") | .[]')
 
           changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$")
 
           for file in $changed_files; do
-            coverage=$(echo "$coverage_output" | jq -r --arg file "$file" '.[$file].lines.pct')
-            
-            if [ "$coverage" != "null" ]; then
+            coverage=${coverages["$file"]}
+            if [ "$coverage" ]; then
               echo "$file: $coverage%"
               if (( $(echo "$coverage < $threshold" | bc -l) )); then
                 fail=true
@@ -51,10 +51,3 @@ jobs:
             exit 1
           fi
         working-directory: markt-frontend
-
-      - name: Upload Full Coverage Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: full-coverage-report
-          path: markt-frontend/coverage/
