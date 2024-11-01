@@ -24,24 +24,27 @@ jobs:
         run: npm install
         working-directory: markt-frontend
 
-      - name: Run Full Test Coverage
-        run: |
-          npm run test-coverage | tee coverage_output.txt
-        working-directory: markt-frontend
-
-      - name: Filter Coverage Report for Changed Files
-        if: success()
+      - name: Identify Changed Files and Run Test Coverage
         run: |
           threshold=80
-          echo "Identifying changed files and filtering coverage report:"
+          echo "Running full coverage and identifying changed files:"
           fail=false
+
+          coverage_output=$(npm run test-coverage --silent --coverageReporters=text-summary)
+          echo "$coverage_output"
+
           changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$")
+
           for file in $changed_files; do
-            coverage=$(grep -A 1 "$file" coverage_output.txt | tail -n 1 | awk '{print $4}' | sed 's/%//')
-            echo "$file: $coverage%"
-            if (( $(echo "$coverage < $threshold" | bc -l) )); then
-              fail=true
-              echo "Code coverage for $file ($coverage%) is below the threshold ($threshold%)"
+            coverage=$(echo "$coverage_output" | grep -A 1 "$file" | tail -n 1 | awk '{print $4}' | sed 's/%//')
+            if [ -n "$coverage" ]; then
+              echo "$file: $coverage%"
+              if (( $(echo "$coverage < $threshold" | bc -l) )); then
+                fail=true
+                echo "Code coverage for $file ($coverage%) is below the threshold ($threshold%)"
+              fi
+            else
+              echo "No coverage data found for $file."
             fi
           done
           if [ "$fail" = true ]; then
