@@ -28,6 +28,8 @@ jobs:
           fail=false
 
           coverage_output=$(npm run test-coverage --silent --coverageReporters=json-summary | jq -r '.total.lines.pct')
+          echo "Total coverage: $coverage_output"
+
 
           declare -A coverages
           coverages=$(echo "$coverage_output" | jq -r 'to_entries | map("\(.key)=\(.value.lines.pct)") | .[]')
