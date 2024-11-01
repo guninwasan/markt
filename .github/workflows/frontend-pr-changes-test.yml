@@ -33,7 +33,7 @@ jobs:
           coverage_output=$(npm run test-coverage --silent --coverageReporters=text)
           echo "$coverage_output"
 
-          changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$")
+          changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$" | awk -F'/' '{print $NF}')
 
           for file in $changed_files; do
             coverage=$(echo "$coverage_output" | awk -v file="$file" '
