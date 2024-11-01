@@ -1,0 +1,36 @@
+name: Frontend Coverage Test for File Changes only
+
+on:
+  pull_request:
+    paths:
+      - "markt-frontend/**"
+
+jobs:
+  pr-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: markt-frontend
+
+      - name: Run Tests on Changed Files
+        run: |
+          changed_files=$(git diff --name-only origin/main HEAD)
+          test_files=$(echo "$changed_files" | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$" | xargs -I {} npx jest --findRelatedTests {})
+          if [ -z "$test_files" ]; then
+            echo "No related tests found for changed files."
+          else
+            echo "Running related tests for changed files:"
+            echo "$test_files"
+            npx jest --findRelatedTests $test_files --coverage --watchAll=false
+          fi
+        working-directory: markt-frontend
