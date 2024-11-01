@@ -31,7 +31,12 @@ jobs:
            for file in $changed_files; do
             if echo "$coverage_output" | grep -q "$file"; then
               echo "$file found"
-              echo "$coverage_output" | awk -v f="$file" '$0 ~ f {print $3}'
+              coverage=$(echo "$coverage_output" | awk -v f="$file" '$0 ~ f {print $3}')
+              echo "Coverage for $file is $coverage"
+              if (( $(echo "$coverage < $threshold" | bc -l) )); then
+                echo "Error: Coverage for $file is below the threshold of $threshold"
+                fail=true
+              fi
             else
               echo "$file not found"
             fi
