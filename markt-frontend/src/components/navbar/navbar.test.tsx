@@ -13,7 +13,7 @@ jest.mock("../../hooks", () => ({
 
 jest.mock("./menu-items", () => ({
   MenuItems: jest.fn(() => (
-    <div>
+    <div data-testid="menu-items">
       <>Home</>
       <>Buy</>
       <>Sell</>
@@ -26,7 +26,13 @@ describe("Navbar", () => {
 
   const renderNavbar = (isMobile = false) => {
     mockUseIsMobile.mockReturnValue({ isMobile });
-    return renderWithRedux(<Navbar />);
+    return render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <Navbar />
+        </MemoryRouter>
+      </Provider>
+    );
   };
 
   afterEach(() => {
@@ -52,5 +58,22 @@ describe("Navbar", () => {
   it("should match the snapshot on mobile", () => {
     const { container } = renderNavbar(true);
     expect(container.firstChild).toMatchSnapshot();
+  });
+
+  it("should toggle the sidebar when the hamburger is clicked", () => {
+    renderNavbar(true);
+    const hamburger = screen.getByTestId("hamburger");
+    fireEvent.click(hamburger);
+    const sidebar = screen.getByTestId("sidebar");
+    expect(sidebar).toBeInTheDocument();
+  });
+
+  it("should close the sidebar when the backdrop is clicked", () => {
+    renderNavbar(true);
+    const hamburger = screen.getByTestId("hamburger");
+    fireEvent.click(hamburger);
+    const backdrop = screen.getByTestId("backdrop");
+    fireEvent.click(backdrop);
+    expect(screen.queryByTestId("sidebar")).not.toBeInTheDocument();
   });
 });
