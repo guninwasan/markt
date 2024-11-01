@@ -21,20 +21,19 @@ jobs:
         run: npm install
         working-directory: markt-frontend
 
-      - name: Run Test Coverage
+      - name: Run Test Coverage with JSON Output
         run: |
           threshold=80
           fail=false
 
-          npm run test-coverage --silent --coverageReporters=text > coverage_output.txt
+          npm run test-coverage --silent --coverageReporters=json-summary
 
           changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$")
 
           for file in $changed_files; do
-            coverage_line=$(grep -A 1 "$file" coverage_output.txt | tail -n 1)
-            coverage=$(echo "$coverage_line" | awk '{gsub("%","",$4); print $4}')
+            coverage=$(jq -r --arg file "$file" '.[$file].lines.pct' <markt-frontend/coverage/coverage-summary.json)
             
-            if [ -n "$coverage" ]; then
+            if [ "$coverage" != "null" ]; then
               echo "$file: $coverage%"
               if (( $(echo "$coverage < $threshold" | bc -l) )); then
                 fail=true
