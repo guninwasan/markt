@@ -8,10 +8,10 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
     class="sc-jtQUzJ hqKZmq"
   >
     <div
-      class="sc-blHHSb hpAuqQ"
+      class="sc-blHHSb kscHbD"
     >
       <div
-        class="sc-fAUdSK hsaNOV"
+        class="sc-fAUdSK jIA-DAh"
       >
         <img
           class="sc-ixGGxD fzPTpc"
@@ -19,7 +19,7 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
         />
       </div>
       <div
-        class="sc-fAUdSK hsaNOV"
+        class="sc-fAUdSK jIA-DAh"
       >
         <img
           class="sc-ixGGxD fzPTpc"
@@ -27,7 +27,7 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
         />
       </div>
       <div
-        class="sc-fAUdSK hsaNOV"
+        class="sc-fAUdSK jIA-DAh"
       >
         <img
           class="sc-ixGGxD fzPTpc"
@@ -35,7 +35,7 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
         />
       </div>
       <div
-        class="sc-fAUdSK hsaNOV"
+        class="sc-fAUdSK jIA-DAh"
       >
         <video
           class="sc-khLCKb iFBhps"

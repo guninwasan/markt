@@ -2,9 +2,12 @@ import styled from "styled-components";
 
 const GalleryContainer = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 1rem;
   justify-content: center;
   margin-top: 10px;
+  flex-wrap: wrap;
+  user-select: none;
+  user-drag: none;
 `;
 
 const ModalContainer = styled.div`
@@ -31,8 +34,9 @@ const CarouselContent = styled.div`
 
 const ImageWrapper = styled.div`
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
   overflow: hidden;
   cursor: pointer;
   border-radius: 8px;
@@ -40,6 +44,8 @@ const ImageWrapper = styled.div`
   &:hover {
     transform: scale(1.05);
   }
+  user-select: none;
+  user-drag: none;
 `;
 
 const MediaWrapper = styled.div`
