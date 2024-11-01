@@ -29,13 +29,13 @@ jobs:
            
            changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$" | xargs -n1 basename)
            for file in $changed_files; do
+            echo  " "
             if echo "$coverage_output" | grep -q "$file"; then
               coverage=$(echo "$coverage_output" | awk -v f="$file" '$0 ~ f {print $3}')
               echo "Coverage for $file is $coverage"
               if (( $(echo "$coverage < $threshold" | bc -l) )); then
                 echo "Error: Coverage for $file ($coverage) is below the threshold of $threshold"
                 fail=true
-            echo  " "
             fi
           done
            if [ "$fail" = true ]; then
