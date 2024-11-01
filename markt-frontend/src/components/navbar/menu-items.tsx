@@ -84,7 +84,11 @@ const MenuItems = () => {
       </MenuItem>
       <MenuItem ref={dropdownRef}>
         <ProfileContainer>
-          <ProfileButton onClick={toggleDropdown} aria-expanded={showDropdown}>
+          <ProfileButton
+            onClick={toggleDropdown}
+            aria-expanded={showDropdown}
+            data-testid="profile"
+          >
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.33 0-10 1.671-10 5v1h20v-1c0-3.329-6.67-5-10-5z" />
             </svg>
