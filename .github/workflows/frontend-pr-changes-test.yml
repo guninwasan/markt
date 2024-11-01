@@ -31,6 +31,7 @@ jobs:
           fail=false
 
           coverage_output=$(npm run test-coverage --silent --coverageReporters=text)
+          echo "$coverage_output"
 
           changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$")
 
@@ -40,7 +41,8 @@ jobs:
           fi
 
           for file in $changed_files; do
-            if echo "$coverage_output" | grep -q "$file"; then
+            coverage_line=$(echo "$coverage_output" | awk -v file="$file" '$0 ~ file {print $0}')
+            if [ -n "$coverage_line" ]; then
               coverage=$(echo "$coverage_output" | grep -A 1 "$file" | awk '/[0-9]+%/{gsub("%","",$4); print $4}')
               echo "$file: $coverage%"
 
@@ -49,7 +51,7 @@ jobs:
                 echo "Code coverage for $file ($coverage%) is below the threshold ($threshold%)"
               fi
             else
-              echo "$file: No coverage data found in the coverage report output."
+              echo "Skipping $file as no coverage data was found in the coverage report output."
             fi
           done
           if [ "$fail" = true ]; then
