@@ -92,7 +92,7 @@ const SpecCategory = styled.div`
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
+  overflow: hidden;
   h3 {
     margin-bottom: 10px;
     font-size: 1.1em;
