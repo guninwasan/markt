@@ -2,78 +2,57 @@
 
 exports[`ProductListingComponent renders correctly on desktop 1`] = `
 <div
-  class="sc-dntaoT itDxOn"
+  class="sc-cHqXqK eFEVWr"
 >
   <div
-    class="sc-ivxoEo fdjjXu"
+    class="sc-jtQUzJ hqKZmq"
   >
     <div
-      class="sc-blHHSb iAZfxc"
+      class="sc-blHHSb hpAuqQ"
     >
       <div
-        class="sc-gtLWhw Kyoay"
+        class="sc-fAUdSK hsaNOV"
       >
         <img
-          alt="Image 1"
-          class="sc-fAUdSK eTRGma"
-          src="https://via.placeholder.com/150"
+          class="sc-ixGGxD fzPTpc"
+          src="https://images-na.ssl-images-amazon.com/images/I/71g2ednj0JL._AC_SL1500_.jpg"
         />
       </div>
       <div
-        class="sc-gtLWhw Kyoay"
+        class="sc-fAUdSK hsaNOV"
       >
         <img
-          alt="Image 2"
-          class="sc-fAUdSK eTRGma"
-          src="https://via.placeholder.com/150"
+          class="sc-ixGGxD fzPTpc"
+          src="https://images-na.ssl-images-amazon.com/images/I/81QpkIctqPL._AC_SL1500_.jpg"
         />
       </div>
       <div
-        class="sc-gtLWhw Kyoay"
+        class="sc-fAUdSK hsaNOV"
       >
         <img
-          alt="Image 3"
-          class="sc-fAUdSK eTRGma"
-          src="https://via.placeholder.com/150"
+          class="sc-ixGGxD fzPTpc"
+          src="https://images-na.ssl-images-amazon.com/images/I/71K7Q4FpguL._AC_SL1500_.jpg"
         />
       </div>
       <div
-        class="sc-gtLWhw Kyoay"
+        class="sc-fAUdSK hsaNOV"
       >
-        <img
-          alt="Image 4"
-          class="sc-fAUdSK eTRGma"
-          src="https://via.placeholder.com/150"
-        />
-      </div>
-      <div
-        class="sc-gtLWhw Kyoay"
-      >
-        <img
-          alt="Image 5"
-          class="sc-fAUdSK eTRGma"
-          src="https://via.placeholder.com/150"
-        />
-      </div>
-      <div
-        class="sc-gtLWhw Kyoay"
-      >
-        <img
-          alt="Image 6"
-          class="sc-fAUdSK eTRGma"
-          src="https://via.placeholder.com/150"
+        <video
+          class="sc-khLCKb iFBhps"
+          controls=""
+          src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
         />
       </div>
     </div>
   </div>
   <div
-    class="sc-ghWlax dxtQXs"
+    class="sc-cEzcPc cNTqzZ"
   >
     <div
-      class="sc-kLhKbu eocVKy"
+      class="sc-ovuCP iSuOpi"
     >
       <div
-        class="sc-ixGGxD XXNEF"
+        class="sc-eOzmre etmnQO"
       >
         <h1>
           Product Title
@@ -83,10 +62,10 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
         </p>
       </div>
       <div
-        class="sc-khLCKb ikiXMJ"
+        class="sc-eauhAA hkBWtB"
       >
         <div
-          class="sc-dstKZu cqYejV"
+          class="sc-fFoeYl clTZdp"
         >
           CAD $$$
         </div>
@@ -94,11 +73,11 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
           Negotiable / Non-negotiable
         </div>
         <div
-          class="sc-keTIit kYGxmp"
+          class="sc-gQaihK cIDCuS"
         >
           <img
             alt="Seller Avatar"
-            class="sc-dpBQxM eOXdc"
+            class="sc-iuUfFv dKOmuZ"
             src="https://via.placeholder.com/50"
           />
           <div>
@@ -118,7 +97,7 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
       </div>
     </div>
     <div
-      class="sc-jwIPbr hmWefI"
+      class="sc-dprtRQ fehuut"
     >
       <h2>
         Product Specifications
