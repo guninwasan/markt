@@ -27,7 +27,9 @@ jobs:
           threshold=80
           fail=false
 
-          coverage_output=$(npm run test-coverage --silent --coverageReporters=json)
+          npm run test-coverage --silent --coverageReporters=json --outputFile=coverage-summary.json
+
+          coverage_output=$(cat coverage-summary.json)
 
           changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$")
 
