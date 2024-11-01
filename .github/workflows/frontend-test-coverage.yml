@@ -35,8 +35,6 @@ jobs:
               if (( $(echo "$coverage < $threshold" | bc -l) )); then
                 echo "Error: Coverage for $file ($coverage) is below the threshold of $threshold"
                 fail=true
-            else
-              echo "$file not found"
             echo  " "
             fi
           done
