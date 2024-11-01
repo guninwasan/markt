@@ -148,6 +148,11 @@ const CloseButton = styled.button`
   }
 `;
 
+const IndexText = styled.p`
+  color: #fff;
+  font-size: 12px;
+`;
+
 export {
   GalleryContainer,
   ModalContainer,
@@ -163,4 +168,5 @@ export {
   PrevButton,
   NextButton,
   CloseButton,
+  IndexText,
 };

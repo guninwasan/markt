@@ -13,6 +13,7 @@ import {
   ThumbnailContainer,
   Thumbnail,
   ZoomedImage,
+  IndexText,
 } from "./image-gallery.styles";
 
 const detectMediaType = (url: string): "image" | "video" => {
@@ -60,13 +61,13 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
     setZoomPosition({ x: 0, y: 0 });
   };
 
-  const handleMouseMove = (e: any) => {
-    const { offsetX, offsetY, target } = e.nativeEvent;
-    const { width, height } = target;
-    const offsetXPercent = ((offsetX / width) * 2 - 1) * 25;
-    const offsetYPercent = ((offsetY / height) * 2 - 1) * 25;
-    setZoomPosition({ x: offsetXPercent, y: offsetYPercent });
-  };
+  // const handleMouseMove = (e: any) => {
+  //   const { offsetX, offsetY, target } = e.nativeEvent;
+  //   const { width, height } = target;
+  //   const offsetXPercent = ((offsetX / width) * 2 - 1) * 25;
+  //   const offsetYPercent = ((offsetY / height) * 2 - 1) * 25;
+  //   setZoomPosition({ x: offsetXPercent, y: offsetYPercent });
+  // };
 
   return (
     <>
@@ -86,8 +87,11 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
         <ModalContainer>
           <CloseButton onClick={closeModal}>✕</CloseButton>
           <CarouselContent>
-            <PrevButton onClick={goToPrevMedia}>❮</PrevButton>
-            <MediaWrapper onMouseMove={handleMouseMove}>
+            <PrevButton onClick={goToPrevMedia} data-testid="prev">
+              ❮
+            </PrevButton>
+            {/* <MediaWrapper onMouseMove={handleMouseMove}> */}
+            <MediaWrapper>
               {mediaItems[currentIndex].type === "image" ? (
                 <ZoomedImage
                   src={mediaItems[currentIndex].src}
@@ -102,7 +106,9 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
                 />
               )}
             </MediaWrapper>
-            <NextButton onClick={goToNextMedia}>❯</NextButton>
+            <NextButton onClick={goToNextMedia} data-testid="next">
+              ❯
+            </NextButton>
             <ThumbnailContainer>
               {mediaItems.map((item, index) => (
                 <Thumbnail
@@ -118,6 +124,9 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
                 </Thumbnail>
               ))}
             </ThumbnailContainer>
+            <IndexText>
+              {currentIndex + 1}/{mediaItems.length}
+            </IndexText>
           </CarouselContent>
         </ModalContainer>
       )}
