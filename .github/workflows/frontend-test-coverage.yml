@@ -26,6 +26,12 @@ jobs:
           fail=false
            coverage_output=$(npm run test-coverage --silent --coverageReporters=text)
            echo "$coverage_output"
+           if echo "$coverage_output" | grep -q "menu-items.tsx"; then
+            echo "menu-items.tsx found"
+            echo "$coverage_output" | awk '/menu-items.tsx/{getline; print}'
+            else
+            echo "menu-items.tsx not found"
+          fi
            changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$" | xargs -n1 basename)
            for file in $changed_files; do
              coverage=$(echo "$coverage_output" | grep -A 1 "$file" | awk '/[0-9]+%/{gsub("%","",$4); print $4}')
