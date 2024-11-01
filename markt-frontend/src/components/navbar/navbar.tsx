@@ -4,11 +4,11 @@ import {
   NavbarContainer,
   MarktHeaderText,
   Hamburger,
-  MobileMenuContainer,
   Backdrop,
   Sidebar,
 } from "./navbar.styles";
 import { MenuItems } from "./menu-items";
+import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   const { isMobile } = useIsMobile();
@@ -24,7 +24,7 @@ const Navbar = () => {
 
   return (
     <NavbarContainer>
-      <MarktHeaderText>Markt</MarktHeaderText>
+      <MarktHeaderText to={"/"}>Markt</MarktHeaderText>
       {isMobile ? (
         <>
           <Hamburger

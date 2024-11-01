@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 
 const NavbarContainer = styled.nav`
   display: flex;
@@ -8,12 +9,13 @@ const NavbarContainer = styled.nav`
   background-color: #d9d9d9;
 `;
 
-const MarktHeaderText = styled.div`
+const MarktHeaderText = styled(NavLink)`
   font-size: 1.5rem;
   font-weight: 1000;
   color: #333;
   text-transform: uppercase;
   letter-spacing: 2px;
+  text-decoration: none;
 `;
 
 const Menu = styled.ul<{ isMobile?: boolean | null }>`
@@ -31,7 +33,7 @@ const MenuItem = styled.li`
   position: relative;
 `;
 
-const MenuLink = styled.a`
+const MenuLink = styled(NavLink)`
   color: #000000;
   text-decoration: none;
   padding: 0.5rem 1rem;
@@ -41,6 +43,12 @@ const MenuLink = styled.a`
     border-radius: 4px;
     color: #f9f9f9;
   }
+`;
+
+const LogoutButton = styled.div`
+  color: #000000;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
 `;
 
 const Hamburger = styled.div<{ isOpen: boolean }>`
@@ -108,29 +116,40 @@ const Sidebar = styled.div<{ isOpen: boolean }>`
   flex-direction: column;
 `;
 
-// Updated ProfileButton and Dropdown styles
-
-const ProfileButton = styled.button`
-  background: none;
-  border: none;
-  color: #333;
+const ProfileContainer = styled.div`
   display: flex;
   align-items: center;
+  gap: 0.25rem;
+  flex-direction: column;
+`;
+
+const ProfileButton = styled.button`
+  background-color: #e0e0e0; /* Light gray background for the circle */
+  border: none;
   cursor: pointer;
-  padding: 0.5rem 1rem;
+  padding: 0;
   position: relative;
+  border-radius: 50%; /* Makes the button circular */
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
-    background-color: #e0e0e0;
-    border-radius: 4px;
+    background-color: #d0d0d0; /* Slightly darker on hover */
   }
 
-  img {
+  svg {
     width: 24px;
     height: 24px;
-    border-radius: 50%;
-    margin-right: 0.5rem;
+    fill: #333; /* Icon color */
   }
+`;
+
+const ProfileIconText = styled.span`
+  font-size: 0.75rem;
+  color: #333;
 `;
 
 const Dropdown = styled.div`
@@ -170,6 +189,9 @@ export {
   Backdrop,
   Sidebar,
   ProfileButton,
+  ProfileIconText,
   Dropdown,
   DropdownItem,
+  ProfileContainer,
+  LogoutButton,
 };
