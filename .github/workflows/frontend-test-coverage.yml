@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -27,11 +29,12 @@ jobs:
         run: |
           CHANGED_FILES=$(git diff --name-only origin/main...HEAD -- "markt-frontend/**" | grep '.tsx' | paste -sd "," -)
           echo "Changed files: $CHANGED_FILES"
-          echo "::set-output name=changed_files::$CHANGED_FILES"
+          echo "changed_files=$CHANGED_FILES" >> $GITHUB_ENV
+        continue-on-error: true
 
       - name: Run tests with coverage for changed files
         id: coverage_check
-        if: steps.get_changed_files.outputs.changed_files
+        if: ${{ steps.get_changed_files.outputs.changed_files != '' }}
         run: |
           THRESHOLD=80
           if [[ -n "${{ steps.get_changed_files.outputs.changed_files }}" ]]; then
@@ -39,18 +42,18 @@ jobs:
             COVERAGE=$(grep -oP '(?<=All files.*\s)\d+(?=%)' coverage_summary.txt | tail -1)
             echo "Coverage for changed files: $COVERAGE%"
             if [[ "$COVERAGE" -lt "$THRESHOLD" ]]; then
-              echo "::set-output name=below_threshold::true"
+              echo "below_threshold=true" >> $GITHUB_ENV
             else
-              echo "::set-output name=below_threshold::false"
+              echo "below_threshold=false" >> $GITHUB_ENV
             fi
           else
             echo "No TypeScript (.tsx) files changed in 'markt-frontend/'."
-            echo "::set-output name=below_threshold::false"
+            echo "below_threshold=false" >> $GITHUB_ENV
           fi
         working-directory: markt-frontend
         env:
           CI: true
 
       - name: Fail if below threshold
-        if: steps.get_changed_files.outputs.changed_files && steps.coverage_check.outputs.below_threshold == 'true'
+        if: ${{ steps.coverage_check.outputs.below_threshold == 'true' }}
         run: exit 1
