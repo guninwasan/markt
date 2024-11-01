@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useIsMobile } from "../../hooks";
 import {
   Menu,
@@ -18,9 +18,26 @@ const MenuItems = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
   const profileName = "Test Name";
+  const dropdownRef = useRef<HTMLLIElement>(null);
 
   const toggleDropdown = () => setShowDropdown(!showDropdown);
   const handleLogout = () => setIsLoggedIn(false);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setShowDropdown(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const renderMobileMenu = () => (
     <>
@@ -37,7 +54,7 @@ const MenuItems = () => {
   );
 
   const renderDesktopMenu = () => (
-    <MenuItem>
+    <MenuItem ref={dropdownRef}>
       <ProfileContainer>
         <ProfileButton onClick={toggleDropdown} aria-expanded={showDropdown}>
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -80,7 +97,9 @@ const MenuItems = () => {
         )
       ) : (
         <MenuItem>
-          <MenuLink to="/register">Login/Register</MenuLink>
+          <MenuLink as={NavLink} to="/register">
+            Login/Register
+          </MenuLink>
         </MenuItem>
       )}
     </Menu>
