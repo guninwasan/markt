@@ -45,7 +45,7 @@ def register():
     # Validate phone number:
     #   - 123-456-7890, (123) 456-7890, or +1-123-456-7890
     PHONE_REGEX = re.compile(r"^\+?[1-9]\d{1,14}$")
-    if not bool(PHONE_REGEX.match(data['phone'])):
+    if not bool(PHONE_REGEX.match(str(data['phone']))):
         validation_errors.append("Phone number must be of valid format: 123-456-7890, (123) 456-7890, or +1-123-456-7890")
 
     # Validate password:
