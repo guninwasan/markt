@@ -11,7 +11,6 @@ describe("Selectors", () => {
       jwt: "some-jwt-token",
     },
     device: {
-      isMobile: true,
       isLoggedIn: false,
       isLoading: false,
     },
@@ -44,11 +43,6 @@ describe("Selectors", () => {
   it("should return the user auth JWT", () => {
     const jwt = selectors.getUserAuthJWT(mockState);
     expect(jwt).toBe("some-jwt-token");
-  });
-
-  it("should return if the device is mobile", () => {
-    const isMobile = selectors.getIsMobile(mockState);
-    expect(isMobile).toBe(true);
   });
 
   it("should return if the user is logged in", () => {

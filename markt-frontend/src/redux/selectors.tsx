@@ -6,7 +6,6 @@ const selectors = {
   getEmail: (state: RootState) => state.userAuth.email,
   getPhone: (state: RootState) => state.userAuth.phone,
   getUserAuthJWT: (state: RootState) => state.userAuth.jwt,
-  getIsMobile: (state: RootState) => state.device.isMobile,
   getIsLoggedIn: (state: RootState) => state.device.isLoggedIn,
 };
 

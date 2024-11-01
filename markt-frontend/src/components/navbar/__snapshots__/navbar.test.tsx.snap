@@ -4,11 +4,13 @@ exports[`Navbar should match the snapshot on desktop 1`] = `
 <nav
   class="sc-blHHSb nIHai"
 >
-  <div
-    class="sc-gtLWhw dgXBwO"
+  <a
+    aria-current="page"
+    class="sc-gtLWhw fSWOOJ active"
+    href="/"
   >
     Markt
-  </div>
+  </a>
 </nav>
 `;
 
@@ -16,13 +18,15 @@ exports[`Navbar should match the snapshot on mobile 1`] = `
 <nav
   class="sc-blHHSb nIHai"
 >
-  <div
-    class="sc-gtLWhw dgXBwO"
+  <a
+    aria-current="page"
+    class="sc-gtLWhw fSWOOJ active"
+    href="/"
   >
     Markt
-  </div>
+  </a>
   <div
-    class="sc-ivxoEo cMOWMP"
+    class="sc-ghWlax eVoPrc"
     data-testid="hamburger"
   >
     <span />
@@ -30,7 +34,7 @@ exports[`Navbar should match the snapshot on mobile 1`] = `
     <span />
   </div>
   <div
-    class="sc-kLhKbu dJZIMR"
+    class="sc-ixGGxD bReSGM"
     data-testid="backdrop"
   />
 </nav>

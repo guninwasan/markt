@@ -7,7 +7,6 @@ type UserAuthType = {
 };
 
 type DeviceSliceType = {
-  isMobile: null | boolean;
   isLoggedIn: boolean;
   isLoading: boolean;
 };

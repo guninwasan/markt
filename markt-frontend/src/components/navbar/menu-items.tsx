@@ -12,16 +12,27 @@ import {
   LogoutButton,
 } from "./navbar.styles";
 import { NavLink } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, selectors, setIsLoggedIn } from "../../redux";
 
 const MenuItems = () => {
   const { isMobile } = useIsMobile();
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const dispatch = useDispatch();
+  const { isLoggedIn, name } = useSelector((state: RootState) => ({
+    isLoggedIn: selectors.getIsLoggedIn(state),
+    name: selectors.getName(state),
+  }));
+
   const [showDropdown, setShowDropdown] = useState(false);
-  const profileName = "Test Name";
   const dropdownRef = useRef<HTMLLIElement>(null);
 
   const toggleDropdown = () => setShowDropdown(!showDropdown);
-  const handleLogout = () => setIsLoggedIn(false);
+
+  const handleLogout = () => {
+    dispatch(setIsLoggedIn(false));
+    localStorage.removeItem("jwt");
+    window.location.reload();
+  };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -39,7 +50,7 @@ const MenuItems = () => {
     };
   }, []);
 
-  const renderMobileMenu = () => (
+  const MobileMenu = () => (
     <>
       <MenuItem>
         <MenuLink to="/account">My Account</MenuLink>
@@ -53,7 +64,7 @@ const MenuItems = () => {
     </>
   );
 
-  const renderDesktopMenu = () => (
+  const DesktopMenu = () => (
     <MenuItem ref={dropdownRef}>
       <ProfileContainer>
         <ProfileButton onClick={toggleDropdown} aria-expanded={showDropdown}>
@@ -61,9 +72,7 @@ const MenuItems = () => {
             <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.33 0-10 1.671-10 5v1h20v-1c0-3.329-6.67-5-10-5z" />
           </svg>
         </ProfileButton>
-        {profileName.length <= 10 && (
-          <ProfileIconText>{profileName}</ProfileIconText>
-        )}
+        {name.length <= 10 && <ProfileIconText>{name}</ProfileIconText>}
       </ProfileContainer>
       {showDropdown && (
         <Dropdown>
@@ -91,9 +100,9 @@ const MenuItems = () => {
       </MenuItem>
       {isLoggedIn ? (
         isMobile ? (
-          renderMobileMenu()
+          <MobileMenu />
         ) : (
-          renderDesktopMenu()
+          <DesktopMenu />
         )
       ) : (
         <MenuItem>
