@@ -22,15 +22,37 @@ jobs:
         run: npm install
         working-directory: markt-frontend
 
-      - name: Run Tests on Changed Files
+      - name: Run Tests on Changed Files with Coverage
         run: |
           changed_files=$(git diff --name-only origin/main HEAD)
           test_files=$(echo "$changed_files" | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$" | xargs -I {} npx jest --findRelatedTests {})
           if [ -z "$test_files" ]; then
             echo "No related tests found for changed files."
           else
-            echo "Running related tests for changed files:"
+            echo "Running related tests with coverage for changed files:"
             echo "$test_files"
-            npx jest --findRelatedTests $test_files --coverage --watchAll=false
+            npx jest --findRelatedTests $test_files --coverage --coverageReporters=text-summary --watchAll=false | tee coverage_output.txt
           fi
         working-directory: markt-frontend
+
+      - name: Check Coverage Threshold
+        if: success() # Only if tests were run successfully
+        run: |
+          coverage=$(grep -oP 'All files\s*\|\s*\K[0-9]+\.[0-9]+' coverage_output.txt)
+          threshold=80
+          echo "Coverage for affected files: $coverage%"
+          if (( $(echo "$coverage < $threshold" | bc -l) )); then
+            echo "Code coverage ($coverage%) is below the threshold ($threshold%). Failing the job."
+            cat coverage_output.txt
+            exit 1
+          else
+            echo "Code coverage ($coverage%) meets the threshold ($threshold%)."
+          fi
+        working-directory: markt-frontend
+
+      - name: Upload Coverage Report
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: markt-frontend/coverage/
