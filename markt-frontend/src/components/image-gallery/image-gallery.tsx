@@ -5,10 +5,6 @@ const GalleryContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 10px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 const ImageWrapper = styled.div`
@@ -56,87 +52,82 @@ const Modal = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   z-index: 1000;
+  animation: fadeIn 0.3s ease;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 `;
 
 const CarouselContainer = styled.div`
   position: relative;
-  max-width: 90%;
+  max-width: 80%;
   max-height: 80vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
+  align-items: center;
+  overflow: hidden;
 `;
 
-const CarouselImage = styled.img<{ scale: number }>`
+const CarouselImage = styled.img<{
+  scale: number;
+  translateX: number;
+  translateY: number;
+}>`
   transition: transform 0.3s ease;
-  transform: ${({ scale }) => `scale(${scale})`};
+  transform-origin: center;
+  cursor: ${({ scale }) => (scale > 1 ? "zoom-out" : "zoom-in")};
   max-width: 100%;
   max-height: 100%;
+  transform: ${({ scale, translateX, translateY }) =>
+    `scale(${scale}) translate(${translateX}%, ${translateY}%)`};
 `;
 
 const CarouselVideo = styled.video`
   max-width: 100%;
   max-height: 100%;
   outline: none;
+  transition: opacity 0.3s ease;
 `;
 
-const NavigationButton = styled.button`
+const CloseButton = styled.button`
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.7);
+  top: 20px;
+  right: 20px;
+  background: none;
   border: none;
+  color: white;
   font-size: 24px;
   cursor: pointer;
-  padding: 10px;
-  border-radius: 50%;
-  z-index: 1001;
-`;
-
-const PrevButton = styled(NavigationButton)`
-  left: 10px;
-`;
-
-const NextButton = styled(NavigationButton)`
-  right: 10px;
-`;
-
-const Magnifier = styled.div<{
-  x: number;
-  y: number;
-  zoom: number;
-  src: string;
-}>`
-  position: absolute;
-  top: ${({ y }) => y}px;
-  left: ${({ x }) => x}px;
-  width: 150px;
-  height: 150px;
-  background-image: url(${({ src }) => src});
-  background-repeat: no-repeat;
-  background-size: ${({ zoom }) => zoom * 100}%;
-  border-radius: 50%;
-  border: 2px solid white;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  z-index: 1002;
+  transition: transform 0.2s ease;
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 const ThumbnailContainer = styled.div`
   display: flex;
   gap: 5px;
-  margin-top: 10px;
+  margin-top: 15px;
+  justify-content: center;
+  animation: fadeIn 0.4s ease;
 `;
 
 const Thumbnail = styled.div<{ active: boolean }>`
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border: 2px solid ${({ active }) => (active ? "white" : "transparent")};
   overflow: hidden;
   cursor: pointer;
+  transition: transform 0.2s ease, border 0.2s ease;
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 const ThumbnailImage = styled.img`
@@ -150,14 +141,37 @@ const ThumbnailVideo = styled.video`
   height: 100%;
 `;
 
+const NavigationButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const PrevButton = styled(NavigationButton)`
+  left: 10px;
+`;
+
+const NextButton = styled(NavigationButton)`
+  right: 10px;
+`;
+
 const detectMediaType = (url: string): "image" | "video" => {
   const imageExtensions = [".jpg", ".jpeg", ".png", ".gif"];
   const videoExtensions = [".mp4", ".webm", ".ogg"];
   const extension = url.split(".").pop()?.toLowerCase();
-
-  if (extension && imageExtensions.includes(`.${extension}`)) return "image";
-  if (extension && videoExtensions.includes(`.${extension}`)) return "video";
-  return "image";
+  return extension && videoExtensions.includes(`.${extension}`)
+    ? "video"
+    : "image";
 };
 
 interface ImageGalleryProps {
@@ -167,9 +181,8 @@ interface ImageGalleryProps {
 const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMagnifying, setIsMagnifying] = useState(false);
-  const [magnifierPosition, setMagnifierPosition] = useState({ x: 0, y: 0 });
-  const [zoomLevel] = useState(2.5);
+  const [scale, setScale] = useState(1);
+  const [translate, setTranslate] = useState({ x: 0, y: 0 });
 
   const handleMediaClick = (index: number) => {
     setCurrentIndex(index);
@@ -178,68 +191,75 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setScale(1);
+    setTranslate({ x: 0, y: 0 });
   };
 
-  const goToNextMedia = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % mediaUrls.length);
+  const goToNextMedia = () =>
+    setCurrentIndex((prev) => (prev + 1) % mediaUrls.length);
+  const goToPrevMedia = () =>
+    setCurrentIndex((prev) => (prev === 0 ? mediaUrls.length - 1 : prev - 1));
+
+  const toggleZoom = (e: React.MouseEvent<HTMLImageElement>) => {
+    if (scale > 1) {
+      setScale(1);
+      setTranslate({ x: 0, y: 0 });
+    } else {
+      setScale(2);
+      const { offsetX, offsetY, target } = e.nativeEvent;
+      const { width, height } = target as HTMLImageElement;
+      const translateX = ((offsetX / width) * 100 - 50) * 0.5;
+      const translateY = ((offsetY / height) * 100 - 50) * 0.5;
+      setTranslate({ x: translateX, y: translateY });
+    }
   };
 
-  const goToPrevMedia = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? mediaUrls.length - 1 : prevIndex - 1
-    );
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.style.display = "none";
   };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const { offsetX, offsetY, target } = e.nativeEvent;
-    const { offsetWidth, offsetHeight } = target as HTMLImageElement;
-
-    const x = (offsetX / offsetWidth) * 100;
-    const y = (offsetY / offsetHeight) * 100;
-
-    setMagnifierPosition({ x, y });
-  };
-
-  const handleMouseEnter = () => setIsMagnifying(true);
-  const handleMouseLeave = () => setIsMagnifying(false);
 
   const mediaItems = mediaUrls.map((url) => ({
     src: url,
     type: detectMediaType(url),
   }));
 
-  const displayedItems = mediaItems.slice(0, 4);
-
   return (
     <>
       <GalleryContainer>
-        {displayedItems.map((item, index) => (
+        {mediaItems.slice(0, 4).map((item, index) => (
           <ImageWrapper key={index} onClick={() => handleMediaClick(index)}>
             {item.type === "image" ? (
               <Image
                 src={item.src}
-                blurred={index === 3 && mediaUrls.length > 4}
+                onError={handleImageError}
+                blurred={index === 3 && mediaItems.length > 4}
               />
             ) : (
-              <CarouselVideo src={item.src} controls />
+              <ThumbnailVideo src={item.src} controls muted />
             )}
-            {index === 3 && mediaUrls.length > 4 && (
-              <LeftCountOverlay>+ {mediaUrls.length - 4} Left</LeftCountOverlay>
+            {index === 3 && mediaItems.length > 4 && (
+              <LeftCountOverlay>
+                + {mediaItems.length - 4} Left
+              </LeftCountOverlay>
             )}
           </ImageWrapper>
         ))}
       </GalleryContainer>
 
       {isModalOpen && (
-        <Modal>
-          <PrevButton onClick={goToPrevMedia}>❮</PrevButton>
-          <CarouselContainer
-            onMouseMove={handleMouseMove}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
+        <Modal onClick={closeModal}>
+          <CloseButton onClick={closeModal}>✕</CloseButton>
+          <CarouselContainer onClick={(e) => e.stopPropagation()}>
+            <PrevButton onClick={goToPrevMedia}>❮</PrevButton>
             {mediaItems[currentIndex].type === "image" ? (
-              <CarouselImage src={mediaItems[currentIndex].src} scale={1} />
+              <CarouselImage
+                src={mediaItems[currentIndex].src}
+                onClick={toggleZoom}
+                scale={scale}
+                translateX={translate.x}
+                translateY={translate.y}
+                onError={handleImageError}
+              />
             ) : (
               <CarouselVideo
                 src={mediaItems[currentIndex].src}
@@ -247,19 +267,8 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
                 autoPlay
               />
             )}
-            {isMagnifying && mediaItems[currentIndex].type === "image" && (
-              <Magnifier
-                src={mediaItems[currentIndex].src}
-                x={magnifierPosition.x}
-                y={magnifierPosition.y}
-                zoom={zoomLevel}
-                style={{
-                  backgroundPosition: `${magnifierPosition.x}% ${magnifierPosition.y}%`,
-                }}
-              />
-            )}
+            <NextButton onClick={goToNextMedia}>❯</NextButton>
           </CarouselContainer>
-          <NextButton onClick={goToNextMedia}>❯</NextButton>
           <ThumbnailContainer>
             {mediaItems.map((item, index) => (
               <Thumbnail
@@ -268,7 +277,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
                 onClick={() => setCurrentIndex(index)}
               >
                 {item.type === "image" ? (
-                  <ThumbnailImage src={item.src} />
+                  <ThumbnailImage src={item.src} onError={handleImageError} />
                 ) : (
                   <ThumbnailVideo src={item.src} muted />
                 )}
