@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ImageGallery should match snapshot 1`] = `
+<div>
+  <div
+    class="sc-blHHSb kscHbD"
+  >
+    <div
+      class="sc-fAUdSK jIA-DAh"
+    >
+      <img
+        class="sc-ixGGxD fzPTpc"
+        src="https://example.com/image1.jpg"
+      />
+    </div>
+    <div
+      class="sc-fAUdSK jIA-DAh"
+    >
+      <img
+        class="sc-ixGGxD fzPTpc"
+        src="https://example.com/image2.jpg"
+      />
+    </div>
+  </div>
+</div>
+`;
