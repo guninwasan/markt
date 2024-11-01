@@ -1,4 +1,4 @@
-name: Frontend Coverage Test for File Changes Only
+name: Frontend Coverage Test for Changed Files Only
 
 on:
   pull_request:
@@ -24,36 +24,40 @@ jobs:
         run: npm install
         working-directory: markt-frontend
 
-      - name: Run Tests on Changed Files with Coverage
+      - name: Run Full Test Coverage
         run: |
-          changed_files=$(git diff --name-only origin/main HEAD)
-          test_files=$(echo "$changed_files" | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$" | xargs -I {} npx jest --findRelatedTests {})
-          if [ -z "$test_files" ]; then
-            echo "No related tests found for changed files."
-          else
-            echo "Running related tests with coverage for changed files:"
-            echo "$test_files"
-            npx jest --findRelatedTests $test_files --coverage --coverageReporters=text-summary --watchAll=false | tee coverage_output.txt
-          fi
+          npm run test-coverage | tee coverage_output.txt
         working-directory: markt-frontend
 
-      - name: Check Coverage Threshold
+      - name: Identify Changed Files
+        id: changes
+        run: |
+          git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$" > changed_files.txt
+          echo "Changed files:"
+          cat changed_files.txt
+
+      - name: Filter Coverage Report for Changed Files
         if: success()
         run: |
-          coverage=$(grep -oP 'All files\s*\|\s*\K[0-9]+\.[0-9]+' coverage_output.txt || echo "0")
           threshold=80
-          if [ -z "$coverage" ] || (( $(echo "$coverage < $threshold" | bc -l) )); then
-            echo "Code coverage ($coverage%) is below the threshold ($threshold%). Failing the job."
-            cat coverage_output.txt
+          echo "Coverage report for changed files:"
+          fail=false
+          while IFS= read -r file; do
+            coverage=$(grep -A 1 "$file" coverage_output.txt | tail -n 1 | awk '{print $4}' | sed 's/%//')
+            echo "$file: $coverage%"
+            if (( $(echo "$coverage < $threshold" | bc -l) )); then
+              fail=true
+              echo "Code coverage for $file ($coverage%) is below the threshold ($threshold%)"
+            fi
+          done < changed_files.txt
+          if [ "$fail" = true ]; then
             exit 1
-          else
-            echo "Code coverage ($coverage%) meets the threshold ($threshold%)."
           fi
         working-directory: markt-frontend
 
-      - name: Upload Coverage Report
-        if: success()
+      - name: Upload Full Coverage Report
+        if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
+          name: full-coverage-report
           path: markt-frontend/coverage/
