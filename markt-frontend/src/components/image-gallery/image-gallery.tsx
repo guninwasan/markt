@@ -85,10 +85,10 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
 
       {isModalOpen && (
         <ModalContainer>
-          <CloseButton onClick={closeModal}>✕</CloseButton>
+          <CloseButton onClick={closeModal}>{"✕"}</CloseButton>
           <CarouselContent>
             <PrevButton onClick={goToPrevMedia} data-testid="prev">
-              ❮
+              {"❮"}
             </PrevButton>
             {/* <MediaWrapper onMouseMove={handleMouseMove}> */}
             <MediaWrapper>
@@ -107,7 +107,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
               )}
             </MediaWrapper>
             <NextButton onClick={goToNextMedia} data-testid="next">
-              ❯
+              {"❯"}
             </NextButton>
             <ThumbnailContainer>
               {mediaItems.map((item, index) => (
