@@ -61,8 +61,8 @@ const ZoomedImage = styled.img<{
   height: 70vh;
   object-fit: contain;
   transition: transform 0.3s ease;
-  // transform: scale(1.5)
-  //   translate(${({ offsetX }) => offsetX}%, ${({ offsetY }) => offsetY}%);
+  user-select: none;
+  user-drag: none;
 `;
 
 const ThumbnailContainer = styled.div`
@@ -71,6 +71,8 @@ const ThumbnailContainer = styled.div`
   margin-top: 20px;
   overflow-x: auto;
   justify-content: center;
+  user-select: none;
+  user-drag: none;
 `;
 
 const Thumbnail = styled.div<{ active: boolean }>`
@@ -84,12 +86,16 @@ const Thumbnail = styled.div<{ active: boolean }>`
   &:hover {
     transform: scale(1.05);
   }
+  user-select: none;
+  user-drag: none;
 `;
 
 const ThumbnailImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+  user-select: none;
+  user-drag: none;
 `;
 
 const ThumbnailVideo = styled.video`
