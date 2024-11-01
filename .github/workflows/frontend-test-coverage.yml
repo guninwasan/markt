@@ -11,37 +11,50 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "16"
+
       - name: Install dependencies
         run: npm install
         working-directory: markt-frontend
+
       - name: Identify Changed Files and Run Test Coverage
         run: |
           threshold=80
-          echo "Running full coverage and identifying changed files:"
           fail=false
-           coverage_output=$(npm run test-coverage --silent --coverageReporters=text)
-           echo "$coverage_output"
-           changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$" | xargs -n1 basename)
-           for file in $changed_files; do
-             coverage=$(echo "$coverage_output" | grep -A 1 "$file" | awk '/[0-9]+%/{gsub("%","",$4); print $4}')
-             if [ -n "$coverage" ]; then
-               echo "$file: $coverage%"
-               if (( $(echo "$coverage < $threshold" | bc -l) )); then
-                 fail=true
-                 echo "Code coverage for $file ($coverage%) is below the threshold ($threshold%)"
-               fi
-             else
-               echo "No coverage data found for $file."
-             fi
-           done
-           if [ "$fail" = true ]; then
+
+          # Run test coverage and save to a temporary file
+          npm run test-coverage --silent --coverageReporters=text > coverage_output.txt
+          cat coverage_output.txt
+
+          # Identify changed files
+          changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$")
+
+          for file in $changed_files; do
+            filename=$(basename "$file")
+            # Check if the filename exists in the coverage report and extract coverage
+            coverage=$(grep -A 1 "$filename" coverage_output.txt | awk '/[0-9]+%/{gsub("%","",$4); print $4}')
+            
+            if [ -n "$coverage" ]; then
+              echo "$filename: $coverage%"
+              if (( $(echo "$coverage < $threshold" | bc -l) )); then
+                fail=true
+                echo "Code coverage for $filename ($coverage%) is below the threshold ($threshold%)"
+              fi
+            else
+              echo "Coverage data not found for $filename in report, skipping."
+            fi
+          done
+
+          # Exit with failure if any file coverage is below threshold
+          if [ "$fail" = true ]; then
             exit 1
           fi
         working-directory: markt-frontend
+
       - name: Upload Full Coverage Report
         if: success() || failure()
         uses: actions/upload-artifact@v4
