@@ -21,17 +21,18 @@ jobs:
         run: npm install
         working-directory: markt-frontend
 
-      - name: Run Test Coverage with JSON Output
+      - name: Run Test Coverage and Capture JSON Output
+        id: coverage_json
         run: |
           threshold=80
           fail=false
 
-          npm run test-coverage --silent --coverageReporters=json-summary
+          coverage_output=$(npm run test-coverage --silent --coverageReporters=json)
 
           changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$")
 
           for file in $changed_files; do
-            coverage=$(jq -r --arg file "$file" '.[$file].lines.pct' <markt-frontend/coverage/coverage-summary.json)
+            coverage=$(echo "$coverage_output" | jq -r --arg file "$file" '.[$file].lines.pct')
             
             if [ "$coverage" != "null" ]; then
               echo "$file: $coverage%"
