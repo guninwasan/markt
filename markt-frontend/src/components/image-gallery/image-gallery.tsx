@@ -1,63 +1,138 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
+import {
+  GalleryContainer,
+  ImageWrapper,
+  ThumbnailImage,
+  ThumbnailVideo,
+  ModalContainer,
+  CloseButton,
+  CarouselContent,
+  PrevButton,
+  NextButton,
+  MediaWrapper,
+  ThumbnailContainer,
+  Thumbnail,
+  ZoomedImage,
+  IndexText,
+} from "./image-gallery.styles";
 
-const GalleryContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-`;
-
-const ImageWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  padding-top: 100%; /* 1:1 Aspect Ratio */
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
-`;
-
-const Placeholder = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: #666;
-`;
-
-const Image = styled.img`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
+const detectMediaType = (url: string): "image" | "video" => {
+  const imageExtensions = [".jpg", ".jpeg", ".png", ".gif"];
+  const videoExtensions = [".mp4", ".webm", ".ogg"];
+  const extension = url.split(".").pop()?.toLowerCase();
+  return extension && videoExtensions.includes(`.${extension}`)
+    ? "video"
+    : "image";
+};
 
 interface ImageGalleryProps {
-  images: string[];
+  mediaUrls: string[];
 }
 
-const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
-  const placeholders = 4 - images.length;
+const ImageGallery: React.FC<ImageGalleryProps> = ({ mediaUrls }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+
+  const mediaItems = mediaUrls.map((url) => ({
+    src: url,
+    type: detectMediaType(url),
+  }));
+
+  const handleMediaClick = (index: number) => {
+    setCurrentIndex(index);
+    setIsModalOpen(true);
+    setZoomPosition({ x: 0, y: 0 });
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const goToNextMedia = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + 1) % mediaUrls.length);
+    setZoomPosition({ x: 0, y: 0 });
+  };
+
+  const goToPrevMedia = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev === 0 ? mediaUrls.length - 1 : prev - 1));
+    setZoomPosition({ x: 0, y: 0 });
+  };
+
+  // const handleMouseMove = (e: any) => {
+  //   const { offsetX, offsetY, target } = e.nativeEvent;
+  //   const { width, height } = target;
+  //   const offsetXPercent = ((offsetX / width) * 2 - 1) * 25;
+  //   const offsetYPercent = ((offsetY / height) * 2 - 1) * 25;
+  //   setZoomPosition({ x: offsetXPercent, y: offsetYPercent });
+  // };
 
   return (
-    <GalleryContainer>
-      {images.map((src, index) => (
-        <ImageWrapper key={index}>
-          <Image src={src} alt={`Image ${index + 1}`} />
-        </ImageWrapper>
-      ))}
-      {Array.from({ length: placeholders }).map((_, index) => (
-        <ImageWrapper key={`placeholder-${index}`}>
-          <Placeholder>Placeholder</Placeholder>
-        </ImageWrapper>
-      ))}
-    </GalleryContainer>
+    <>
+      <GalleryContainer>
+        {mediaItems.slice(0, 4).map((item, index) => (
+          <ImageWrapper key={index} onClick={() => handleMediaClick(index)}>
+            {item.type === "image" ? (
+              <ThumbnailImage src={item.src} />
+            ) : (
+              <ThumbnailVideo src={item.src} controls muted />
+            )}
+          </ImageWrapper>
+        ))}
+      </GalleryContainer>
+
+      {isModalOpen && (
+        <ModalContainer>
+          <CloseButton onClick={closeModal}>{"✕"}</CloseButton>
+          <CarouselContent>
+            <PrevButton onClick={goToPrevMedia} data-testid="prev">
+              {"❮"}
+            </PrevButton>
+            {/* <MediaWrapper onMouseMove={handleMouseMove}> */}
+            {/*  we can use this if we want to zoom and pan the image. Currently it works but it is not that stable*/}
+            {/* might make a new ticket for this if required */}
+            <MediaWrapper>
+              {mediaItems[currentIndex].type === "image" ? (
+                <ZoomedImage
+                  src={mediaItems[currentIndex].src}
+                  offsetX={zoomPosition.x}
+                  offsetY={zoomPosition.y}
+                />
+              ) : (
+                <ThumbnailVideo
+                  src={mediaItems[currentIndex].src}
+                  controls
+                  autoPlay
+                />
+              )}
+            </MediaWrapper>
+            <NextButton onClick={goToNextMedia} data-testid="next">
+              {"❯"}
+            </NextButton>
+            <ThumbnailContainer>
+              {mediaItems.map((item, index) => (
+                <Thumbnail
+                  key={index}
+                  active={index === currentIndex}
+                  onClick={() => setCurrentIndex(index)}
+                >
+                  {item.type === "image" ? (
+                    <ThumbnailImage src={item.src} />
+                  ) : (
+                    <ThumbnailVideo src={item.src} muted />
+                  )}
+                </Thumbnail>
+              ))}
+            </ThumbnailContainer>
+            <IndexText>
+              {currentIndex + 1}/{mediaItems.length}
+            </IndexText>
+          </CarouselContent>
+        </ModalContainer>
+      )}
+    </>
   );
 };
 

@@ -35,13 +35,11 @@ const ProductListingComponent = () => {
       <ProductListingContainer isMobile={isMobile}>
         <ProductImages>
           <ImageGallery
-            images={[
-              "https://via.placeholder.com/150",
-              "https://via.placeholder.com/150",
-              "https://via.placeholder.com/150",
-              "https://via.placeholder.com/150",
-              "https://via.placeholder.com/150",
-              "https://via.placeholder.com/150",
+            mediaUrls={[
+              "https://images-na.ssl-images-amazon.com/images/I/71g2ednj0JL._AC_SL1500_.jpg",
+              "https://images-na.ssl-images-amazon.com/images/I/81QpkIctqPL._AC_SL1500_.jpg",
+              "https://images-na.ssl-images-amazon.com/images/I/71K7Q4FpguL._AC_SL1500_.jpg",
+              "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
             ]}
           />
         </ProductImages>
