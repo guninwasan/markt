@@ -9,7 +9,7 @@ const coverContainerStyles = {
   alignItems: "center" as const,
   justifyContent: "center" as const, // Center content vertically
   flexShrink: 0,
-  background: "#B6B6B6",
+  background: "#87ACBB",
   boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
   overflow: "hidden", // Ensure no overflow to prevent scrolling
 };
@@ -42,13 +42,13 @@ const titleStyles = {
 };
 
 const subtitleStyles = {
-  fontSize: "2rem",
+  fontSize: "4.2rem",
   fontStyle: "normal",
   fontWeight: 700,
   lineHeight: "normal",
-  marginLeft: "31.56rem",
-  marginRight: "1rem",
-  marginTop: "auto",
+  marginLeft: "0",
+  marginRight: "4.6rem",
+  marginTop: "2rem",
   marginBottom: "auto",
   color: "#4D4D4D",
 };

@@ -6,7 +6,17 @@ const HomePage = () => {
     <div>
       <Navbar />
       <SearchBar></SearchBar>
-      <img src="/" alt="image" width={"100%"} height={400} />
+      <img
+        src="/cover-image3.jpg"
+        alt="Cover Image"
+        style={{
+          width: "100%",
+          height: "400px",
+          objectFit: "cover",
+          objectPosition: "bottom",
+        }}
+      />
+
       <ExploreListings />
     </div>
   );
