@@ -1,4 +1,4 @@
-name: Run Tests and Check Coverage
+name: Frontend Overall Test Coverage
 
 on:
   pull_request:

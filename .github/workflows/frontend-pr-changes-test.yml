@@ -1,4 +1,4 @@
-name: Frontend Coverage Test for Changed Files Only
+name: Frontend PR Changes Test Coverage
 
 on:
   pull_request:
