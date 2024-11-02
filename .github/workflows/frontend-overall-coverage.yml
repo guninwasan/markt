@@ -24,7 +24,7 @@ jobs:
 
       - name: Run Tests with Coverage
         run: |
-          npm run test-coverage -- --coverageReporters=text-summary | tee coverage_output.txt
+          npm run test-coverage | tee coverage_output.txt
         working-directory: markt-frontend
 
       - name: Check Coverage Percentage
@@ -36,6 +36,7 @@ jobs:
             echo "Code coverage ($coverage%) is below the threshold ($threshold%). Failing the job."
             echo "Coverage Report:"
             cat coverage_output.txt
+            echo "Code coverage ($coverage%) is below the threshold ($threshold%). Failing the job."
             exit 1
           else
             echo "Code coverage ($coverage%) meets the threshold ($threshold%)."
