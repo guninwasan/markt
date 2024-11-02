@@ -4,7 +4,6 @@ import {
   NavbarContainer,
   MarktHeaderText,
   Hamburger,
-  MobileMenuContainer,
   Backdrop,
   Sidebar,
 } from "./navbar.styles";
@@ -24,7 +23,7 @@ const Navbar = () => {
 
   return (
     <NavbarContainer>
-      <MarktHeaderText>Markt</MarktHeaderText>
+      <MarktHeaderText to={"/"}>Markt</MarktHeaderText>
       {isMobile ? (
         <>
           <Hamburger
