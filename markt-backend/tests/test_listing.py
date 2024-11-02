@@ -7,8 +7,7 @@ from database.models import Listing, User
 
 @pytest.fixture
 def client():
-    test_db = "test_user.db"
-    app = create_app_api(test_db, testing=True)
+    app = create_app_api(testing=True)
 
     with app.app_context():
         db.create_all()  # setup
