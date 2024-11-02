@@ -4,7 +4,6 @@ import {
   NavbarContainer,
   MarktHeaderText,
   Hamburger,
-  MobileMenuContainer,
   Backdrop,
   Sidebar,
 } from "./navbar.styles";
@@ -24,18 +23,28 @@ const Navbar = () => {
 
   return (
     <NavbarContainer>
-      <MarktHeaderText>Markt</MarktHeaderText>
+      <MarktHeaderText to={"/"}>Markt</MarktHeaderText>
       {isMobile ? (
         <>
-          <Hamburger onClick={toggleSidebar} isOpen={isOpen}>
+          <Hamburger
+            onClick={toggleSidebar}
+            isOpen={isOpen}
+            data-testid="hamburger"
+          >
             <span />
             <span />
             <span />
           </Hamburger>
-          <Backdrop isOpen={isOpen} onClick={closeSidebar} />
-          <Sidebar isOpen={isOpen}>
-            <MenuItems />
-          </Sidebar>
+          <Backdrop
+            data-testid="backdrop"
+            isOpen={isOpen}
+            onClick={closeSidebar}
+          />
+          {isOpen && (
+            <Sidebar data-testid="sidebar" isOpen={isOpen}>
+              <MenuItems />
+            </Sidebar>
+          )}
         </>
       ) : (
         <MenuItems />
