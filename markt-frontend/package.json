@@ -27,7 +27,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test-coverage": "react-scripts test --coverage --watchAll=false --no-cache",
+    "test-coverage": "react-scripts test --coverage --watchAll=false --no-cache --collectCoverageFrom='src/**/*.{js,jsx,ts,tsx}' --collectCoverageFrom='!src/**/index.tsx' --collectCoverageFrom='!src/**/types.tsx'",
     "eject": "react-scripts eject",
     "dev": "react-scripts start",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' --ignore-pattern '**/*.test.*' --ignore-pattern '**/*.spec.*'"
