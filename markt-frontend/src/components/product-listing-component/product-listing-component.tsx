@@ -12,12 +12,37 @@ import {
   SellerInfo,
   SellerAvatar,
   ProductSpecsContainer,
+  SpecGrid,
+  SpecCategory,
+  SpecItem,
   BottomTab,
 } from "./product-listing-component.styles";
+import { ProductSpecs } from "./product-specifications";
 
 const ProductListingComponent = () => {
   const { isMobile } = useIsMobile();
   const [isBottomTabVisible, setBottomTabVisible] = useState(false);
+
+  const dummySpecifications = {
+    basicInfo: {
+      condition: "Good",
+      brand: "Brand Name",
+      model: "Model X",
+      yearOfManufacture: "2022",
+    },
+    appearance: {
+      color: "Black",
+      dimensions: "100 x 100 x 100 cm",
+      weight: "500g",
+      material: "Aluminum",
+    },
+    performance: {
+      batteryLife: "10 hours",
+      storageCapacity: "256GB",
+      additionalFeatures: "Water-resistant, Bluetooth-enabled",
+    },
+    warranty: "No warranty",
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -70,19 +95,13 @@ const ProductListingComponent = () => {
               </SellerInfo>
             </PriceBox>
           </TitleAndPriceContainer>
-          <ProductSpecsContainer>
-            <h2>Product Specifications</h2>
-            <ul>
-              <li>Specification 1</li>
-              <li>Specification 2</li>
-              <li>Specification 3</li>
-              <li>Specification 4</li>
-            </ul>
-          </ProductSpecsContainer>
+          <ProductSpecs specs={dummySpecifications} />
         </ProductDetails>
       </ProductListingContainer>
+
       {isMobile && (
         <BottomTab isVisible={isBottomTabVisible} test-id="bottom-tab">
+          <PriceText>CAD $$$</PriceText>
           <SellerInfo>
             <SellerAvatar
               src="https://via.placeholder.com/50"

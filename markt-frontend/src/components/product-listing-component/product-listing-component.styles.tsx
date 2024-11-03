@@ -81,6 +81,33 @@ const BottomTab = styled.div<{ isVisible: boolean }>`
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 `;
 
+const SpecGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+`;
+
+const SpecCategory = styled.div`
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  h3 {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+  }
+`;
+
+const SpecItem = styled.p`
+  margin: 5px 0;
+  font-size: 0.95em;
+  color: #555;
+`;
+
 export {
   ProductListingContainer,
   ProductImages,
@@ -93,4 +120,7 @@ export {
   SellerAvatar,
   ProductSpecsContainer,
   BottomTab,
+  SpecGrid,
+  SpecCategory,
+  SpecItem,
 };
