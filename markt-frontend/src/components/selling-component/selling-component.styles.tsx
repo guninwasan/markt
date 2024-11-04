@@ -50,7 +50,7 @@ const Label = styled.label`
 `;
 
 const TextInput = styled.input`
-  width: 100%;
+  width: 90%;
   padding: 14px;
   font-size: 16px;
   border: 1px solid #ddd;
@@ -64,7 +64,7 @@ const TextInput = styled.input`
 `;
 
 const TextArea = styled.textarea`
-  width: 100%;
+  width: 90%;
   padding: 14px;
   font-size: 16px;
   border: 1px solid #ddd;

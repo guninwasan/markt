@@ -115,30 +115,28 @@ const SellingComponent = () => {
       <h1>List Your Product</h1>
       <form onSubmit={handleSubmit}>
         <SectionHeader>Essential Details</SectionHeader>
-        <FormRow>
-          <FormGroup style={{ flex: "1 1 45%" }}>
-            <Label>Title *</Label>
-            <TextInput
-              type="text"
-              name="title"
-              required
-              placeholder="Enter the product title"
-              value={formData.title}
-              onChange={handleChange}
-            />
-          </FormGroup>
-          <FormGroup style={{ flex: "1 1 45%" }}>
-            <Label>Price (CAD) *</Label>
-            <TextInput
-              type="number"
-              name="price"
-              required
-              placeholder="Enter the product price"
-              value={formData.price}
-              onChange={handleChange}
-            />
-          </FormGroup>
-        </FormRow>
+        <FormGroup style={{ flex: "1 1 45%" }}>
+          <Label>Title *</Label>
+          <TextInput
+            type="text"
+            name="title"
+            required
+            placeholder="Enter the product title"
+            value={formData.title}
+            onChange={handleChange}
+          />
+        </FormGroup>
+        <FormGroup style={{ flex: "1 1 45%" }}>
+          <Label>Price (CAD) *</Label>
+          <TextInput
+            type="number"
+            name="price"
+            required
+            placeholder="Enter the product price"
+            value={formData.price}
+            onChange={handleChange}
+          />
+        </FormGroup>
 
         <FormGroup>
           <Label>Description *</Label>
@@ -209,7 +207,7 @@ const SellingComponent = () => {
           </FormGroup>
         ))}
 
-        <Button type="submit">Submit Listing</Button>
+        <Button type="submit">Post Listing</Button>
       </form>
     </SellingFormContainer>
   );
