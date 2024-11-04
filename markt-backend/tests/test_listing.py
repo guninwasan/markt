@@ -27,7 +27,7 @@ def test_create_listing(client):
     incomplete_data = {
         "title": "Math Textbook",
         "condition": "used",
-        "owner_id": test_user.id
+        "owner_email": test_user.email
     }
     rsp = client.post('/api/listing/create', json=incomplete_data)
     assert rsp.status_code == 400
@@ -42,7 +42,7 @@ def test_create_listing(client):
         "price": 100,
         "quantity": 1,
         "condition": "used",
-        "owner_id": 9999
+        "owner_email": "invalid@gmail.com"
     }
     rsp = client.post('/api/listing/create', json=invalid_user)
     assert rsp.status_code == 404
@@ -57,7 +57,7 @@ def test_create_listing(client):
         "price": -4848,
         "quantity": 1,
         "condition": "used",
-        "owner_id": test_user.id
+        "owner_email": test_user.email
     }
     rsp = client.post('/api/listing/create', json=invalid_user)
     assert rsp.status_code == 400
@@ -71,7 +71,7 @@ def test_create_listing(client):
         "price": 100,
         "quantity": 1,
         "condition": "used",
-        "owner_id": test_user.id
+        "owner_email": test_user.email
     }
     rsp = client.post('/api/listing/create', json=data)
     assert rsp.status_code == 201

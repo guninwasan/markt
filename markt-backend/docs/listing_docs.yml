@@ -34,8 +34,8 @@ create:
             type: "boolean"
             default: false
             required: True
-          owner_id:
-            type: "integer"
+          owner_email:
+            type: "string"
             required: True
 
 get:

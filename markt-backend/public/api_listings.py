@@ -30,7 +30,7 @@ def create():
                         "errors": err.messages}), 400
 
     # Check if user exists
-    user = db.session.get(User, data['owner_id'])
+    user = User.query.filter_by(email=data['owner_email']).first()
     if user is None:
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
@@ -43,7 +43,7 @@ def create():
         quantity=data['quantity'],
         sold=data['sold'],
         condition=data['condition'],
-        owner_id=data['owner_id']
+        owner_id=user.id
     )
     db.session.add(listing)
     db.session.commit()
@@ -75,7 +75,6 @@ def get(id):
         "sold": listing.sold,
         "condition": listing.condition,
         "seller": {
-            "id": listing.owner.id,
             "phone": listing.owner.phone,
             "email": listing.owner.email
         }
@@ -107,7 +106,6 @@ def get_all():
             "condition": listing.condition,
             "sold": listing.sold,
             "seller": {
-                "id": listing.owner.id,
                 "phone": listing.owner.phone,
                 "email": listing.owner.email
             }
@@ -161,7 +159,6 @@ def update(id):
                             "data": "User does not exist!"}), 404
         listing.buyer_id = buyer.id
         buyer_rsp = {
-            "id": listing.buyer.id,
             "email": listing.buyer.email,
             "phone": listing.buyer.phone,
         }
