@@ -9,6 +9,7 @@ const ProductFlairs = ({ formData, handleTagSelection }: any) => (
         (tag) => (
           <Tag
             key={tag}
+            className={formData.flairs.includes(tag) ? "selected" : ""}
             selected={formData.flairs.includes(tag)}
             onClick={() => handleTagSelection(tag)}
           >
