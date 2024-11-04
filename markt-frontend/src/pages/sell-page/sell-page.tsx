@@ -1,5 +1,4 @@
-import { Navbar } from "../../components";
-import { SellingComponent } from "../../components/selling-component";
+import { Navbar, SellingComponent } from "../../components";
 
 const SellPage = () => {
   return (

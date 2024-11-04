@@ -42,7 +42,7 @@ describe("Specifications Component", () => {
     specs.forEach((spec) => {
       const input = screen.getByPlaceholderText(`Enter ${spec}`);
       expect(input).toBeInTheDocument();
-      expect(input).toHaveValue(formData[spec]);
+      expect(input).toHaveValue(formData[spec as keyof typeof formData] || "");
     });
   });
 
