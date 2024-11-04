@@ -16,12 +16,18 @@ import {
   SpecCategory,
   SpecItem,
   BottomTab,
+  ShareInterestButton,
+  ModalContent,
+  ModalBackdrop,
+  NoteTextArea,
 } from "./product-listing-component.styles";
 import { ProductSpecs } from "./product-specifications";
 
 const ProductListingComponent = () => {
   const { isMobile } = useIsMobile();
   const [isBottomTabVisible, setBottomTabVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [note, setNote] = useState("");
 
   const dummySpecifications = {
     basicInfo: {
@@ -55,6 +61,58 @@ const ProductListingComponent = () => {
     };
   }, []);
 
+  const handleShareInterestClick = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false); 
+  };
+
+  const handleSendEmail = () => {
+    /* NOTE FOR DEVELOPER: PLEASE UPDATE VARIABLES 
+    IN THIS AS WELL WHEN API CALLS MADE */
+    
+    const sellerName = "Seller Name"; 
+    const productTitle = "Product Title"; 
+    const productId = "Product ID"; 
+    const productPrice = "Product Price"; 
+    const buyerName = "Buyer Name"; 
+    const sellerEmail = "hello123@example.com";
+    const buyerNote = note; 
+  
+    const subject = `Interest in your product listing on Markt: ${productTitle}`;
+    
+    const body = `
+  Hello ${sellerName},
+  
+  I am interested in a product listed by you on Markt!
+  
+  Product details:
+  Product title: ${productTitle}
+  Product ID: ${productId}
+  Listed price: ${productPrice}
+
+  Note from buyer:
+  ${buyerNote}
+  
+  For the seller:
+
+  Please reply to the buyer on this email. 
+  
+  Please remove the listing if the product is no longer available.
+  
+  Regards,
+  Team Markt
+    `;
+  
+    const mailtoLink = `mailto:${sellerEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  
+    window.location.href = mailtoLink;
+  };
+  
+  
+
   return (
     <>
       <ProductListingContainer isMobile={isMobile}>
@@ -78,7 +136,14 @@ const ProductListingComponent = () => {
                 description description description description description
                 description description description
               </p>
+      
+              <ShareInterestButton onClick={handleShareInterestClick}>
+                Share Interest
+              </ShareInterestButton>
+
             </TitleAndDescription>
+
+
             <PriceBox>
               <PriceText>CAD $$$</PriceText>
               <div>Negotiable / Non-negotiable</div>
@@ -98,6 +163,26 @@ const ProductListingComponent = () => {
           <ProductSpecs specs={dummySpecifications} />
         </ProductDetails>
       </ProductListingContainer>
+
+      {isModalVisible && (
+        <ModalBackdrop>
+          <ModalContent>
+            <p>Before sharing your interest in the product with the seller, do you have any questions for the seller?</p>
+
+            <NoteTextArea
+              placeholder="Enter your concerns here..."
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
+            <div>
+              <button onClick={handleSendEmail}>
+                Share Interest
+              </button>
+              <button onClick={handleCloseModal} style={{ marginLeft: "10px" }}>Close</button>
+            </div>            
+          </ModalContent>
+        </ModalBackdrop>
+      )}
 
       {isMobile && (
         <BottomTab isVisible={isBottomTabVisible} test-id="bottom-tab">
