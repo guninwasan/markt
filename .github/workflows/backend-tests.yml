@@ -55,7 +55,6 @@ jobs:
         PGPASSWORD: welcome1234
       run: |
         psql -h localhost -U postgres -c "CREATE DATABASE \"MizzicaBackend\";"
-        psql -h localhost -U postgres -c "CREATE DATABASE \"MizzicaBackendTest\";"
     - name: Lint with flake8
       run: |
         cd markt-backend
