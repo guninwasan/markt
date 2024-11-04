@@ -91,7 +91,9 @@ const AddMediaButton = styled.button`
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
   &:hover {
-    background: #eef6ff;
+    background: grey;
+    color: #fff;
+    border: 2px dashed #fff;
   }
 `;
 
