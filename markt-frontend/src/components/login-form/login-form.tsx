@@ -8,8 +8,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useIsMobile } from "../../hooks";
 import { setUserDetails } from "../../redux/slices/user-auth-slice";
 
-
-
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const { isMobile } = useIsMobile();
@@ -81,11 +79,9 @@ const LoginForm: React.FC = () => {
         });
 
         const result = await response.json();
-        console.log(result);
 
         if (response.ok) {
           alert("Login successful! Redirecting to Home...");
-          // localStorage.setItem('jwt', result.token);
           dispatch(setUserDetails({
             userID: result.userID,
             name: result.name,

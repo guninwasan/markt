@@ -43,10 +43,10 @@ def register():
         validation_errors.append("Email must be a valid UofT email!")
 
     # Validate phone number:
-    #   - 123-456-7890, (123) 456-7890, or +1-123-456-7890
-    PHONE_REGEX = re.compile(r"^\+?[1-9]\d{1,14}$")
-    if not bool(PHONE_REGEX.match(str(data['phone']))):
-        validation_errors.append("Phone number must be of valid format: 123-456-7890, (123) 456-7890, or +1-123-456-7890")
+    #   - Exactly 10 digits, no letters or special characters
+    PHONE_REGEX = re.compile(r"^\d{10}$")
+    if not PHONE_REGEX.match(str(data['phone'])):
+        validation_errors.append("Phone number must be exactly 10 digits with no letters or special characters.")
 
     # Validate password:
     #   - Minimum 8 characters
