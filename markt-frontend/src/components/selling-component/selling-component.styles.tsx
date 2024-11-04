@@ -80,8 +80,8 @@ const AddMediaButton = styled.button`
   padding: 12px;
   font-size: 16px;
   font-weight: bold;
-  color: #0066cc;
-  border: 2px dashed #0066cc;
+  color: #000000;
+  border: 2px dashed #000000;
   border-radius: 8px;
   background: #f9f9f9;
   cursor: pointer;
