@@ -6,7 +6,25 @@ import {
   SectionHeader,
 } from "../selling-component.styles";
 
-const Specifications = ({ formData, handleChange }: any) => (
+type SpecificationsProps = {
+  formData: {
+    brand?: string;
+    model?: string;
+    yearOfManufacture?: string;
+    color?: string;
+    dimensions?: string;
+    weight?: string;
+    material?: string;
+    batteryLife?: string;
+    storageCapacity?: string;
+  };
+  handleChange: any;
+};
+
+const Specifications: React.FC<SpecificationsProps> = ({
+  formData,
+  handleChange,
+}) => (
   <>
     <SectionHeader>Specifications (Optional)</SectionHeader>
     {[
@@ -26,7 +44,7 @@ const Specifications = ({ formData, handleChange }: any) => (
           type="text"
           name={spec}
           placeholder={`Enter ${spec}`}
-          value={formData[spec] || ""}
+          value={formData[spec as keyof SpecificationsProps["formData"]] || ""}
           onChange={handleChange}
         />
       </FormGroup>
