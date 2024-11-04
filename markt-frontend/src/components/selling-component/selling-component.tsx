@@ -12,27 +12,7 @@ import {
   Button,
 } from "./selling-component.styles";
 
-type FormData = {
-  title: string;
-  price: string;
-  description: string;
-  negotiable: boolean;
-  condition: string;
-  flairs: string[];
-  media: File[];
-  brand: string;
-  model: string;
-  yearOfManufacture: string;
-  color: string;
-  dimensions: string;
-  weight: string;
-  material: string;
-  batteryLife: string;
-  storageCapacity: string;
-  additionalFeatures: string;
-};
-
-const initialFormData: FormData = {
+const initialFormData = {
   title: "",
   price: "",
   description: "",
@@ -50,10 +30,12 @@ const initialFormData: FormData = {
   batteryLife: "",
   storageCapacity: "",
   additionalFeatures: "",
+  additionalDetails: "",
 };
 
 const SellingComponent = () => {
-  const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [formData, setFormData] = useState<any>(initialFormData);
+  const [priceError, setPriceError] = useState<string>("");
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -63,18 +45,20 @@ const SellingComponent = () => {
     const { name, value, type } = e.target;
     if (type === "checkbox") {
       const { checked } = e.target as HTMLInputElement;
-      setFormData((prevData) => ({
+      setFormData((prevData: any) => ({
         ...prevData,
         [name]: checked,
       }));
     } else if (type === "file") {
       const { files } = e.target as HTMLInputElement;
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files ? Array.from(files) : prevData.media,
-      }));
+      if (files) {
+        setFormData((prevData: any) => ({
+          ...prevData,
+          media: [...prevData.media, ...Array.from(files)],
+        }));
+      }
     } else {
-      setFormData((prevData) => ({
+      setFormData((prevData: any) => ({
         ...prevData,
         [name]: value,
       }));
@@ -82,19 +66,31 @@ const SellingComponent = () => {
   };
 
   const handleTagSelection = (tag: string) => {
-    setFormData((prevData) => ({
+    setFormData((prevData: any) => ({
       ...prevData,
       flairs: prevData.flairs.includes(tag)
-        ? prevData.flairs.filter((flair) => flair !== tag)
+        ? prevData.flairs.filter((flair: any) => flair !== tag)
         : [...prevData.flairs, tag],
     }));
   };
 
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const priceAsNumber = parseFloat(value);
+    if (!isNaN(priceAsNumber) && priceAsNumber >= 0) {
+      setPriceError("");
+      setFormData((prevData: any) => ({ ...prevData, price: value }));
+    } else {
+      setPriceError("Please enter a valid positive number for price.");
+    }
+  };
+
   const handleAddMedia = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFormData((prevData) => ({
+    const files = e.target.files;
+    if (files) {
+      setFormData((prevData: any) => ({
         ...prevData,
-        // media: [...prevData.media, ...Array.from(e.target.files)],
+        media: [...prevData.media, ...Array.from(files)],
       }));
     }
   };
@@ -105,7 +101,11 @@ const SellingComponent = () => {
       alert("Please fill in all required fields.");
       return;
     }
-    console.log("Form Data Submitted:", formData);
+    if (priceError) {
+      alert("Please correct the errors in the form.");
+      return;
+    }
+    alert("Form Data Submitted");
     // connect with backend
   };
 
@@ -128,13 +128,14 @@ const SellingComponent = () => {
         <FormGroup style={{ flex: "1 1 45%" }}>
           <Label>Price (CAD) *</Label>
           <TextInput
-            type="number"
+            type="text"
             name="price"
             required
             placeholder="Enter the product price"
             value={formData.price}
-            onChange={handleChange}
+            onChange={handlePriceChange}
           />
+          {priceError && <p style={{ color: "red" }}>{priceError}</p>}
         </FormGroup>
 
         <FormGroup>
@@ -146,6 +147,18 @@ const SellingComponent = () => {
             value={formData.description}
             onChange={handleChange}
           />
+        </FormGroup>
+
+        <FormGroup>
+          <Label>
+            <input
+              type="checkbox"
+              name="negotiable"
+              checked={formData.negotiable}
+              onChange={handleChange}
+            />
+            Price Negotiable
+          </Label>
         </FormGroup>
 
         <SectionHeader>Media</SectionHeader>
@@ -161,6 +174,7 @@ const SellingComponent = () => {
             />
             + Add Images or Videos
           </AddMediaButton>
+          <p>{formData.media.length} files selected</p>
         </FormGroup>
 
         <SectionHeader>Product Flairs</SectionHeader>
@@ -196,11 +210,22 @@ const SellingComponent = () => {
               type="text"
               name={spec}
               placeholder={`Enter ${spec}`}
-              // value={formData[spec as keyof FormData] || ""}
+              value={formData[spec] || ""}
               onChange={handleChange}
             />
           </FormGroup>
         ))}
+
+        <SectionHeader>Additional Details</SectionHeader>
+        <FormGroup>
+          <Label>Additional Details</Label>
+          <TextArea
+            name="additionalDetails"
+            placeholder="Add any extra information about the product"
+            value={formData.additionalDetails}
+            onChange={handleChange}
+          />
+        </FormGroup>
 
         <Button type="submit">Post Listing</Button>
       </form>
