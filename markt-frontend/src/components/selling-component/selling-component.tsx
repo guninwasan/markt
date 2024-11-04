@@ -1,16 +1,12 @@
 import { useState, useRef } from "react";
+import { SellingFormContainer, Button } from "./selling-component.styles";
 import {
-  SellingFormContainer,
-  SectionHeader,
-  FormGroup,
-  Label,
-  TextInput,
-  TextArea,
-  AddMediaButton,
-  TagContainer,
-  Tag,
-  Button,
-} from "./selling-component.styles";
+  EssentialDetails,
+  MediaSection,
+  ProductFlairs,
+  Specifications,
+  AdditionalDetails,
+} from "./sections";
 
 const initialFormData = {
   title: "",
@@ -121,121 +117,24 @@ const SellingComponent = () => {
     <SellingFormContainer>
       <h1>List Your Product</h1>
       <form onSubmit={handleSubmit}>
-        <SectionHeader>Essential Details</SectionHeader>
-        <FormGroup style={{ flex: "1 1 45%" }}>
-          <Label>Title *</Label>
-          <TextInput
-            type="text"
-            name="title"
-            required
-            placeholder="Enter the product title"
-            value={formData.title}
-            onChange={handleChange}
-          />
-        </FormGroup>
-        <FormGroup style={{ flex: "1 1 45%" }}>
-          <Label>Price (CAD) *</Label>
-          <TextInput
-            type="text"
-            name="price"
-            required
-            placeholder="Enter the product price"
-            value={formData.price}
-            onChange={handlePriceChange}
-          />
-          {priceError && <p style={{ color: "red" }}>{priceError}</p>}
-        </FormGroup>
-
-        <FormGroup>
-          <Label>Description *</Label>
-          <TextArea
-            name="description"
-            required
-            placeholder="Provide a detailed description of the item..."
-            value={formData.description}
-            onChange={handleChange}
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>
-            <input
-              type="checkbox"
-              name="negotiable"
-              checked={formData.negotiable}
-              onChange={handleChange}
-            />
-            Price Negotiable
-          </Label>
-        </FormGroup>
-
-        <SectionHeader>Media</SectionHeader>
-        <FormGroup>
-          <Label>Images and Videos</Label>
-          <AddMediaButton type="button" onClick={handleAddMediaClick}>
-            <input
-              type="file"
-              multiple
-              accept="image/*,video/*"
-              onChange={handleAddMedia}
-              style={{ display: "none" }}
-              ref={fileInputRef}
-            />
-            + Add Images or Videos
-          </AddMediaButton>
-          <p>{formData.media.length} files selected</p>
-        </FormGroup>
-
-        <SectionHeader>Product Flairs</SectionHeader>
-        <TagContainer>
-          {["Like New", "Limited Edition", "Free Shipping", "Popular"].map(
-            (tag) => (
-              <Tag
-                key={tag}
-                selected={formData.flairs.includes(tag)}
-                onClick={() => handleTagSelection(tag)}
-              >
-                {tag}
-              </Tag>
-            )
-          )}
-        </TagContainer>
-
-        <SectionHeader>Specifications (Optional)</SectionHeader>
-        {[
-          "brand",
-          "model",
-          "yearOfManufacture",
-          "color",
-          "dimensions",
-          "weight",
-          "material",
-          "batteryLife",
-          "storageCapacity",
-        ].map((spec) => (
-          <FormGroup key={spec}>
-            <Label>{spec.charAt(0).toUpperCase() + spec.slice(1)}</Label>
-            <TextInput
-              type="text"
-              name={spec}
-              placeholder={`Enter ${spec}`}
-              value={formData[spec] || ""}
-              onChange={handleChange}
-            />
-          </FormGroup>
-        ))}
-
-        <SectionHeader>Additional Details</SectionHeader>
-        <FormGroup>
-          <Label>Additional Details</Label>
-          <TextArea
-            name="additionalDetails"
-            placeholder="Add any extra information about the product"
-            value={formData.additionalDetails}
-            onChange={handleChange}
-          />
-        </FormGroup>
-
+        <EssentialDetails
+          formData={formData}
+          handleChange={handleChange}
+          handlePriceChange={handlePriceChange}
+          priceError={priceError}
+        />
+        <MediaSection
+          formData={formData}
+          handleAddMediaClick={handleAddMediaClick}
+          handleAddMedia={handleAddMedia}
+          fileInputRef={fileInputRef}
+        />
+        <ProductFlairs
+          formData={formData}
+          handleTagSelection={handleTagSelection}
+        />
+        <Specifications formData={formData} handleChange={handleChange} />
+        <AdditionalDetails formData={formData} handleChange={handleChange} />
         <Button type="submit">Post Listing</Button>
       </form>
     </SellingFormContainer>
