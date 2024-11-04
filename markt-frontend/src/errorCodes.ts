@@ -7,8 +7,4 @@ export enum ErrorRsp {
     ERR_PARAM_PHONE = 1005,
     ERR_NOT_FOUND = 1006,
     ERR = 1007,
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 99db3d97beb1bebbbb05c92382fa86beedeab1e1
