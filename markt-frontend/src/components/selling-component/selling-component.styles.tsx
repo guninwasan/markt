@@ -21,6 +21,7 @@ const SellingFormContainer = styled.div`
   border-radius: 12px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
   animation: ${fadeIn} 0.5s ease;
+  overflow: hidden;
 `;
 
 const SectionHeader = styled.h2`
@@ -35,6 +36,7 @@ const FormGroup = styled.div`
   margin-bottom: 25px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 `;
 
 const FormRow = styled.div`
