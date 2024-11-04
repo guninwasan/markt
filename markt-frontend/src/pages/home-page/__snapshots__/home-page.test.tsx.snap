@@ -40,10 +40,9 @@ exports[`HomePage should match the snapshot 1`] = `
     </div>
   </div>
   <img
-    alt="image"
-    height="400"
-    src="/"
-    width="100%"
+    alt="Cover Image"
+    src="/cover-image3.jpg"
+    style="width: 100%; height: 400px; object-fit: cover; object-position: bottom;"
   />
   <div
     data-testid="explore-listings"
