@@ -61,18 +61,25 @@ const SellingComponent = () => {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    const { name, value, type, checked, files } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]:
-        type === "checkbox"
-          ? checked
-          : type === "file"
-          ? files
-            ? Array.from(files)
-            : prevData.media
-          : value,
-    }));
+    const { name, value, type } = e.target;
+    if (type === "checkbox") {
+      const { checked } = e.target as HTMLInputElement;
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: checked,
+      }));
+    } else if (type === "file") {
+      const { files } = e.target as HTMLInputElement;
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: files ? Array.from(files) : prevData.media,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
 
   const handleTagSelection = (tag: string) => {
@@ -88,19 +95,19 @@ const SellingComponent = () => {
     if (e.target.files) {
       setFormData((prevData) => ({
         ...prevData,
-        media: [...prevData.media, ...Array.from(e.target.files)],
+        // media: [...prevData.media, ...Array.from(e.target.files)],
       }));
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Add form validation logic here
     if (!formData.title || !formData.price || !formData.description) {
       alert("Please fill in all required fields.");
       return;
     }
     console.log("Form Data Submitted:", formData);
+    // connect with backend
   };
 
   return (
@@ -196,7 +203,7 @@ const SellingComponent = () => {
               type="text"
               name={spec}
               placeholder={`Enter ${spec}`}
-              value={formData[spec as keyof FormData] || ""}
+              // value={formData[spec as keyof FormData] || ""}
               onChange={handleChange}
             />
           </FormGroup>
