@@ -25,7 +25,7 @@ const SellingFormContainer = styled.div`
 
 const SectionHeader = styled.h2`
   font-size: 1.8em;
-  color: #333;
+  color: grey;
   padding-bottom: 10px;
   border-bottom: 2px solid #ddd;
   margin-top: 30px;

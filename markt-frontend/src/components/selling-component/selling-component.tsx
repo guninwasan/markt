@@ -166,21 +166,17 @@ const SellingComponent = () => {
 
         <SectionHeader>Product Flairs</SectionHeader>
         <TagContainer>
-          {[
-            "Like New",
-            "Best Seller",
-            "Limited Edition",
-            "Free Shipping",
-            "Popular",
-          ].map((tag) => (
-            <Tag
-              key={tag}
-              selected={formData.flairs.includes(tag)}
-              onClick={() => handleTagSelection(tag)}
-            >
-              {tag}
-            </Tag>
-          ))}
+          {["Like New", "Limited Edition", "Free Shipping", "Popular"].map(
+            (tag) => (
+              <Tag
+                key={tag}
+                selected={formData.flairs.includes(tag)}
+                onClick={() => handleTagSelection(tag)}
+              >
+                {tag}
+              </Tag>
+            )
+          )}
         </TagContainer>
 
         <SectionHeader>Specifications (Optional)</SectionHeader>
