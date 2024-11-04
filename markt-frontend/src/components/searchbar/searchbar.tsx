@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   SearchBarContainer,
   SearchInput,
@@ -6,7 +6,6 @@ import {
   InnerSearchBarContainer,
 } from "./searchbar.styles";
 import { FaSearch } from "react-icons/fa";
-import { useIsMobile } from "../../hooks";
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -24,7 +23,7 @@ const SearchBar = () => {
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search..."
+          placeholder="Search...."
         />
         <SearchButton onClick={handleSearchSubmit}>
           <FaSearch />
