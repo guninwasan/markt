@@ -16,7 +16,6 @@ const Cover = ({ children, title }: CoverProps) => {
   return (
     <div style={{ display: "flex", height: "100vh" }}>
       <div style={coverContainerStyles}>
-        <h1 style={titleStyles}>MARKT</h1>
         <p style={subtitleStyles}>
           Your Campus.
           <br />

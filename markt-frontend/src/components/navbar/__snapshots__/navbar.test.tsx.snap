@@ -2,7 +2,7 @@
 
 exports[`Navbar should match the snapshot on desktop 1`] = `
 <nav
-  class="sc-blHHSb nIHai"
+  class="sc-blHHSb bTLhyn"
 >
   <a
     aria-current="page"
@@ -16,7 +16,7 @@ exports[`Navbar should match the snapshot on desktop 1`] = `
 
 exports[`Navbar should match the snapshot on mobile 1`] = `
 <nav
-  class="sc-blHHSb nIHai"
+  class="sc-blHHSb bTLhyn"
 >
   <a
     aria-current="page"

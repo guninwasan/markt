@@ -26,9 +26,15 @@ The team is using [GitHub Issues](https://github.com/UofT-ECE444-Fall2024/projec
 
 ### Tech Stack
 
-Flask - Backend
+Back-end: Flask (https://flask.palletsprojects.com/en/stable/)
 
-React- Frontend
+Front-end: React (https://react.dev/)
+
+Database: PostgreSQL (https://www.postgresql.org/)
+
+Database Management: SQLAlchemy (https://www.sqlalchemy.org/)
+
+**Note**: The team is also using generative AI tools like ChatGPT and copilot to reduce the workload. The team is also willing to provide any prompts if needed.
 
 ### Team Members & Roles
 

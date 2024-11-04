@@ -18,7 +18,7 @@ describe("HomePage", () => {
 
   it("should render the image", () => {
     render(<HomePage />);
-    const imageElement = screen.getByAltText("image");
+    const imageElement = screen.getByAltText("Cover Image");
     expect(imageElement).toBeInTheDocument();
   });
 

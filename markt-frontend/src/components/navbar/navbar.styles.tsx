@@ -6,7 +6,7 @@ const NavbarContainer = styled.nav`
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 2.5rem;
-  background-color: #d9d9d9;
+  background-color: #b8d3e0;
 `;
 
 const MarktHeaderText = styled(NavLink)`
