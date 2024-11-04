@@ -105,11 +105,11 @@ const Tag = styled.span<{ selected?: boolean }>`
   font-size: 0.9em;
   border-radius: 6px;
   cursor: pointer;
-  background-color: ${({ selected }) => (selected ? "#0066cc" : "#f0f0f0")};
+  background-color: ${({ selected }) => (selected ? "#000" : "#f0f0f0")};
   color: ${({ selected }) => (selected ? "#fff" : "#333")};
   transition: background-color 0.3s;
   &:hover {
-    background-color: ${({ selected }) => (selected ? "#005bb5" : "#ddd")};
+    background-color: ${({ selected }) => (selected ? "grey" : "#ddd")};
   }
 `;
 
