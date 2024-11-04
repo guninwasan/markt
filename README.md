@@ -34,7 +34,7 @@ Database: PostgreSQL (https://www.postgresql.org/)
 
 Database Management: SQLAlchemy (https://www.sqlalchemy.org/)
 
-**Note**: The team is also using generative AI tools like ChatGPT and copilot to reduce the workload. The team is also willing to prvide any prompts if needed.
+**Note**: The team is also using generative AI tools like ChatGPT and copilot to reduce the workload. The team is also willing to provide any prompts if needed.
 
 ### Team Members & Roles
 
