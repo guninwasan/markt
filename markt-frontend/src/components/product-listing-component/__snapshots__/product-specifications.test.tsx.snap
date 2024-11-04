@@ -1,0 +1,116 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProductSpecs should match snapshot 1`] = `
+<div>
+  <div
+    class="sc-khLCKb cBxgAV"
+  >
+    <h2>
+      Product Specifications
+    </h2>
+    <div
+      class="sc-keTIit golzCU"
+    >
+      <div
+        class="sc-dpBQxM cCPOaR"
+      >
+        <h3>
+          Basic Information
+        </h3>
+        <p
+          class="sc-jwIPbr dFwVlf"
+        >
+          Condition: 
+          New
+        </p>
+        <p
+          class="sc-jwIPbr dFwVlf"
+        >
+          Brand: 
+          BrandName
+        </p>
+        <p
+          class="sc-jwIPbr dFwVlf"
+        >
+          Model: 
+          ModelX
+        </p>
+        <p
+          class="sc-jwIPbr dFwVlf"
+        >
+          Year: 
+          2022
+        </p>
+      </div>
+      <div
+        class="sc-dpBQxM cCPOaR"
+      >
+        <h3>
+          Appearance
+        </h3>
+        <p
+          class="sc-jwIPbr dFwVlf"
+        >
+          Color: 
+          Black
+        </p>
+        <p
+          class="sc-jwIPbr dFwVlf"
+        >
+          Dimensions: 
+          10x5x2 inches
+        </p>
+        <p
+          class="sc-jwIPbr dFwVlf"
+        >
+          Weight: 
+          1.5 lbs
+        </p>
+        <p
+          class="sc-jwIPbr dFwVlf"
+        >
+          Material: 
+          Plastic
+        </p>
+      </div>
+      <div
+        class="sc-dpBQxM cCPOaR"
+      >
+        <h3>
+          Performance
+        </h3>
+        <p
+          class="sc-jwIPbr dFwVlf"
+        >
+          Battery Life: 
+          10 hours
+        </p>
+        <p
+          class="sc-jwIPbr dFwVlf"
+        >
+          Storage Capacity: 
+          256GB
+        </p>
+        <p
+          class="sc-jwIPbr dFwVlf"
+        >
+          Features: 
+          Waterproof, Bluetooth
+        </p>
+      </div>
+      <div
+        class="sc-dpBQxM cCPOaR"
+      >
+        <h3>
+          Warranty
+        </h3>
+        <p
+          class="sc-jwIPbr dFwVlf"
+        >
+          2 years
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
