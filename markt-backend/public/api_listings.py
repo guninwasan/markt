@@ -1,3 +1,4 @@
+import re
 from flask import Blueprint, jsonify, request
 from flasgger import Swagger, swag_from
 from marshmallow import ValidationError
@@ -5,7 +6,7 @@ from marshmallow import ValidationError
 from database.db import db
 from database.models import Listing, User
 from utils.errors import ErrorRsp
-from schemas.listing_schema import ListingInformationSchema
+from schemas.listing_schema import ListingInformationSchema, ListingUpdate
 
 listing_api_bp = Blueprint('listing_api', __name__)
 swagger = Swagger()
@@ -125,6 +126,13 @@ def get_all():
 # API implementation
 def update(id):
     data = request.get_json()
+    schema = ListingUpdate()
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "data": "Invalid parameters",
+                        "errors": err.messages}), 400
 
     # Check if listing exists
     listing = db.session.get(Listing, id)
@@ -133,17 +141,17 @@ def update(id):
                         "data": "Listing does not exist!"}), 404
 
     if 'title'in data:
-        listing.title = data['title']
+        listing.title = str(data['title'])
     if 'description'in data:
-        listing.title = data['description']
+        listing.description = str(data['description'])
     if 'price'in data:
-        listing.title = data['price']
+        listing.price = data['price']
     if 'quantity'in data:
-        listing.title = data['quantity']
+        listing.quantity = data['quantity']
     if 'condition'in data:
-        listing.title = data['condition']
+        listing.condition = data['condition']
     if 'sold'in data:
-        listing.title = data['sold']
+        listing.sold = data['sold']
     db.session.commit()
 
     return jsonify({"status": ErrorRsp.OK.value,
