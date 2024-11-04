@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import { FaSearch } from "react-icons/fa";
 
 const NavbarContainer = styled.nav`
   display: flex;
@@ -178,6 +179,17 @@ const DropdownItem = styled.a`
   }
 `;
 
+const SearchWithMenu = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const SearchButtonMobile = styled(FaSearch)`
+  width: 1.25rem;
+  height: 1.25rem;
+`;
+
 export {
   NavbarContainer,
   MarktHeaderText,
@@ -194,4 +206,6 @@ export {
   DropdownItem,
   ProfileContainer,
   LogoutButton,
+  SearchWithMenu,
+  SearchButtonMobile,
 };
