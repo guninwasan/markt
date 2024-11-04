@@ -1,0 +1,324 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SellPage matches snapshot 1`] = `
+<div>
+  <div
+    data-testid="navbar"
+  >
+    Mocked Navbar
+  </div>
+  <div
+    class="sc-blHHSb kGKeWj"
+  >
+    <h1>
+      List Your Product
+    </h1>
+    <form>
+      <h2
+        class="sc-gtLWhw iIUFyC"
+      >
+        Essential Details
+      </h2>
+      <div
+        class="sc-egkSDF bHeElY"
+        style="flex: 1 1 45%;"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+        >
+          Title *
+        </label>
+        <input
+          class="sc-ivxoEo iThNQX"
+          name="title"
+          placeholder="Enter the product title"
+          required=""
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="sc-egkSDF bHeElY"
+        style="flex: 1 1 45%;"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+        >
+          Price (CAD) *
+        </label>
+        <input
+          class="sc-ivxoEo iThNQX"
+          name="price"
+          placeholder="Enter the product price"
+          required=""
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="sc-egkSDF bHeElY"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+        >
+          Description *
+        </label>
+        <textarea
+          class="sc-ghWlax hnPIHy"
+          name="description"
+          placeholder="Provide a detailed description of the item..."
+          required=""
+        />
+      </div>
+      <div
+        class="sc-egkSDF bHeElY"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+        >
+          <input
+            name="negotiable"
+            type="checkbox"
+          />
+          Price Negotiable
+        </label>
+      </div>
+      <h2
+        class="sc-gtLWhw iIUFyC"
+      >
+        Media
+      </h2>
+      <div
+        class="sc-egkSDF bHeElY"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+        >
+          Images and Videos
+        </label>
+        <button
+          class="sc-kLhKbu HiyHm"
+          type="button"
+        >
+          <input
+            accept="image/*,video/*"
+            multiple=""
+            style="display: none;"
+            type="file"
+          />
+          + Add Images or Videos
+        </button>
+        <p>
+          0
+           files selected
+        </p>
+      </div>
+      <h2
+        class="sc-gtLWhw iIUFyC"
+      >
+        Product Flairs
+      </h2>
+      <div
+        class="sc-ixGGxD gKWNoB"
+      >
+        <span
+          class="sc-khLCKb jHYDMD"
+        >
+          Like New
+        </span>
+        <span
+          class="sc-khLCKb jHYDMD"
+        >
+          Limited Edition
+        </span>
+        <span
+          class="sc-khLCKb jHYDMD"
+        >
+          Free Shipping
+        </span>
+        <span
+          class="sc-khLCKb jHYDMD"
+        >
+          Popular
+        </span>
+      </div>
+      <h2
+        class="sc-gtLWhw iIUFyC"
+      >
+        Specifications (Optional)
+      </h2>
+      <div
+        class="sc-egkSDF bHeElY"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+        >
+          Brand
+        </label>
+        <input
+          class="sc-ivxoEo iThNQX"
+          name="brand"
+          placeholder="Enter brand"
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="sc-egkSDF bHeElY"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+        >
+          Model
+        </label>
+        <input
+          class="sc-ivxoEo iThNQX"
+          name="model"
+          placeholder="Enter model"
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="sc-egkSDF bHeElY"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+        >
+          YearOfManufacture
+        </label>
+        <input
+          class="sc-ivxoEo iThNQX"
+          name="yearOfManufacture"
+          placeholder="Enter yearOfManufacture"
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="sc-egkSDF bHeElY"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+        >
+          Color
+        </label>
+        <input
+          class="sc-ivxoEo iThNQX"
+          name="color"
+          placeholder="Enter color"
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="sc-egkSDF bHeElY"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+        >
+          Dimensions
+        </label>
+        <input
+          class="sc-ivxoEo iThNQX"
+          name="dimensions"
+          placeholder="Enter dimensions"
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="sc-egkSDF bHeElY"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+        >
+          Weight
+        </label>
+        <input
+          class="sc-ivxoEo iThNQX"
+          name="weight"
+          placeholder="Enter weight"
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="sc-egkSDF bHeElY"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+        >
+          Material
+        </label>
+        <input
+          class="sc-ivxoEo iThNQX"
+          name="material"
+          placeholder="Enter material"
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="sc-egkSDF bHeElY"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+        >
+          BatteryLife
+        </label>
+        <input
+          class="sc-ivxoEo iThNQX"
+          name="batteryLife"
+          placeholder="Enter batteryLife"
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="sc-egkSDF bHeElY"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+        >
+          StorageCapacity
+        </label>
+        <input
+          class="sc-ivxoEo iThNQX"
+          name="storageCapacity"
+          placeholder="Enter storageCapacity"
+          type="text"
+          value=""
+        />
+      </div>
+      <h2
+        class="sc-gtLWhw iIUFyC"
+      >
+        Additional Details
+      </h2>
+      <div
+        class="sc-egkSDF bHeElY"
+      >
+        <label
+          class="sc-dntaoT kYaKLE"
+          for="additionalDetails"
+        >
+          Additional Details
+        </label>
+        <textarea
+          class="sc-ghWlax hnPIHy"
+          id="additionalDetails"
+          name="additionalDetails"
+          placeholder="Add any extra information about the product"
+        />
+      </div>
+      <button
+        class="sc-dstKZu dqiKIq"
+        type="submit"
+      >
+        Post Listing
+      </button>
+    </form>
+  </div>
+</div>
+`;

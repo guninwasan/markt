@@ -8,10 +8,13 @@ import {
 
 const AdditionalDetails = ({ formData, handleChange }: any) => (
   <>
-    <SectionHeader>Additional Details</SectionHeader>
+    <SectionHeader data-testid="additional-details-section-header">
+      Additional Details
+    </SectionHeader>
     <FormGroup>
-      <Label>Additional Details</Label>
+      <Label htmlFor="additionalDetails">Additional Details</Label>
       <TextArea
+        id="additionalDetails"
         name="additionalDetails"
         placeholder="Add any extra information about the product"
         value={formData.additionalDetails}
