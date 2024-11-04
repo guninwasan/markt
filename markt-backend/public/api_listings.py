@@ -140,6 +140,7 @@ def update(id):
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "Listing does not exist!"}), 404
 
+    buyer_rsp = None
     if 'title'in data:
         listing.title = str(data['title'])
     if 'description'in data:
@@ -155,10 +156,16 @@ def update(id):
     if 'buyer_email' in data:
         # Check if buyer exists
         buyer = User.query.filter_by(email=data['buyer_email']).first()
-        if buyer is not None:
+        if buyer is None:
             return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                             "data": "User does not exist!"}), 404
         listing.buyer_id = buyer.id
+        buyer_rsp = {
+            "id": listing.buyer.id,
+            "email": listing.buyer.email,
+            "phone": listing.buyer.phone,
+        }
+
     db.session.commit()
 
     rsp = {
@@ -168,11 +175,7 @@ def update(id):
         "quantity": listing.quantity,
         "condition": listing.condition,
         "sold": listing.sold,
-        "buyer": {
-            "id": listing.buyer.id,
-            "email": listing.buyer.email,
-            "phone": listing.buyer.phone,
-        }
+        "buyer": buyer_rsp
     }
 
     return jsonify({"status": ErrorRsp.OK.value,

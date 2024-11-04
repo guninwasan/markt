@@ -16,4 +16,4 @@ class ListingUpdate(Schema):
     quantity = fields.Int(required=False)
     sold = fields.Bool(required=False, load_default=False)
     condition = fields.Str(required=False)
-    owner_id = fields.Int(required=False)
+    buyer_email = fields.Str(required=False)
