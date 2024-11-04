@@ -45,6 +45,9 @@ const ProductListingComponent = () => {
   };
 
   const handleSendEmail = () => {
+    /* NOTE FOR DEVELOPER: PLEASE UPDATE VARIABLES 
+    IN THIS AS WELL WHEN API CALLS MADE */
+    
     const sellerName = "Seller Name"; 
     const productTitle = "Product Title"; 
     const productId = "Product ID"; 
