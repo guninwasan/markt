@@ -19,7 +19,7 @@ exports[`Navbar should match the snapshot on desktop 1`] = `
     >
       <input
         class="sc-gQaihK kMVuzr"
-        placeholder="Search..."
+        placeholder="Search...."
         type="text"
         value=""
       />
