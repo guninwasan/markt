@@ -7,9 +7,9 @@ def create_app_db(db_name=None, testing=False):
     app = Flask(__name__)
 
     if testing:
-        url = 'postgresql://postgres:welcome1234@localhost/MizzicaBackendTest'
+        url = 'postgresql://postgres:root@localhost/MizzicaBackendTest'
     else:
-        url = 'postgresql://postgres:welcome1234@localhost/MizzicaBackend'
+        url = 'postgresql://postgres:root@localhost/MizzicaBackend'
 
     app.config['SQLALCHEMY_DATABASE_URI'] = url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
