@@ -45,8 +45,44 @@ const ProductListingComponent = () => {
   };
 
   const handleSendEmail = () => {
-    console.log("Sending email");
+    const sellerName = "Seller Name"; 
+    const productTitle = "Product Title"; 
+    const productId = "Product ID"; 
+    const productPrice = "Product Price"; 
+    const buyerName = "Buyer Name"; 
+    const sellerEmail = "hello123@example.com";
+    const buyerNote = note; 
+  
+    const subject = `Interest in your product listing on Markt: ${productTitle}`;
+    
+    const body = `
+  Hello ${sellerName},
+  
+  I am interested in a product listed by you on Markt!
+  
+  Product details:
+  Product title: ${productTitle}
+  Product ID: ${productId}
+  Listed price: ${productPrice}
+
+  Note from buyer:
+  ${buyerNote}
+  
+  For the seller:
+
+  Please reply to the buyer on this email. 
+  
+  Please remove the listing if the product is no longer available.
+  
+  Regards,
+  Team Markt
+    `;
+  
+    const mailtoLink = `mailto:${sellerEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  
+    window.location.href = mailtoLink;
   };
+  
   
 
   return (
