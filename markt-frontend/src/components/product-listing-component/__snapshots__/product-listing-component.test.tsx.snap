@@ -96,26 +96,105 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
         </div>
       </div>
     </div>
+  </div>
+</div>
+`;
+
+exports[`ProductListingComponent renders correctly on mobile 1`] = `
+<div
+  class="sc-jtQUzJ bimzXR"
+>
+  <div
+    class="sc-cEzcPc gRqlWM"
+  >
     <div
-      class="sc-eUlrpB dVjxmo"
+      class="sc-blHHSb kscHbD"
     >
-      <h2>
-        Product Specifications
-      </h2>
-      <ul>
-        <li>
-          Specification 1
-        </li>
-        <li>
-          Specification 2
-        </li>
-        <li>
-          Specification 3
-        </li>
-        <li>
-          Specification 4
-        </li>
-      </ul>
+      <div
+        class="sc-fAUdSK jIA-DAh"
+      >
+        <img
+          class="sc-ixGGxD fzPTpc"
+          src="https://images-na.ssl-images-amazon.com/images/I/71g2ednj0JL._AC_SL1500_.jpg"
+        />
+      </div>
+      <div
+        class="sc-fAUdSK jIA-DAh"
+      >
+        <img
+          class="sc-ixGGxD fzPTpc"
+          src="https://images-na.ssl-images-amazon.com/images/I/81QpkIctqPL._AC_SL1500_.jpg"
+        />
+      </div>
+      <div
+        class="sc-fAUdSK jIA-DAh"
+      >
+        <img
+          class="sc-ixGGxD fzPTpc"
+          src="https://images-na.ssl-images-amazon.com/images/I/71K7Q4FpguL._AC_SL1500_.jpg"
+        />
+      </div>
+      <div
+        class="sc-fAUdSK jIA-DAh"
+      >
+        <video
+          class="sc-khLCKb iFBhps"
+          controls=""
+          src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="sc-ovuCP ehjNBO"
+  >
+    <div
+      class="sc-eOzmre EJVRr"
+    >
+      <div
+        class="sc-eauhAA ezoNKZ"
+      >
+        <h1>
+          Product Title
+        </h1>
+        <p>
+          Description description description description description description description description description description description description description description description description description description
+        </p>
+      </div>
+      <div
+        class="sc-fFoeYl eTBqH"
+      >
+        <div
+          class="sc-gQaihK cnwMNn"
+        >
+          CAD $$$
+        </div>
+        <div>
+          Negotiable / Non-negotiable
+        </div>
+        <div
+          class="sc-iuUfFv hhLigg"
+        >
+          <img
+            alt="Seller Avatar"
+            class="sc-dprtRQ blkaRr"
+            src="https://via.placeholder.com/50"
+          />
+          <div>
+            <div>
+              NAME BLURRED
+            </div>
+            <div>
+              SELLER ID # 1234
+            </div>
+            <a
+              href="#"
+            >
+              See all seller reviews
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

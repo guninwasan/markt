@@ -1,0 +1,50 @@
+name: Frontend Overall Test Coverage
+
+on:
+  pull_request:
+    paths:
+      - "markt-frontend/**"
+
+jobs:
+  frontend-overall-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: markt-frontend
+
+      - name: Run Tests with Coverage
+        run: |
+          npm run test-coverage | tee coverage_output.txt
+        working-directory: markt-frontend
+
+      - name: Check Coverage Percentage
+        run: |
+          coverage=$(grep -oP 'All files\s*\|\s*\K[0-9]+\.[0-9]+' coverage_output.txt)
+          threshold=80
+          echo "Coverage: $coverage%"
+          if (( $(echo "$coverage < $threshold" | bc -l) )); then
+            echo "Code coverage ($coverage%) is below the threshold ($threshold%). Failing the job."
+            echo "Coverage Report:"
+            cat coverage_output.txt
+            echo "Code coverage ($coverage%) is below the threshold ($threshold%). Failing the job."
+            exit 1
+          else
+            echo "Code coverage ($coverage%) meets the threshold ($threshold%)."
+          fi
+        working-directory: markt-frontend
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: markt-frontend/coverage/

@@ -3,9 +3,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import { LoginInputField } from '../input-field';
 import { loginButtonStyles } from '../input-field/input-field.styles';
 import { ErrorRsp } from '../../errorCodes';
+import { RootState, selectors, setIsLoggedIn } from "../../redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useIsMobile } from "../../hooks";
+import { setUserDetails } from "../../redux/slices/user-auth-slice";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
+  const { isMobile } = useIsMobile();
+  const dispatch = useDispatch();
+  const { isLoggedIn, name } = useSelector((state: RootState) => ({
+    isLoggedIn: selectors.getIsLoggedIn(state),
+    name: selectors.getName(state),
+  }));
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -72,6 +82,15 @@ const LoginForm: React.FC = () => {
 
         if (response.ok) {
           alert("Login successful! Redirecting to Home...");
+          dispatch(setUserDetails({
+            userID: result.userID,
+            name: result.name,
+            email: result.email,
+            phone: result.phone,
+            jwt: result.token,
+          }));
+
+          dispatch(setIsLoggedIn(true));
           navigate('/'); // Redirect to home
         } else {
           // Handle specific backend errors

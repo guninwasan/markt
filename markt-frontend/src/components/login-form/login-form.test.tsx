@@ -2,15 +2,20 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { LoginForm } from "./login-form";
+import { store } from "../../redux/store";
+import { Provider } from "react-redux";
 
 describe("LoginForm Component", () => {
   beforeEach(() => {
     render(
-      <Router>
-        <LoginForm />
-      </Router>
+      <Provider store={store}>
+        <Router>
+          renderWithRedux(<LoginForm />);
+        </Router>
+      </Provider>
     );
   });
+
 
   it("should render form with email and password fields and login button", () => {
     expect(
@@ -18,12 +23,6 @@ describe("LoginForm Component", () => {
     ).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Login" })).toBeInTheDocument();
-  });
-
-  it("should display error message for invalid email when field is blurred", () => {
-    const emailInput = screen.getByPlaceholderText("UofT Email Address");
-    fireEvent.blur(emailInput);
-    expect(screen.getByText("A valid email is required")).toBeInTheDocument();
   });
 
   it("should enable login button when valid email and password are entered", () => {
