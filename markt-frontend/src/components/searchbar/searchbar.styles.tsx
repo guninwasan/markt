@@ -9,16 +9,15 @@ export const SearchBarContainer = styled.div`
 `;
 
 export const InnerSearchBarContainer = styled.div`
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 33vw;
   max-width: 1024px;
   border-radius: 8px; /* Rounded corners */
 `;
 
 export const SearchInput = styled.input`
-  width: 27vw;
   height: 2rem;
   border: none;
   padding-left: 1rem; /* Add space for the search icon */

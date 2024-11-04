@@ -8,6 +8,8 @@ import {
   Sidebar,
   SearchWithMenu,
   SearchButtonMobile,
+  ModalBackdrop,
+  SpotlightModal,
 } from "./navbar.styles";
 import { MenuItems } from "./menu-items";
 import { SearchBar } from "../searchbar";
@@ -25,13 +27,17 @@ const Navbar = () => {
     setIsOpen(false);
   };
 
+  const toggleModal = () => {
+    setModalIsOpen(!modalIsOpen);
+  };
+
   return (
     <NavbarContainer>
       <MarktHeaderText to={"/"}>Markt</MarktHeaderText>
 
       {isMobile ? (
         <SearchWithMenu>
-          <SearchButtonMobile width={40} height={40} onClick={setModalIsOpen} />
+          <SearchButtonMobile width={40} height={40} onClick={toggleModal} />
           <Hamburger
             onClick={toggleSidebar}
             isOpen={isOpen}
@@ -50,6 +56,13 @@ const Navbar = () => {
             <Sidebar data-testid="sidebar" isOpen={isOpen}>
               <MenuItems />
             </Sidebar>
+          )}
+          {modalIsOpen && isMobile && (
+            <ModalBackdrop onClick={toggleModal}>
+              <SpotlightModal onClick={(e) => e.stopPropagation()}>
+                <SearchBar />
+              </SpotlightModal>
+            </ModalBackdrop>
           )}
         </SearchWithMenu>
       ) : (
