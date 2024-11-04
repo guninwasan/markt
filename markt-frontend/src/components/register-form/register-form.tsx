@@ -19,6 +19,14 @@ const RegisterForm: React.FC = () => {
     form: ''
   });
 
+  const [touchedFields, setTouchedFields] = useState<{ [key: string]: boolean }>({
+    fullName: false,
+    email: false,
+    password: false,
+    phone: false,
+    studentID: false
+  });
+
   const navigate = useNavigate();
 
   // Handle input changes and clear specific field errors on input
@@ -28,10 +36,24 @@ const RegisterForm: React.FC = () => {
       setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: '' })); // Clear error on input change
   };
 
-  // Handle onBlur for each input to keep errors cleared when user revisits fields
-  const handleBlur = (fieldName: string) => {
-    setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: '' }));
-  };
+  // Handle onBlur for each input to show specific "required" error messages if empty
+const handleBlur = (fieldName: string, value: string) => {
+  // Mark the field as touched
+  setTouchedFields((prevTouched) => ({ ...prevTouched, [fieldName]: true }));
+
+  // Show specific "required" error messages if the field is empty
+  if (!value) {
+    const fieldErrorMessages: { [key: string]: string } = {
+      fullName: "Full Name is required",
+      email: "A valid email is required",
+      password: "Password is required",
+      phone: "Phone number is required",
+      studentID: "Student ID is required"
+    };
+
+    setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: fieldErrorMessages[fieldName] || "This field is required" }));
+  }
+};
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -106,7 +128,7 @@ const RegisterForm: React.FC = () => {
         placeholder="Full Name"
         value={fullName}
         onChange={handleInputChange(setFullName, 'fullName')}
-        onBlur={() => handleBlur('fullName')}
+        onBlur={() => handleBlur('fullName', fullName)}
       />
       {errors.fullName && <p style={{ color: 'red' }}>{errors.fullName}</p>}
 
@@ -115,7 +137,7 @@ const RegisterForm: React.FC = () => {
         placeholder="UofT Email Address"
         value={email}
         onChange={handleInputChange(setEmail, 'email')}
-        onBlur={() => handleBlur('email')}
+        onBlur={() => handleBlur('email', email)}
       />
       {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
 
@@ -124,7 +146,7 @@ const RegisterForm: React.FC = () => {
         placeholder="Password"
         value={password}
         onChange={handleInputChange(setPassword, 'password')}
-        onBlur={() => handleBlur('password')}
+        onBlur={() => handleBlur('password', password)}
       />
       {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
 
@@ -133,7 +155,7 @@ const RegisterForm: React.FC = () => {
         placeholder="Phone No."
         value={phone}
         onChange={handleInputChange(setPhone, 'phone')}
-        onBlur={() => handleBlur('phone')}
+        onBlur={() => handleBlur('phone', phone)}
       />
       {errors.phone && <p style={{ color: 'red' }}>{errors.phone}</p>}
 
@@ -142,7 +164,7 @@ const RegisterForm: React.FC = () => {
         placeholder="UofT Student ID (for verification)"
         value={studentID}
         onChange={handleInputChange(setStudentID, 'studentID')}
-        onBlur={() => handleBlur('studentID')}
+        onBlur={() => handleBlur('studentID', studentID)}
       />
       {errors.studentID && <p style={{ color: 'red' }}>{errors.studentID}</p>}
 

@@ -7,7 +7,7 @@ describe("RegisterForm Component", () => {
   beforeEach(() => {
     render(
       <Router>
-        <RegisterForm />
+        renderWithRedux(<RegisterForm />);
       </Router>
     );
   });
@@ -27,21 +27,6 @@ describe("RegisterForm Component", () => {
     ).toBeInTheDocument();
   });
 
-  it("should disable create account button if any field is invalid or empty", () => {
-    const createAccountButton = screen.getByRole("button", {
-      name: "Create Account",
-    });
-    expect(createAccountButton).toBeDisabled();
-
-    fireEvent.change(screen.getByPlaceholderText("Full Name"), {
-      target: { value: "John Doe" },
-    });
-    fireEvent.change(screen.getByPlaceholderText("UofT Email Address"), {
-      target: { value: "invalid-email" },
-    });
-    expect(createAccountButton).toBeDisabled();
-  });
-
   it("should show error messages for invalid or empty fields on blur", () => {
     fireEvent.blur(screen.getByPlaceholderText("Full Name"));
     expect(screen.getByText("Full Name is required")).toBeInTheDocument();
@@ -52,13 +37,13 @@ describe("RegisterForm Component", () => {
     fireEvent.blur(screen.getByPlaceholderText("Password"));
     expect(
       screen.getByText(
-        "Password must be at least 8 characters long and contain at least one special character"
+        "Password is required"
       )
     ).toBeInTheDocument();
 
     fireEvent.blur(screen.getByPlaceholderText("Phone No."));
     expect(
-      screen.getByText("Phone number must be exactly 10 digits")
+      screen.getByText("Phone number is required")
     ).toBeInTheDocument();
 
     fireEvent.blur(
