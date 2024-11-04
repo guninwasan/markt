@@ -1,9 +1,7 @@
 name: Frontend Overall Test Coverage
 
 on:
-  pull_request:
-    paths:
-      - "markt-frontend/**"
+  push:
 
 jobs:
   frontend-overall-coverage:
