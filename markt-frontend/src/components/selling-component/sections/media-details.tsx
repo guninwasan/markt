@@ -15,9 +15,10 @@ const MediaSection = ({
   <>
     <SectionHeader>Media</SectionHeader>
     <FormGroup>
-      <Label>Images and Videos</Label>
+      <Label htmlFor="mediaInput">Images and Videos</Label>
       <AddMediaButton type="button" onClick={handleAddMediaClick}>
         <input
+          id="mediaInput"
           type="file"
           multiple
           accept="image/*,video/*"
@@ -27,7 +28,7 @@ const MediaSection = ({
         />
         + Add Images or Videos
       </AddMediaButton>
-      <p>{formData.media.length} files selected</p>
+      <p>{formData.media.length} files uploaded</p>
     </FormGroup>
   </>
 );
