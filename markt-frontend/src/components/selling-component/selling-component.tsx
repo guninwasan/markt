@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   SellingFormContainer,
   SectionHeader,
@@ -36,6 +36,14 @@ const initialFormData = {
 const SellingComponent = () => {
   const [formData, setFormData] = useState<any>(initialFormData);
   const [priceError, setPriceError] = useState<string>("");
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAddMediaClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -164,13 +172,14 @@ const SellingComponent = () => {
         <SectionHeader>Media</SectionHeader>
         <FormGroup>
           <Label>Images and Videos</Label>
-          <AddMediaButton type="button">
+          <AddMediaButton type="button" onClick={handleAddMediaClick}>
             <input
               type="file"
               multiple
               accept="image/*,video/*"
               onChange={handleAddMedia}
               style={{ display: "none" }}
+              ref={fileInputRef}
             />
             + Add Images or Videos
           </AddMediaButton>
