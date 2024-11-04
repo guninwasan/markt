@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
-import { SearchBarContainer, SearchInput, SearchButton, InnerSearchBarContainer } from './searchbar.styles';
-import { FaSearch } from 'react-icons/fa';
+import React, { useEffect, useState } from "react";
+import {
+  SearchBarContainer,
+  SearchInput,
+  SearchButton,
+  InnerSearchBarContainer,
+} from "./searchbar.styles";
+import { FaSearch } from "react-icons/fa";
+import { useIsMobile } from "../../hooks";
 
 const SearchBar = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchSubmit = () => {
     if (searchTerm.trim()) {
-      console.log('Search submitted: ', searchTerm);
-      // You can replace this with your actual search logic
+      console.log("Search submitted: ", searchTerm);
     }
   };
 
@@ -17,12 +22,11 @@ const SearchBar = () => {
       <InnerSearchBarContainer>
         <SearchInput
           type="text"
-          placeholder="Search for an item or category..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSearchSubmit()} // Optional: Submit with Enter key
+          placeholder="Search..."
         />
-        <SearchButton onClick={handleSearchSubmit} aria-label="Submit search">  
+        <SearchButton onClick={handleSearchSubmit}>
           <FaSearch />
         </SearchButton>
       </InnerSearchBarContainer>
