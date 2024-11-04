@@ -1,6 +1,9 @@
 name: Frontend PR Changes Test Coverage
 
 on:
+  push:
+    paths:
+      - "markt-frontend/**"
   pull_request:
     paths:
       - "markt-frontend/**"
