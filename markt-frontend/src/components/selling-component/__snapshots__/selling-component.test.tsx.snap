@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SellingComponent should match snapshot 1`] = `
+<div>
+  <div
+    class="sc-blHHSb kGKeWj"
+  >
+    <h1>
+      List Your Product
+    </h1>
+    <form>
+      <div>
+        EssentialDetails Component
+      </div>
+      <div>
+        MediaSection Component
+      </div>
+      <div>
+        ProductFlairs Component
+      </div>
+      <div>
+        Specifications Component
+      </div>
+      <div>
+        AdditionalDetails Component
+      </div>
+      <button
+        class="sc-dstKZu dqiKIq"
+        type="submit"
+      >
+        Post Listing
+      </button>
+    </form>
+  </div>
+</div>
+`;

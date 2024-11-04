@@ -7,3 +7,4 @@ export * from "./input-field";
 export * from "./cover";
 export * from "./register-form";
 export * from "./login-form";
+export * from "./selling-component";

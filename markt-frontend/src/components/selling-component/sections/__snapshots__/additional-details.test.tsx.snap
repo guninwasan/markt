@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AdditionalDetails Component should match snapshot 1`] = `
+<div>
+  <h2
+    class="sc-gtLWhw iIUFyC"
+    data-testid="additional-details-section-header"
+  >
+    Additional Details
+  </h2>
+  <div
+    class="sc-egkSDF bHeElY"
+  >
+    <label
+      class="sc-dntaoT kYaKLE"
+      for="additionalDetails"
+    >
+      Additional Details
+    </label>
+    <textarea
+      class="sc-ghWlax hnPIHy"
+      id="additionalDetails"
+      name="additionalDetails"
+      placeholder="Add any extra information about the product"
+    >
+      Some additional details
+    </textarea>
+  </div>
+</div>
+`;
