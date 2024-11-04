@@ -81,6 +81,92 @@ const BottomTab = styled.div<{ isVisible: boolean }>`
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 `;
 
+const ShareInterestButton = styled.button`
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3; 
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const ModalBackdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  text-align: left; 
+
+  p {
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    font-weight: normal; 
+    font-style: italic;
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff; 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+`;
+
+
+const NoteTextArea = styled.textarea`
+  width: 100%;
+  height: 100px;
+  padding: 0.5rem;
+  margin-top: 1rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  resize: vertical;
+  font-family: inherit; 
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+`;
+
+
 const SpecGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -120,6 +206,11 @@ export {
   SellerAvatar,
   ProductSpecsContainer,
   BottomTab,
+  ShareInterestButton,
+  ModalBackdrop,
+  ModalContent,
+  NoteTextArea,
+
   SpecGrid,
   SpecCategory,
   SpecItem,

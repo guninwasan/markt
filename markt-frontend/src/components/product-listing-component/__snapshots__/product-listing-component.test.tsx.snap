@@ -60,6 +60,11 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
         <p>
           Description description description description description description description description description description description description description description description description description description
         </p>
+        <button
+          class="sc-hJRrWL jMJLwo"
+        >
+          Share Interest
+        </button>
       </div>
       <div
         class="sc-fFoeYl eTBqH"
@@ -160,6 +165,11 @@ exports[`ProductListingComponent renders correctly on mobile 1`] = `
         <p>
           Description description description description description description description description description description description description description description description description description description
         </p>
+        <button
+          class="sc-hJRrWL jMJLwo"
+        >
+          Share Interest
+        </button>
       </div>
       <div
         class="sc-fFoeYl eTBqH"
