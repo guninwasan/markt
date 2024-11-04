@@ -12,6 +12,8 @@ const pulse = keyframes`
 `;
 
 const SellingFormContainer = styled.div`
+  width: 75%;
+  min-width: 300px;
   max-width: 1200px;
   margin: 20px auto;
   padding: 30px;
