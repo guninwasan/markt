@@ -5,7 +5,6 @@ const HomePage = () => {
   return (
     <div>
       <Navbar />
-      <SearchBar></SearchBar>
       <img
         src="/cover-image3.jpg"
         alt="Cover Image"

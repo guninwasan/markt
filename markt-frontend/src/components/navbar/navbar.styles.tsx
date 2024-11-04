@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import { FaSearch } from "react-icons/fa";
 
 const NavbarContainer = styled.nav`
   display: flex;
@@ -88,7 +89,6 @@ const MobileMenuContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: red;
 `;
 
 const Backdrop = styled.div<{ isOpen: boolean }>`
@@ -178,6 +178,41 @@ const DropdownItem = styled.a`
   }
 `;
 
+const SearchWithMenu = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const SearchButtonMobile = styled(FaSearch)`
+  width: 1.25rem;
+  height: 1.25rem;
+`;
+
+const ModalBackdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const SpotlightModal = styled.div`
+  background-color: #f0f0f0;
+  width: 100%;
+  max-width: 300px;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  min-height: 100px;
+`;
+
 export {
   NavbarContainer,
   MarktHeaderText,
@@ -194,4 +229,8 @@ export {
   DropdownItem,
   ProfileContainer,
   LogoutButton,
+  SearchWithMenu,
+  SearchButtonMobile,
+  ModalBackdrop,
+  SpotlightModal,
 };
