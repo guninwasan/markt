@@ -1,12 +1,10 @@
 name: Lint TypeScript Code
 
 on:
-  pull_request:
-    paths:
-      - "markt-frontend/**"
+  push:
 
 jobs:
-  lint:
+  lint-frontend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
