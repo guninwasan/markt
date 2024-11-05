@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  frontend-pr-changes-test:
+  pr-changes:
     runs-on: ubuntu-latest
 
     steps:
