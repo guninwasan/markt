@@ -37,6 +37,6 @@ describe("ProductListingComponent", () => {
   it("renders product details correctly", () => {
     render(<ProductListingComponent />);
     expect(screen.getByText(/CAD/)).toBeInTheDocument();
-    expect(screen.getByText(/See all seller reviews/)).toBeInTheDocument();
+    expect(screen.getByText(/SELLER ID/)).toBeInTheDocument();
   });
 });

@@ -1,61 +1,42 @@
-// leftcontainer.styles.tsx
+import styled from "styled-components";
+import { colors } from "../../utils";
 
-const coverContainerStyles = {
-  display: "flex",
-  width: "55vw",
-  height: "100vh", // Set the height to 100% of the viewport
-  // padding: '185px 116px', // Adjust padding to prevent overflow (removed bottom padding)
-  flexDirection: "column" as const,
-  alignItems: "center" as const,
-  justifyContent: "center" as const, // Center content vertically
-  flexShrink: 0,
-  background: "#87ACBB",
-  boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-  overflow: "hidden", // Ensure no overflow to prevent scrolling
-};
+const CoverContainer = styled.div`
+  display: flex;
+  width: 55vw;
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: ${colors.darkerPrimary};
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+`;
 
-const rightContainerStyles = {
-  display: "flex",
-  width: "45vw", // Take up the remaining part of the viewport width
-  height: "100vh", // Same height as the left container
-  flexDirection: "column" as const,
-  justifyContent: "center" as const,
-  alignItems: "flex-start" as const, // Align items to the left
-  padding: "0 3rem", // Add padding for the inputs and text
-  boxSizing: "border-box" as const, // Ensure padding is inside the box
-  background: "#FFFFFF", // Assuming a white background for the right side
-  boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-};
+const RightContainer = styled.div`
+  display: flex;
+  width: 45vw;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 3rem;
+  box-sizing: border-box;
+  background: ${colors.white};
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+`;
 
-const titleStyles = {
-  color: "#000",
-  fontFamily: "Inter, sans-serif", // Ensure Inter is available in your project
-  fontSize: "48px",
-  fontStyle: "normal",
-  fontWeight: 700,
-  lineHeight: "normal",
-  textDecorationLine: "underline",
-  marginLeft: "31.56rem",
-  marginRight: "7.25rem",
-  marginTop: "11.56rem",
-  marginBottom: "auto",
-};
+const Subtitle = styled.h2`
+  font-size: 4.2rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin-left: 0;
+  margin-right: 4.6rem;
+  margin-top: 2rem;
+  margin-bottom: auto;
+  color: ${colors.darkGrey};
+`;
 
-const subtitleStyles = {
-  fontSize: "4.2rem",
-  fontStyle: "normal",
-  fontWeight: 700,
-  lineHeight: "normal",
-  marginLeft: "0",
-  marginRight: "4.6rem",
-  marginTop: "2rem",
-  marginBottom: "auto",
-  color: "#4D4D4D",
-};
-
-export {
-  coverContainerStyles,
-  titleStyles,
-  subtitleStyles,
-  rightContainerStyles,
-};
+export { CoverContainer, RightContainer, Subtitle };

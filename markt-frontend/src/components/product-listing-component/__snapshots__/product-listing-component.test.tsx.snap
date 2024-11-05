@@ -61,7 +61,7 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
           Description description description description description description description description description description description description description description description description description description
         </p>
         <button
-          class="sc-hJRrWL jMJLwo"
+          class="sc-hJRrWL iLftQh"
         >
           Share Interest
         </button>
@@ -87,16 +87,9 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
           />
           <div>
             <div>
-              NAME BLURRED
-            </div>
-            <div>
               SELLER ID # 1234
             </div>
-            <a
-              href="#"
-            >
-              See all seller reviews
-            </a>
+            add stars here
           </div>
         </div>
       </div>
@@ -166,7 +159,7 @@ exports[`ProductListingComponent renders correctly on mobile 1`] = `
           Description description description description description description description description description description description description description description description description description description
         </p>
         <button
-          class="sc-hJRrWL jMJLwo"
+          class="sc-hJRrWL iLftQh"
         >
           Share Interest
         </button>
@@ -192,16 +185,9 @@ exports[`ProductListingComponent renders correctly on mobile 1`] = `
           />
           <div>
             <div>
-              NAME BLURRED
-            </div>
-            <div>
               SELLER ID # 1234
             </div>
-            <a
-              href="#"
-            >
-              See all seller reviews
-            </a>
+            add stars here
           </div>
         </div>
       </div>

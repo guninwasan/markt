@@ -3,7 +3,7 @@
 exports[`AdditionalDetails Component should match snapshot 1`] = `
 <div>
   <h2
-    class="sc-gtLWhw iIUFyC"
+    class="sc-gtLWhw eYVYUD"
     data-testid="additional-details-section-header"
   >
     Additional Details
@@ -12,13 +12,13 @@ exports[`AdditionalDetails Component should match snapshot 1`] = `
     class="sc-egkSDF bHeElY"
   >
     <label
-      class="sc-dntaoT kYaKLE"
+      class="sc-dntaoT bUVQgQ"
       for="additionalDetails"
     >
       Additional Details
     </label>
     <textarea
-      class="sc-ghWlax hnPIHy"
+      class="sc-ghWlax jsMPBP"
       id="additionalDetails"
       name="additionalDetails"
       placeholder="Add any extra information about the product"

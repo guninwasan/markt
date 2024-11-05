@@ -5,7 +5,7 @@ import React from "react";
 const LoginPage = () => {
   return (
     <div>
-      <Navbar />
+      <Navbar hideSearch />
       <Cover title="Welcome Back to UofT's Secure Marketplace!">
         <LoginForm />
       </Cover>

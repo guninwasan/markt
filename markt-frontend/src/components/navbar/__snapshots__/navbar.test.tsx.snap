@@ -2,29 +2,29 @@
 
 exports[`Navbar should match the snapshot on desktop 1`] = `
 <nav
-  class="sc-blHHSb bTLhyn"
+  class="sc-blHHSb isZSSR"
 >
   <a
     aria-current="page"
-    class="sc-gtLWhw fSWOOJ active"
+    class="sc-gtLWhw dEihEB active"
     href="/"
   >
     Markt
   </a>
   <div
-    class="sc-eauhAA gAtGdF"
+    class="sc-eauhAA gTACkZ"
   >
     <div
       class="sc-fFoeYl fxsTkD"
     >
       <input
-        class="sc-gQaihK kMVuzr"
+        class="sc-gQaihK gTtECY"
         placeholder="Search...."
         type="text"
         value=""
       />
       <button
-        class="sc-iuUfFv kEekNc"
+        class="sc-iuUfFv dXDhOe"
       >
         <svg
           fill="currentColor"
@@ -47,11 +47,11 @@ exports[`Navbar should match the snapshot on desktop 1`] = `
 
 exports[`Navbar should match the snapshot on mobile 1`] = `
 <nav
-  class="sc-blHHSb bTLhyn"
+  class="sc-blHHSb isZSSR"
 >
   <a
     aria-current="page"
-    class="sc-gtLWhw fSWOOJ active"
+    class="sc-gtLWhw dEihEB active"
     href="/"
   >
     Markt
@@ -60,7 +60,7 @@ exports[`Navbar should match the snapshot on mobile 1`] = `
     class="sc-jtQUzJ gsuUbx"
   >
     <svg
-      class="sc-cEzcPc jdnUmY"
+      class="sc-cEzcPc iphOze"
       fill="currentColor"
       height="1em"
       stroke="currentColor"
@@ -74,7 +74,7 @@ exports[`Navbar should match the snapshot on mobile 1`] = `
       />
     </svg>
     <div
-      class="sc-ghWlax eVoPrc"
+      class="sc-ghWlax fZtzVb"
       data-testid="hamburger"
     >
       <span />

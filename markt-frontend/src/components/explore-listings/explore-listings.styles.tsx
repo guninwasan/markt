@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { colors } from "../../utils";
 
 const Container = styled.div`
   padding: 2rem;
@@ -20,7 +21,7 @@ const Subheader = styled.h2<{ isSelected: boolean }>`
   cursor: pointer;
   font-size: 1rem;
   font-weight: normal;
-  color: ${({ isSelected }) => (isSelected ? "black" : "#8F8F8F")};
+  color: ${({ isSelected }) => (isSelected ? colors.black : colors.grey)};
   border-bottom: ${({ isSelected }) =>
     isSelected ? "2px solid black" : "none"};
   padding-bottom: 0.5rem;
@@ -33,7 +34,7 @@ const ListingsContainer = styled.div`
 `;
 
 const Listing = styled.div`
-  border: 1px solid #ccc;
+  border: 1px solid ${colors.grey};
   padding: 1rem;
   width: calc(33.333% - 1rem);
   box-sizing: border-box;

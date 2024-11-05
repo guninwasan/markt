@@ -3,7 +3,7 @@ import os
 from flask import Flask
 from .db import init_db, db
 
-def create_app_db(db_name=None, testing=False):
+def create_app_db(testing):
     app = Flask(__name__)
 
     if testing:

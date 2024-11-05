@@ -14,7 +14,10 @@ import {
 import { MenuItems } from "./menu-items";
 import { SearchBar } from "../searchbar";
 
-const Navbar = () => {
+type NavbarProps = {
+  hideSearch?: boolean;
+};
+const Navbar = ({ hideSearch }: NavbarProps) => {
   const { isMobile } = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -37,7 +40,9 @@ const Navbar = () => {
 
       {isMobile ? (
         <SearchWithMenu>
-          <SearchButtonMobile width={40} height={40} onClick={toggleModal} />
+          {!hideSearch && (
+            <SearchButtonMobile width={40} height={40} onClick={toggleModal} />
+          )}
           <Hamburger
             onClick={toggleSidebar}
             isOpen={isOpen}
@@ -67,7 +72,7 @@ const Navbar = () => {
         </SearchWithMenu>
       ) : (
         <>
-          <SearchBar />
+          {!hideSearch && <SearchBar />}
           <MenuItems />
         </>
       )}

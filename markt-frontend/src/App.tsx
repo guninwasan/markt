@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { HomePage, LoginPage, RegisterPage, SellPage } from "./pages";
+import { HomePage, LoginPage, RegisterPage, SellPage, ProfilePage, NotFoundPage } from "./pages";
 import { ProductListingPage } from "./pages";
 import { useIsMobile } from "./hooks";
 
@@ -14,7 +14,8 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/listing" element={<ProductListingPage />} />
         <Route path="/sell" element={<SellPage />} />
-        <Route path="*" element={<h1>Not Found</h1>} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );

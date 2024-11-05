@@ -3,7 +3,7 @@
 exports[`SellingComponent should match snapshot 1`] = `
 <div>
   <div
-    class="sc-blHHSb kGKeWj"
+    class="sc-blHHSb fuksRV"
   >
     <h1>
       List Your Product
@@ -25,7 +25,7 @@ exports[`SellingComponent should match snapshot 1`] = `
         AdditionalDetails Component
       </div>
       <button
-        class="sc-dstKZu dqiKIq"
+        class="sc-dstKZu fYSZrv"
         type="submit"
       >
         Post Listing

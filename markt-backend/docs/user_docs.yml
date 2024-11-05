@@ -1,9 +1,12 @@
 register:
   responses:
     201:
-      description: "User registered"
+      description: "User registered successfully!"
     400:
-      description: "Invalid input"
+      description:
+        "Missing parameters",
+        "User already exists!",
+        "Email must be a valid UofT email!"
   parameters:
     - name: "user"
       in: "body"
@@ -11,23 +14,26 @@ register:
       schema:
         type: "object"
         properties:
-          utorid:
-            type: "string"
           password:
             type: "string"
+            required: true
           email:
             type: "string"
+            required: true
           phone:
             type: "string"
+            required: true
 
 login:
   responses:
     200:
-      description: "User logged in"
+      description: "User logged in successfully!"
     404:
-      description: "User not found"
+      description: "User does not exist!"
     401:
-      description: "Incorrect password"
+      description: "Incorrect password!"
+    400:
+      description: "Missing parameters"
   parameters:
     - name: "user"
       in: "body"
@@ -37,5 +43,42 @@ login:
         properties:
           email:
             type: "string"
+            required: true
           password:
+            type: "string"
+            required: true
+update:
+  responses:
+    200:
+      description: JSON response
+        password:
+          type: "string"
+          details: "Updated", "Not updated"
+        email:
+          type: "string"
+          details: User's associated email
+        phone:
+          type: "string"
+          details: User's associated phone
+    400:
+      description:
+        "Missing parameters",
+        "User data not updated" # sanity check on password
+    404:
+      description: "User does not exist!"
+  parameters:
+    - name: "user"
+      in: "body"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          verify_email:
+            type: "string"
+            required: true
+          new_password:
+            type: "string"
+          new_email:
+            type: "string"
+          new_phone:
             type: "string"
