@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { colors } from "../../utils";
 
 const CoverContainer = styled.div`
   display: flex;
@@ -8,7 +9,7 @@ const CoverContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: #87acbb;
+  background: ${colors.darkerPrimary};
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   overflow: hidden;
 `;
@@ -22,7 +23,7 @@ const RightContainer = styled.div`
   align-items: flex-start;
   padding: 0 3rem;
   box-sizing: border-box;
-  background: #ffffff;
+  background: ${colors.white};
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 `;
 
