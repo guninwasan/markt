@@ -2,6 +2,8 @@ import React from "react";
 import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { RegisterForm } from "./register-form";
+import { ErrorRsp } from "../../errorCodes";
+
 // Mock window.alert
 window.alert = jest.fn();
 
@@ -64,7 +66,6 @@ describe("RegisterForm Component", () => {
   });
 
   it("should handle successful form submission", async () => {
-    // Mock a successful fetch response
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
@@ -72,7 +73,6 @@ describe("RegisterForm Component", () => {
       })
     ) as jest.Mock;
 
-    // Fill out all fields to enable the submit button
     await act(async () => {
       fireEvent.change(screen.getByPlaceholderText("Full Name"), { target: { value: "John Doe" } });
       fireEvent.change(screen.getByPlaceholderText("UofT Email Address"), { target: { value: "john@mail.utoronto.ca" } });
@@ -84,6 +84,67 @@ describe("RegisterForm Component", () => {
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith("http://localhost:5000/api/user/register", expect.anything());
+      expect(window.alert).toHaveBeenCalledWith("Registration successful - redirecting to Login!");
+    });
+  });
+
+  it("should handle existing user error (ERR_PARAM_DUP)", async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: false,
+        json: () => Promise.resolve({ status: ErrorRsp.ERR_PARAM_DUP }),
+      })
+    ) as jest.Mock;
+
+    await act(async () => {
+      fireEvent.change(screen.getByPlaceholderText("UofT Email Address"), { target: { value: "existinguser@mail.utoronto.ca" } });
+      fireEvent.change(screen.getByPlaceholderText("Password"), { target: { value: "password123" } });
+      fireEvent.click(screen.getByRole("button", { name: /create account/i }));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("User already exists!")).toBeInTheDocument();
+    });
+  });
+
+  it("should handle validation errors from the backend (ERR_PARAM)", async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: false,
+        json: () =>
+          Promise.resolve({
+            status: ErrorRsp.ERR_PARAM,
+            data: ["Email format is invalid", "Phone number is invalid"],
+          }),
+      })
+    ) as jest.Mock;
+
+    await act(async () => {
+      fireEvent.change(screen.getByPlaceholderText("UofT Email Address"), { target: { value: "invalid-email" } });
+      fireEvent.change(screen.getByPlaceholderText("Phone No."), { target: { value: "123" } });
+      fireEvent.click(screen.getByRole("button", { name: /create account/i }));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Email format is invalid")).toBeInTheDocument();
+      expect(screen.getByText("Phone number is invalid")).toBeInTheDocument();
+    });
+  });
+
+  it("should show a general error message on an unexpected error", async () => {
+    global.fetch = jest.fn(() => Promise.reject(new Error("Network error"))) as jest.Mock;
+
+    await act(async () => {
+      fireEvent.change(screen.getByPlaceholderText("Full Name"), { target: { value: "John Doe" } });
+      fireEvent.change(screen.getByPlaceholderText("UofT Email Address"), { target: { value: "john@mail.utoronto.ca" } });
+      fireEvent.change(screen.getByPlaceholderText("Password"), { target: { value: "password123" } });
+      fireEvent.change(screen.getByPlaceholderText("Phone No."), { target: { value: "1234567890" } });
+      fireEvent.change(screen.getByPlaceholderText("UofT Student ID (for verification)"), { target: { value: "123456789" } });
+      fireEvent.click(screen.getByRole("button", { name: /create account/i }));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("An unexpected error occurred. Please try again later.")).toBeInTheDocument();
     });
   });
 
