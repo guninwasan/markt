@@ -1,7 +1,8 @@
 import styled from "styled-components";
+import { colors } from "../../utils";
 
 export const SearchBarContainer = styled.div`
-  color: #333;
+  color: ${colors.textBlack};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,11 +24,11 @@ export const SearchInput = styled.input`
   padding-left: 1rem; /* Add space for the search icon */
   font-size: 1.25rem;
   font-weight: 300; /* Lighter font weight */
-  color: #333;
+  color: ${colors.textBlack};
   outline: none;
   border-radius: 8px 8px 8px 8px; /* Rounded corners on the left side */
   &::placeholder {
-    color: #999;
+    color: ${colors.grey};
   }
 `;
 
@@ -41,7 +42,8 @@ export const SearchButton = styled.button`
   align-items: center;
   border-radius: 0 8px 8px 0; /* Rounded corners on the right side */
   &:hover {
-    color: #333;
+    color: ${colors.textBlack};
+    cursor: pointer;
   }
   &:focus {
     outline: none;

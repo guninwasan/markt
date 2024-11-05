@@ -189,6 +189,7 @@ const SearchWithMenu = styled.div`
 const SearchButtonMobile = styled(FaSearch)`
   width: 1.25rem;
   height: 1.25rem;
+  cursor: pointer;
 `;
 
 const ModalBackdrop = styled.div`
