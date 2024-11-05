@@ -12,4 +12,9 @@ describe("App", () => {
     const homePage = screen.getByText(marktHomePageText);
     expect(homePage).toBeInTheDocument();
   });
+
+  it("should match the snapshot", () => {
+    const { container } = render(<App />);
+    expect(container).toMatchSnapshot();
+  });
 });
