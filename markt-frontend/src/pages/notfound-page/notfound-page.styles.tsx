@@ -4,11 +4,11 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
+  height: 100%;
   text-align: center;
   padding: 2rem;
   background-color: #f9f9f9;
+  overflow: hidden;
 `;
 
 const NotFoundHeading = styled.h1`
@@ -27,9 +27,10 @@ const Message = styled.p`
 const GameContainer = styled.div`
   width: 600px;
   height: 400px;
-  max-width: 90%;
+  max-width: 100%;
   border: none;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
 `;
 
 export { PageContainer, NotFoundHeading, Message, GameContainer };
