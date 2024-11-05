@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { colors } from "../../utils";
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
@@ -17,7 +18,7 @@ const SellingFormContainer = styled.div`
   max-width: 1200px;
   margin: 20px auto;
   padding: 30px;
-  background-color: #fff;
+  background-color: ${colors.lightWhite};
   border-radius: 12px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
   animation: ${fadeIn} 0.5s ease;
@@ -28,7 +29,7 @@ const SectionHeader = styled.h2`
   font-size: 1.8em;
   color: grey;
   padding-bottom: 10px;
-  border-bottom: 2px solid #ddd;
+  border-bottom: 2px solid ${colors.lightGrey};
   margin-top: 30px;
 `;
 
@@ -48,14 +49,14 @@ const FormRow = styled.div`
 const Label = styled.label`
   font-weight: bold;
   margin-bottom: 8px;
-  color: #333;
+  color: ${colors.textBlack};
 `;
 
 const TextInput = styled.input`
   width: 90%;
   padding: 14px;
   font-size: 16px;
-  border: 1px solid #ddd;
+  border: 1px solid ${colors.lightGrey};
   border-radius: 8px;
   transition: all 0.3s;
   &:focus {
@@ -69,7 +70,7 @@ const TextArea = styled.textarea`
   width: 90%;
   padding: 14px;
   font-size: 16px;
-  border: 1px solid #ddd;
+  border: 1px solid ${colors.lightGrey};
   border-radius: 8px;
   min-height: 100px;
   transition: all 0.3s;
@@ -84,16 +85,16 @@ const AddMediaButton = styled.button`
   padding: 12px;
   font-size: 16px;
   font-weight: bold;
-  color: #000000;
-  border: 2px dashed #000000;
+  color: ${colors.textBlack};
+  border: 2px dashed ${colors.textBlack};
   border-radius: 8px;
-  background: #f9f9f9;
+  background: ${colors.white};
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
   &:hover {
     background: grey;
-    color: #fff;
-    border: 2px dashed #fff;
+    color: ${colors.lightWhite};
+    border: 2px dashed ${colors.lightWhite};
   }
 `;
 
@@ -109,11 +110,13 @@ const Tag = styled.span<{ selected?: boolean }>`
   font-size: 0.9em;
   border-radius: 6px;
   cursor: pointer;
-  background-color: ${({ selected }) => (selected ? "#000" : "#f0f0f0")};
-  color: ${({ selected }) => (selected ? "#fff" : "#333")};
+  background-color: ${({ selected }) =>
+    selected ? colors.textBlack : colors.lightGrey};
+  color: ${({ selected }) => (selected ? colors.lightWhite : colors.textBlack)};
   transition: background-color 0.3s;
   &:hover {
-    background-color: ${({ selected }) => (selected ? "grey" : "#ddd")};
+    background-color: ${({ selected }) =>
+      selected ? colors.darkGrey : colors.grey};
   }
 `;
 
@@ -123,15 +126,15 @@ const Button = styled.button`
   padding: 16px;
   font-size: 18px;
   font-weight: bold;
-  background-color: #333;
-  color: #fff;
+  background-color: ${colors.black};
+  color: ${colors.lightWhite};
   border: none;
   border-radius: 8px;
   cursor: pointer;
   animation: ${pulse} 1.5s infinite;
   transition: background-color 0.3s;
   &:hover {
-    background-color: #555;
+    background-color: ${colors.darkGrey};
   }
 `;
 
