@@ -19,8 +19,7 @@ def client():
 def test_create_listing(client):
     # Create a test user
     test_user = User(
-        utorid="testuser", password="abc",
-        email="test@utoronto.ca", phone="6478290835")
+        password="abc", email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 
@@ -28,7 +27,7 @@ def test_create_listing(client):
     incomplete_data = {
         "title": "Math Textbook",
         "condition": "used",
-        "seller_id": test_user.id
+        "owner_email": test_user.email
     }
     rsp = client.post('/api/listing/create', json=incomplete_data)
     assert rsp.status_code == 400
@@ -43,7 +42,7 @@ def test_create_listing(client):
         "price": 100,
         "quantity": 1,
         "condition": "used",
-        "seller_id": 9999
+        "owner_email": "invalid@gmail.com"
     }
     rsp = client.post('/api/listing/create', json=invalid_user)
     assert rsp.status_code == 404
@@ -58,7 +57,7 @@ def test_create_listing(client):
         "price": -4848,
         "quantity": 1,
         "condition": "used",
-        "seller_id": test_user.id
+        "owner_email": test_user.email
     }
     rsp = client.post('/api/listing/create', json=invalid_user)
     assert rsp.status_code == 400
@@ -72,7 +71,7 @@ def test_create_listing(client):
         "price": 100,
         "quantity": 1,
         "condition": "used",
-        "seller_id": test_user.id
+        "owner_email": test_user.email
     }
     rsp = client.post('/api/listing/create', json=data)
     assert rsp.status_code == 201
@@ -83,8 +82,7 @@ def test_create_listing(client):
 def test_get_listing(client):
     # Create a test user
     test_user = User(
-        utorid="testuser", password="abc",
-        email="test@utoronto.ca", phone="6478290835")
+        password="abc", email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 
@@ -95,7 +93,7 @@ def test_get_listing(client):
         price=300,
         quantity=1,
         condition="used",
-        seller_id=test_user.id
+        owner_id=test_user.id
     )
     db.session.add(listing)
     db.session.commit()
@@ -124,17 +122,17 @@ def test_get_all_listings(client):
 
     # Create a test user
     test_user = User(
-        utorid="testuser", password="abc",
-        email="test@utoronto.ca", phone="6478290835")
+        password="abc", email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 
     # Create 2 listings
     listing1 = Listing(
         title="Item 1", description="test description",
-        price=100, quantity=1, condition="new", seller_id=test_user.id)
+        price=100, quantity=1, condition="new", owner_id=test_user.id)
     listing2 = Listing(title="Item 2", description="test description",
-        price=500, quantity=1, condition="old", seller_id=test_user.id)
+        price=500, quantity=1, condition="old", owner_id=test_user.id)
+
     db.session.add(listing1)
     db.session.add(listing2)
     db.session.commit()
@@ -151,19 +149,18 @@ def test_get_all_listings(client):
 def test_update_listing(client):
     # Create a test user
     test_user = User(
-        utorid="testuser", password="abc",
-        email="test@utoronto.ca", phone="6478290835")
+        password="abc", email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 
-    # Create a listing
+    # Create a test listing
     listing = Listing(
         title="Old Laptop",
         description="Old Laptop",
         price=400,
         quantity=1,
         condition="used",
-        seller_id=test_user.id
+        owner_id=test_user.id
     )
     db.session.add(listing)
     db.session.commit()
@@ -187,13 +184,12 @@ def test_update_listing(client):
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
-    assert rsp['data'] == "Listing updated successfully"
+    assert rsp['data']['title'] == update_data["title"]
 
 def test_delete_listing(client):
     # Create a test user
     test_user = User(
-        utorid="testuser", password="abc",
-        email="test@utoronto.ca", phone="6478290835")
+        password="abc", email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 
@@ -204,7 +200,7 @@ def test_delete_listing(client):
         price=100,
         quantity=1,
         condition="used",
-        seller_id=test_user.id
+        owner_id=test_user.id
     )
     db.session.add(listing)
     db.session.commit()
@@ -227,3 +223,49 @@ def test_delete_listing(client):
     # Make sure the listing is deleted
     listing_in_db = db.session.get(Listing, listing.id)
     assert listing_in_db is None
+
+def test_buy_item(client):
+    # Create test users
+    test_seller = User(
+        password="ab1234c", email="test@utoronto.ca", phone="6478290835")
+
+    test_buyer = User(
+        password="09uhnk", email="hello@utoronto.ca", phone="4167892038")
+    db.session.add(test_seller)
+    db.session.add(test_buyer)
+    db.session.commit()
+
+    # Create a test listing
+    listing = Listing(
+        title="Old Laptop",
+        description="Old Laptop",
+        price=400,
+        quantity=1,
+        condition="used",
+        owner_id=test_seller.id
+    )
+    db.session.add(listing)
+    db.session.commit()
+
+    # Invalid buyer
+    invalid_buyer = {
+        "buyer_email": "invalid@utoronto.ca",
+        "sold": True
+    }
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=invalid_buyer)
+    assert rsp.status_code == 404
+    rsp = rsp.get_json()
+    assert rsp['status'] == ErrorRsp.ERR_NOT_FOUND.value
+    assert rsp['data'] == "User does not exist!"
+
+    # Test_buyer
+    buy_data = {
+        "buyer_email": test_buyer.email,
+        "sold": True
+    }
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=buy_data)
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert rsp['status'] == ErrorRsp.OK.value
+    assert rsp['data']['sold'] == True
+    assert test_buyer.listings_bought[0].id == listing.id

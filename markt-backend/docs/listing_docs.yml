@@ -1,9 +1,11 @@
 create:
   responses:
     201:
-      description: "Listing created"
+      description: "Listing created successfully!"
     400:
-      description: "Invalid input"
+      description: "Missing parameters"
+    404:
+      description: "User does not exist!"
   parameters:
     - name: "listing"
       in: "body"
@@ -13,28 +15,35 @@ create:
         properties:
           title:
             type: "string"
+            required: True
           description:
             type: "string"
+            required: True
           price:
             type: "integer"
             minimum: 0
+            required: True
           quantity:
             type: "integer"
+            required: True
             minimum: 1
           condition:
             type: "string"
+            required: True
           sold:
             type: "boolean"
             default: false
-          seller_id:
-            type: "integer"
+            required: True
+          owner_email:
+            type: "string"
+            required: True
 
-listing_by_id:
+get:
   responses:
     200:
       description: JSON response
     404:
-      description: "Listing not found"
+      description: "Listing does not exist!"
   parameters:
     - name: "user"
       in: "query"
@@ -52,9 +61,9 @@ get_all:
 update:
   responses:
     200:
-      description: "Listing updated"
-    400:
-      description: "Invalid listing id"
+      description: JSON response
+    404:
+      description: "Listing does not exist!"
   parameters:
     - name: "listing"
       in: "body"
@@ -64,17 +73,39 @@ update:
         properties:
           title:
             type: "string"
+            required: False
           description:
             type: "string"
+            required: False
           price:
             type: "integer"
             minimum: 0
+            required: False
           quantity:
             type: "integer"
             minimum: 1
+            required: False
           sold:
             type: "boolean"
+            required: False
           condition:
             type: "string"
-          seller_id:
-            type: "integer"
+            required: False
+          buyer_email:
+            type: "string"
+            required: False
+
+delete:
+  responses:
+    200:
+      description: "Listing deleted successfully"
+    404:
+      description: "Listing does not exist!"
+  parameters:
+    - name: "user"
+      in: "query"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          id: "integer"
