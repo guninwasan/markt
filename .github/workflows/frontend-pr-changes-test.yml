@@ -20,13 +20,18 @@ jobs:
         run: npm install
         working-directory: markt-frontend
 
-      - name: Identify Changed Files and Run Test Coverage
+      - name: Run Tests with Coverage
+        run: |
+          npm run test-coverage | tee coverage_output.txt
+        working-directory: markt-frontend
+
+      - name: Identify Changed Files
         run: |
           threshold=80
           echo "Running full coverage and identifying changed files:"
           fail=false
 
-          coverage_output=$(npm run test-coverage --coverageReporters=text)
+          coverage_output=$(grep -oP 'All files\s*\|\s*\K[0-9]+\.[0-9]+' coverage_output.txt)
           echo "$coverage_output"
 
           changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$")
@@ -37,12 +42,12 @@ jobs:
           fi
 
           for file in $changed_files; do
-            coverage_line=$(echo "$coverage_output" | awk -v file="$file" '$0 ~ file {print $0}')
+            coverage_line=$(grep -A 1 "$file" coverage_output.txt | grep -oP '[0-9]+\.[0-9]+(?=%)')
             if [ -n "$coverage_line" ]; then
-              coverage=$(echo "$coverage_output" | grep -A 1 "$file" | awk '/[0-9]+%/{gsub("%","",$4); print $4}')
+              coverage=$(echo "$coverage_line" | awk '{print $1}')
               echo "$file: $coverage%"
 
-              if (( coverage < threshold )); then
+              if (( $(echo "$coverage < $threshold" | bc -l) )); then
                 fail=true
                 echo "Code coverage for $file ($coverage%) is below the threshold ($threshold%)"
               fi
