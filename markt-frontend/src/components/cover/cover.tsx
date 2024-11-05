@@ -1,32 +1,26 @@
-// cover.tsx
 import React from "react";
-import {
-  coverContainerStyles,
-  titleStyles,
-  subtitleStyles,
-  rightContainerStyles,
-} from "./cover.styles";
+import { CoverContainer, RightContainer, Subtitle } from "./cover.styles";
 
-interface CoverProps {
-  children: React.ReactNode; // Accepts children for login or register form
-  title: string; // Dynamic title for different forms
-}
+type CoverProps = {
+  children: React.ReactNode;
+  title: string;
+};
 
 const Cover = ({ children, title }: CoverProps) => {
   return (
     <div style={{ display: "flex", height: "100vh" }}>
-      <div style={coverContainerStyles}>
-        <p style={subtitleStyles}>
+      <CoverContainer>
+        <Subtitle>
           Your Campus.
           <br />
           Your Marketplace.
-        </p>
-      </div>
+        </Subtitle>
+      </CoverContainer>
 
-      <div style={rightContainerStyles}>
-        <h2>{title}</h2> {/* Dynamic title */}
-        {children} {/* Dynamic form (Login or Register) */}
-      </div>
+      <RightContainer>
+        <h2>{title}</h2>
+        {children}
+      </RightContainer>
     </div>
   );
 };
