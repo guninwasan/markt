@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { colors } from "../../utils";
 
 type ProductListingComponentProps = {
   isMobile: boolean | null;
@@ -62,18 +63,18 @@ const SellerAvatar = styled.img`
 
 const ProductSpecsContainer = styled.div`
   margin-top: 2rem;
-  border: 1px solid #ddd;
+  border: 1px solid ${colors.lightGrey};
   padding: 1rem;
   border-radius: 8px;
-  background-color: #f9f9f9;
+  background-color: ${colors.white};
 `;
 
 const BottomTab = styled.div<{ isVisible: boolean }>`
   position: fixed;
   bottom: 0;
   width: 100%;
-  background-color: white;
-  border-top: 1px solid #ddd;
+  background-color: ${colors.white};
+  border-top: 1px solid ${colors.lightGrey};
   padding: 1rem;
   display: ${({ isVisible }) => (isVisible ? "flex" : "none")};
   justify-content: center;
@@ -85,14 +86,14 @@ const ShareInterestButton = styled.button`
   padding: 0.8rem 1.5rem;
   font-size: 1rem;
   font-weight: bold;
-  color: white;
-  background-color: #007bff; 
+  color: ${colors.white};
+  background-color: ${colors.darkerPrimary};
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color: #0056b3; 
+    background-color: ${colors.darkerHoverPrimary};
   }
 
   &:focus {
@@ -119,12 +120,12 @@ const ModalContent = styled.div`
   border-radius: 8px;
   width: 90%;
   max-width: 500px;
-  text-align: left; 
+  text-align: left;
 
   p {
     margin-bottom: 1.5rem;
     font-size: 1rem;
-    font-weight: normal; 
+    font-weight: normal;
     font-style: italic;
   }
 
@@ -133,7 +134,7 @@ const ModalContent = styled.div`
     font-size: 1rem;
     font-weight: bold;
     color: white;
-    background-color: #007bff; 
+    background-color: #007bff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -148,7 +149,6 @@ const ModalContent = styled.div`
   }
 `;
 
-
 const NoteTextArea = styled.textarea`
   width: 100%;
   height: 100px;
@@ -158,14 +158,13 @@ const NoteTextArea = styled.textarea`
   border: 1px solid #ddd;
   border-radius: 5px;
   resize: vertical;
-  font-family: inherit; 
+  font-family: inherit;
 
   &:focus {
     outline: none;
     border-color: #007bff;
   }
 `;
-
 
 const SpecGrid = styled.div`
   display: grid;
@@ -210,7 +209,6 @@ export {
   ModalBackdrop,
   ModalContent,
   NoteTextArea,
-
   SpecGrid,
   SpecCategory,
   SpecItem,

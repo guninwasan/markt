@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { colors } from "../../utils";
 
 const GalleryContainer = styled.div`
   display: flex;
@@ -85,7 +86,7 @@ const Thumbnail = styled.div<{ active: boolean }>`
   height: 60px;
   overflow: hidden;
   border: ${({ active }) =>
-    active ? "2px solid #fff" : "2px solid transparent"};
+    active ? `2px solid ${colors.white}` : "2px solid transparent"};
   transition: transform 0.2s ease;
   cursor: pointer;
   &:hover {
@@ -113,7 +114,7 @@ const NavButton = styled.button`
   background: rgba(255, 255, 255, 0.6);
   border: none;
   font-size: 30px;
-  color: #333;
+  color: ${colors.darkGrey};
   cursor: pointer;
   padding: 10px;
   border-radius: 50%;
@@ -122,6 +123,7 @@ const NavButton = styled.button`
   transform: translateY(-50%);
   transition: background 0.3s ease;
   &:hover {
+    cursor: pointer;
     background: rgba(255, 255, 255, 0.9);
   }
 `;
@@ -140,16 +142,16 @@ const CloseButton = styled.button`
   right: 20px;
   background: none;
   border: none;
-  color: #fff;
+  color: ${colors.white};
   font-size: 30px;
   cursor: pointer;
   &:hover {
-    color: #ff5f5f;
+    color: ${colors.red};
   }
 `;
 
 const IndexText = styled.p`
-  color: #fff;
+  color: ${colors.white};
   font-size: 12px;
 `;
 

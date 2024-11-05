@@ -11,10 +11,6 @@ import {
   PriceText,
   SellerInfo,
   SellerAvatar,
-  ProductSpecsContainer,
-  SpecGrid,
-  SpecCategory,
-  SpecItem,
   BottomTab,
   ShareInterestButton,
   ModalContent,
@@ -66,23 +62,23 @@ const ProductListingComponent = () => {
   };
 
   const handleCloseModal = () => {
-    setIsModalVisible(false); 
+    setIsModalVisible(false);
   };
 
   const handleSendEmail = () => {
     /* NOTE FOR DEVELOPER: PLEASE UPDATE VARIABLES 
     IN THIS AS WELL WHEN API CALLS MADE */
-    
-    const sellerName = "Seller Name"; 
-    const productTitle = "Product Title"; 
-    const productId = "Product ID"; 
-    const productPrice = "Product Price"; 
-    const buyerName = "Buyer Name"; 
+
+    const sellerName = "Seller Name";
+    const productTitle = "Product Title";
+    const productId = "Product ID";
+    const productPrice = "Product Price";
+    const buyerName = "Buyer Name";
     const sellerEmail = "hello123@example.com";
-    const buyerNote = note; 
-  
+    const buyerNote = note;
+
     const subject = `Interest in your product listing on Markt: ${productTitle}`;
-    
+
     const body = `
   Hello ${sellerName},
   
@@ -105,13 +101,13 @@ const ProductListingComponent = () => {
   Regards,
   Team Markt
     `;
-  
-    const mailtoLink = `mailto:${sellerEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  
+
+    const mailtoLink = `mailto:${sellerEmail}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+
     window.location.href = mailtoLink;
   };
-  
-  
 
   return (
     <>
@@ -136,13 +132,11 @@ const ProductListingComponent = () => {
                 description description description description description
                 description description description
               </p>
-      
+
               <ShareInterestButton onClick={handleShareInterestClick}>
                 Share Interest
               </ShareInterestButton>
-
             </TitleAndDescription>
-
 
             <PriceBox>
               <PriceText>CAD $$$</PriceText>
@@ -153,9 +147,8 @@ const ProductListingComponent = () => {
                   alt="Seller Avatar"
                 />
                 <div>
-                  <div>NAME BLURRED</div>
                   <div>SELLER ID # 1234</div>
-                  <a href="#">See all seller reviews</a>
+                  add stars here
                 </div>
               </SellerInfo>
             </PriceBox>
@@ -167,7 +160,10 @@ const ProductListingComponent = () => {
       {isModalVisible && (
         <ModalBackdrop>
           <ModalContent>
-            <p>Before sharing your interest in the product with the seller, do you have any questions for the seller?</p>
+            <p>
+              Before sharing your interest in the product with the seller, do
+              you have any questions for the seller?
+            </p>
 
             <NoteTextArea
               placeholder="Enter your concerns here..."
@@ -175,11 +171,11 @@ const ProductListingComponent = () => {
               onChange={(e) => setNote(e.target.value)}
             />
             <div>
-              <button onClick={handleSendEmail}>
-                Share Interest
+              <button onClick={handleSendEmail}>Share Interest</button>
+              <button onClick={handleCloseModal} style={{ marginLeft: "10px" }}>
+                Close
               </button>
-              <button onClick={handleCloseModal} style={{ marginLeft: "10px" }}>Close</button>
-            </div>            
+            </div>
           </ModalContent>
         </ModalBackdrop>
       )}
@@ -193,9 +189,9 @@ const ProductListingComponent = () => {
               alt="Seller Avatar"
             />
             <div>
-              <div>NAME BLURRED</div>
+              {/* just create a reusable component for seller */}
               <div>SELLER ID # 1234</div>
-              <a href="#">See all seller reviews</a>
+              add stars
             </div>
           </SellerInfo>
         </BottomTab>

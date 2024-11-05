@@ -176,7 +176,7 @@ const DropdownItem = styled.a`
 
   &:hover {
     background-color: #f0f0f0;
-    color: #000;
+    color: ${colors.textBlack};
   }
 `;
 

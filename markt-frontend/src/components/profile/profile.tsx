@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GreetingText, UserInfo, ProfileDetailsHeading, ButtonContainer, LogoutButton, ModalOverlay, ModalContent } from "./profile.styles";
+import {
+  GreetingText,
+  UserInfo,
+  ProfileDetailsHeading,
+  ButtonContainer,
+  Button,
+  ModalOverlay,
+  ModalContent,
+} from "./profile.styles";
 import styled from "styled-components";
 
 const Profile = () => {
@@ -18,9 +26,9 @@ const Profile = () => {
     setIsModalVisible(true);
 
     setTimeout(() => {
-      setIsModalVisible(false); 
-      navigate("/"); 
-    }, 2000); 
+      setIsModalVisible(false);
+      navigate("/");
+    }, 2000);
   };
 
   //CHANGE PASSWORD FUNCTIONALITY NEEDS TO BE ADDED
@@ -38,16 +46,16 @@ const Profile = () => {
         <UserInfo>UofT Student ID: {userID}</UserInfo>
 
         <ButtonContainer>
-          <LogoutButton onClick={handleChangePassword}>Change Password</LogoutButton>
-          <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+          <Button onClick={handleChangePassword} primaryColor>
+            Change Password
+          </Button>
+          <Button onClick={handleLogout}>Logout</Button>
         </ButtonContainer>
       </div>
 
       {isModalVisible && (
         <ModalOverlay>
-          <ModalContent>
-            You have been logged out.
-          </ModalContent>
+          <ModalContent>You have been logged out.</ModalContent>
         </ModalOverlay>
       )}
     </div>

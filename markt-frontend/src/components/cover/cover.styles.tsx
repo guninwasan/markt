@@ -36,7 +36,7 @@ const Subtitle = styled.h2`
   margin-right: 4.6rem;
   margin-top: 2rem;
   margin-bottom: auto;
-  color: #4d4d4d;
+  color: ${colors.darkGrey};
 `;
 
 export { CoverContainer, RightContainer, Subtitle };
