@@ -1,7 +1,9 @@
 name: Frontend PR Changes Test Coverage
 
 on:
-  push:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   frontend-pr-changes-test:
@@ -65,3 +67,6 @@ jobs:
         with:
           name: coverage-report
           path: markt-frontend/coverage/
+
+      - name: Debug Step
+        run: echo "Workflow completed successfully"
