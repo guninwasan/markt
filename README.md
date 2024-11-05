@@ -32,7 +32,7 @@ Front-end: React (https://react.dev/)
 
 Database: PostgreSQL (https://www.postgresql.org/)
 
-Database Management: SQLAlchemy (https://www.sqlalchemy.org/)
+Database Management: pgAdmin (https://www.pgadmin.org/)
 
 **Note**: The team is also using generative AI tools like ChatGPT and copilot to reduce the workload. The team is also willing to provide any prompts if needed.
 
