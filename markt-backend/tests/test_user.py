@@ -88,7 +88,7 @@ def test_login(client):
 
 def test_update(client):
     # Create a user
-    user = User(full_name="Test User", password="mypassword",
+    user = User(full_name="Test User", password="mY8iw$02j",
                 email="user@mail.utoronto.ca", phone="6478290835")
     db.session.add(user)
     db.session.commit()
@@ -110,7 +110,7 @@ def test_update(client):
         "new_full_name": "John Smith",
         "new_email": "new_email@mail.utoronto.ca",
         "new_phone": "1234567890",
-        "new_password": "newpassword"
+        "new_password": "mY8iwp@ssword"
     }
     rsp = client.post('/api/user/update', json=update_data)
     assert rsp.status_code == 200

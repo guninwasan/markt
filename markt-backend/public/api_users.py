@@ -39,28 +39,15 @@ def register():
     validation_errors = []
 
     # Validate email
-    if ("@mail.utoronto.ca" not in data['email']) and ("@utoronto.ca" not in data['email']):
+    if not User.validate_email_format(data["email"]):
         validation_errors.append("Email must be a valid UofT email!")
 
-    # Validate phone number:
-    #   - Exactly 10 digits, no letters or special characters
-    PHONE_REGEX = re.compile(r"^\d{10}$")
-    if not PHONE_REGEX.match(str(data['phone'])):
-        validation_errors.append("Phone number must be exactly 10 digits with no letters or special characters.")
+    # Validate phone number
+    if not User.validate_phone_format(data["phone"]):
+        validation_errors.append("Phone number must be of valid format: 123-456-7890, (123) 456-7890, or +1-123-456-7890")
 
-    # Validate password:
-    #   - Minimum 8 characters
-    #   - At least one lowercase letter
-    #   - At least one uppercase letter
-    #   - At least one digit
-    #   - At least one special character
-    password = data['password']
-    if (len(password) < 8 or
-        not re.search(r"[A-Z]", password) or
-        not re.search(r"[a-z]", password) or
-        not re.search(r"[0-9]", password) or
-        not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password)
-    ):
+    # Validate password
+    if not User.validate_password_format(data["password"]):
         validation_errors.append("Password must contain at minimum 8 characters, 1 lowercase and uppercase letter, 1 digit, 1 special character")
 
     # Return validation errors if any
@@ -105,7 +92,7 @@ def login():
                         "data": "User does not exist!"}), 404
 
     # Validate user's password
-    if not user.validate_password(data['password']):
+    if not user.check_password(data['password']):
         return jsonify({"status": ErrorRsp.ERR_PARAM.value,
                         "data": "Incorrect password!"}), 401
 
@@ -137,25 +124,50 @@ def update():
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
 
+    # Store all validation errors
+    validation_errors = []
+
     # If password is changed, set the API rsp
     rsp_password = "Not updated"
 
     if 'new_full_name'in data:
         user.full_name = data['new_full_name']
+
     if 'new_email'in data:
-        user.email = data['new_email']
+        # Validate email
+        if not user.validate_email_format(data["new_email"]):
+            validation_errors.append("Email must be a valid UofT email!")
+        else:
+            user.email = data['new_email']
+
     if 'new_phone'in data:
-        user.phone = data['new_phone']
+        # Validate phone number
+        if not user.validate_phone_format(data["new_phone"]):
+            validation_errors.append("Phone number must be of valid format: 123-456-7890, (123) 456-7890, or +1-123-456-7890")
+        else:
+            user.phone = data['new_phone']
+
     if 'new_password' in data:
-        user.set_password(data['new_password'])
-        rsp_password = "Updated"
-    db.session.commit()
+        # Validate password
+        if not user.validate_password_format(data["new_password"]):
+            validation_errors.append("Password must contain at minimum 8 characters, 1 lowercase and uppercase letter, 1 digit, 1 special character")
+        else:
+            user.set_password(data['new_password'])
+            rsp_password = "Updated"
+
+    # Return validation errors if any
+    if len(validation_errors):
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "data": validation_errors}), 400
 
     # Sanity check for password since it is not secure to send the updated password
     # in the API rsp
-    if 'new_password' in data and not user.validate_password(data['new_password']):
+    if 'new_password' in data and not user.check_password(data['new_password']):
         return jsonify({"status": ErrorRsp.ERR.value,
                         "data": "User data not updated"}), 400
+
+    # If no errors, commit changes
+    db.session.commit()
 
     rsp = {
         "full_name": user.full_name,
@@ -163,6 +175,6 @@ def update():
         "email": user.email,
         "phone": user.phone
     }
-    
+
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": rsp}), 200
