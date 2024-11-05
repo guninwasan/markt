@@ -3,7 +3,7 @@ import { Navbar, SellingComponent } from "../../components";
 const SellPage = () => {
   return (
     <>
-      <Navbar />
+      <Navbar hideSearch />
       <SellingComponent />
     </>
   );

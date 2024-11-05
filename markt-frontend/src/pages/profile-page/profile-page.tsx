@@ -3,9 +3,8 @@ import { Profile, Navbar } from "../../components";
 const ProfilePage = () => {
   return (
     <div>
-      <Navbar />
+      <Navbar hideSearch />
       <Profile />
-
     </div>
   );
 };
