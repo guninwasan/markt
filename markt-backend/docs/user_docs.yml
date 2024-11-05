@@ -87,3 +87,5 @@ update:
             type: "string"
           new_phone:
             type: "string"
+          new_rating:
+            type: "float"

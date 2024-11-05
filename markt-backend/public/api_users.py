@@ -143,17 +143,26 @@ def update():
     if 'new_phone'in data:
         # Validate phone number
         if not user.validate_phone_format(data["new_phone"]):
-            validation_errors.append("Phone number must be of valid format: 123-456-7890, (123) 456-7890, or +1-123-456-7890")
+            validation_errors.append("Phone number must be of valid format: 123-456-7890, \
+                                     (123) 456-7890, or +1-123-456-7890")
         else:
             user.phone = data['new_phone']
 
     if 'new_password' in data:
         # Validate password
         if not user.validate_password_format(data["new_password"]):
-            validation_errors.append("Password must contain at minimum 8 characters, 1 lowercase and uppercase letter, 1 digit, 1 special character")
+            validation_errors.append("Password must contain at minimum 8 characters, \
+                                     1 lowercase and uppercase letter, 1 digit, 1 special character")
         else:
             user.set_password(data['new_password'])
             rsp_password = "Updated"
+
+    if "new_rating" in data:
+        # Validate rating
+        if not user.validate_rating_range(data["new_rating"]):
+            validation_errors.append("Rating must be between 0 and 5")
+        else:
+            user.update_total_rating(data["new_rating"])
 
     # Return validation errors if any
     if len(validation_errors):
@@ -173,7 +182,8 @@ def update():
         "full_name": user.full_name,
         "password": rsp_password, # string indicating whether or not password was updated
         "email": user.email,
-        "phone": user.phone
+        "phone": user.phone,
+        "rating": user.get_average_rating()
     }
 
     return jsonify({"status": ErrorRsp.OK.value,

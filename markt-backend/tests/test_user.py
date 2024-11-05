@@ -126,3 +126,42 @@ def test_update(client):
     assert updated_user.email == update_data["new_email"]
     assert updated_user.phone == update_data["new_phone"]
     assert updated_user.full_name == update_data["new_full_name"]
+
+def test_rating(client):
+    # Create a user
+    user = User(full_name="Test User", password="mY8iw$02j",
+                email="user@mail.utoronto.ca", phone="6478290835")
+    db.session.add(user)
+    db.session.commit()
+
+    # Invalid rating
+    update_data = {
+        "verification_email": user.email,
+        "new_rating": -10
+    }
+    rsp = client.post('/api/user/update', json=update_data)
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+
+    # Rating 1: 5
+    update_data = {
+        "verification_email": user.email,
+        "new_rating": 5
+    }
+    rsp = client.post('/api/user/update', json=update_data)
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert update_data["new_rating"] == rsp["data"]["rating"]
+
+    # Rating 2: 3.5, Average: 4.25
+    update_data = {
+        "verification_email": user.email,
+        "new_rating": 3.5
+    }
+    rsp = client.post('/api/user/update', json=update_data)
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert 4.25 == rsp["data"]["rating"]

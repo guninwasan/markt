@@ -11,6 +11,9 @@ class User(db.Model):
     phone = db.Column(db.String(15), nullable=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
 
+    total_ratings = db.Column(db.Float, default=0.0)
+    number_of_ratings = db.Column(db.Integer, default=0)
+
     # Relationships
     listings_for_selling = db.relationship('Listing', back_populates='owner', foreign_keys='Listing.owner_id', lazy='dynamic')
     listings_bought = db.relationship('Listing', back_populates='buyer', foreign_keys='Listing.buyer_id', lazy='dynamic')
@@ -75,6 +78,27 @@ class User(db.Model):
         if not bool(PHONE_REGEX.match(str(phone))):
             return False
         return True
+
+    """
+    Rating Helpers
+    """
+    @classmethod
+    def validate_rating_range(self, rating):
+        if 0 <= rating <= 5:
+            return True
+        return False
+
+    def update_total_rating(self, new_rating):
+        if self.validate_rating_range(new_rating):
+            self.total_ratings += new_rating
+            self.number_of_ratings += 1
+        else:
+            raise ValueError("Rating must be between 0 and 5")
+
+    def get_average_rating(self):
+        if self.number_of_ratings == 0:
+            return 0
+        return round(self.total_ratings / self.number_of_ratings, 2)
 
 class Listing(db.Model):
     __tablename__ = 'listings'
