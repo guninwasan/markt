@@ -1,5 +1,4 @@
 import { ExploreListings, Navbar } from "../../components";
-import { SearchBar } from "../../components/searchbar/searchbar";
 
 const HomePage = () => {
   return (
