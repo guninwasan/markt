@@ -3,29 +3,29 @@
 exports[`NotFoundPage should match the snapshot 1`] = `
 <div>
   <nav
-    class="sc-blHHSb bTLhyn"
+    class="sc-blHHSb isZSSR"
   >
     <a
       aria-current="page"
-      class="sc-gtLWhw fSWOOJ active"
+      class="sc-gtLWhw dEihEB active"
       href="/"
     >
       Markt
     </a>
     <div
-      class="sc-eauhAA gAtGdF"
+      class="sc-eauhAA gTACkZ"
     >
       <div
         class="sc-fFoeYl fxsTkD"
       >
         <input
-          class="sc-gQaihK kMVuzr"
+          class="sc-gQaihK gTtECY"
           placeholder="Search...."
           type="text"
           value=""
         />
         <button
-          class="sc-iuUfFv kEekNc"
+          class="sc-iuUfFv dXDhOe"
         >
           <svg
             fill="currentColor"
@@ -50,7 +50,7 @@ exports[`NotFoundPage should match the snapshot 1`] = `
         class="sc-fAUdSK dBokxb"
       >
         <a
-          class="sc-dntaoT lagFYI"
+          class="sc-dntaoT fXFXKj"
           href="/register"
         >
           Login/Register
@@ -59,20 +59,20 @@ exports[`NotFoundPage should match the snapshot 1`] = `
     </ul>
   </nav>
   <div
-    class="sc-jWJSSj deMfHV"
+    class="sc-hGNhLO ghjqye"
   >
     <h1
-      class="sc-iCjFWQ gvGiZi"
+      class="sc-jlHfjz jBjTZW"
     >
       Page Not Found
     </h1>
     <p
-      class="sc-khdDuB ernooK"
+      class="sc-hRgSog kCkenQ"
     >
       Oops! It looks like the page you are looking for does not exist. Enjoy this game while we have you here!
     </p>
     <div
-      class="sc-hGNhLO dFxUpm"
+      class="sc-jwaPLR eHzOte"
     >
       <iframe
         height="100%"
