@@ -1,9 +1,7 @@
 name: Frontend PR Changes Test Coverage
 
 on:
-  pull_request:
-    branches:
-      - main
+  push:
 
 jobs:
   frontend-pr-changes-test:
@@ -57,16 +55,7 @@ jobs:
               echo "Skipping $file as no coverage data was found in the coverage report output."
             fi
           done
-          if [ "$fail" = true ]; then
+          if [ "$fail" = true]; then
             exit 1
           fi
         working-directory: markt-frontend
-
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: markt-frontend/coverage/
-
-      - name: Debug Step
-        run: echo "Workflow completed successfully"
