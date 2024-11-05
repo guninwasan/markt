@@ -1,9 +1,7 @@
 name: Frontend PR Changes Test Coverage
 
 on:
-  pull_request:
-    paths:
-      - "markt-frontend/**"
+  push:
 
 jobs:
   frontend-pr-changes-test:
@@ -12,8 +10,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
