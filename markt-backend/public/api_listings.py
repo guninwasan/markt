@@ -157,6 +157,29 @@ def update(id):
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": "Listing updated successfully"}), 200
 
+# Mock search API for listings - to be replaced with actual search API by Rishi.
+@listing_api_bp.route('/search', methods=['GET'])
+# Endpoint parameter specification
+@swag_from('../docs/listing_docs.yml', endpoint='search')
+def search_listings():
+    query = request.args.get('query', '')
+    if not query:
+        return jsonify({
+            "status": ErrorRsp.ERR_PARAM.value,
+            "data": "Query parameter is missing"
+        }), 400
+
+    listings = Listing.query.filter(
+        (Listing.title.ilike(f"%{query}%")) | (Listing.description.ilike(f"%{query}%"))
+    ).limit(10).all()  # Limit to top 10 results
+
+    rsp = [{"id": listing.id, "title": listing.title} for listing in listings]
+    return jsonify({
+        "status": ErrorRsp.OK.value,
+        "data": rsp
+    }), 200
+
+
 """
     Endpoint: Delete a listing
     Route: 'api/listing/delete/<int:id>/'

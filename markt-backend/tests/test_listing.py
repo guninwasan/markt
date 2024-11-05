@@ -227,3 +227,58 @@ def test_delete_listing(client):
     # Make sure the listing is deleted
     listing_in_db = db.session.get(Listing, listing.id)
     assert listing_in_db is None
+
+def test_search_listings(client):
+    # Create a test user
+    test_user = User(
+        utorid="testuser",
+        password="abc",
+        email="test@utoronto.ca",
+        phone="6478290835"
+    )
+    db.session.add(test_user)
+    db.session.commit()
+
+    # Create two listings
+    listing1 = Listing(
+        title="Item 1",
+        description="test description",
+        price=100,
+        quantity=1,
+        condition="new",
+        seller_id=test_user.id
+    )
+    listing2 = Listing(
+        title="Item 2",
+        description="test description",
+        price=500,
+        quantity=1,
+        condition="old",
+        seller_id=test_user.id
+    )
+    db.session.add_all([listing1, listing2])
+    db.session.commit()
+
+    # Search for listings
+    search_query = "Item"
+    rsp = client.get(f'/api/listing/search?query={search_query}')
+    
+    # Assertions
+    assert rsp.status_code == 200
+    data = rsp.get_json()
+    print(data)
+    assert data["status"] == 1000
+    assert len(data["data"]) == 2  # Check that two listings are returned
+    assert data["data"][0]["title"] == "Item 1"
+    assert data["data"][1]["title"] == "Item 2"
+
+    # Search for listings that don't exist
+    search_query = "Non-existent item"
+    rsp = client.get(f'/api/listing/search?query={search_query}')
+
+    # Assertions
+    assert rsp.status_code == 200
+    data = rsp.get_json()
+    assert data["status"] == 1000
+    assert len(data["data"]) == 0  # Check that no listings are returned
+

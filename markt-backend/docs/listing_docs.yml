@@ -78,3 +78,31 @@ update:
             type: "string"
           seller_id:
             type: "integer"
+
+search:
+  responses:
+    200:
+      description: JSON response
+  parameters:
+    - name: "query"
+      in: "query"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          title:
+            type: "string"
+          description:
+            type: "string"
+          price:
+            type: "integer"
+            minimum: 0
+          quantity:
+            type: "integer"
+            minimum: 1
+          condition:
+            type: "string"
+          sold:
+            type: "boolean"
+          seller_id:
+            type: "integer"
