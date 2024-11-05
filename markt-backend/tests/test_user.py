@@ -24,7 +24,8 @@ def test_register(client):
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
 
     # Invalid email, phone number, and password
-    non_UofT_user = {"password": "abc123", "email": "user@gmail.com", "phone": "6478290835"}
+    non_UofT_user = {"full_name": "Test User", "password": "abc123",
+                     "email": "user@gmail.com", "phone": "6478290835"}
     rsp = client.post('/api/user/register', json=non_UofT_user)
     assert rsp.status_code != 200
     rsp = rsp.get_json()
@@ -32,7 +33,8 @@ def test_register(client):
     assert 'Email must be a valid UofT email!' in rsp["data"]
 
     # Valid data
-    UofT_valid_buyer = {"password": "abc123C$", "email": "user@utoronto.ca", "phone": "6478290835"}
+    UofT_valid_buyer = {"full_name": "Test User", "password": "abc123C$",
+                        "email": "user@utoronto.ca", "phone": "6478290835"}
     rsp = client.post('/api/user/register', json=UofT_valid_buyer)
     assert rsp.status_code == 201
     rsp = rsp.get_json()
@@ -55,7 +57,8 @@ def test_login(client):
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
 
     # Create a user in the database
-    user = User(password="myPass%wor3", email="user@mail.utoronto.ca", phone="6478290835")
+    user = User(full_name="Jane Doe", password="myPass%wor3",
+                email="user@mail.utoronto.ca", phone="6478290835")
     db.session.add(user)
     db.session.commit()
 
@@ -85,13 +88,14 @@ def test_login(client):
 
 def test_update(client):
     # Create a user
-    user = User(password="mypassword", email="user@mail.utoronto.ca", phone="6478290835")
+    user = User(full_name="Test User", password="mypassword",
+                email="user@mail.utoronto.ca", phone="6478290835")
     db.session.add(user)
     db.session.commit()
 
     # Invalid user
     non_existent_user = {
-        "verify_email": "invalid@mail.utoronto.ca",
+        "verification_email": "invalid@mail.utoronto.ca",
         "new_phone": "8394039291"
     }
     rsp = client.post('/api/user/update', json=non_existent_user)
@@ -102,7 +106,8 @@ def test_update(client):
 
     # Valid update data
     update_data = {
-        "verify_email": user.email,
+        "verification_email": user.email,
+        "new_full_name": "John Smith",
         "new_email": "new_email@mail.utoronto.ca",
         "new_phone": "1234567890",
         "new_password": "newpassword"
@@ -112,9 +117,12 @@ def test_update(client):
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
     assert update_data["new_email"] == rsp["data"]["email"]
+    assert update_data["new_full_name"] == rsp["data"]["full_name"]
+    assert update_data["new_phone"] == rsp["data"]["phone"]
     assert "Updated" == rsp["data"]["password"]
 
     # Verify updates in the database
     updated_user = User.query.filter_by(email=update_data["new_email"]).first()
     assert updated_user.email == update_data["new_email"]
     assert updated_user.phone == update_data["new_phone"]
+    assert updated_user.full_name == update_data["new_full_name"]

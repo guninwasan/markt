@@ -5,6 +5,7 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String(100), nullable=False)
     password_encryp = db.Column(db.String(1000), nullable=False)
     phone = db.Column(db.String(15), nullable=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
@@ -13,7 +14,8 @@ class User(db.Model):
     listings_for_selling = db.relationship('Listing', back_populates='owner', foreign_keys='Listing.owner_id', lazy='dynamic')
     listings_bought = db.relationship('Listing', back_populates='buyer', foreign_keys='Listing.buyer_id', lazy='dynamic')
 
-    def __init__(self, password, email, phone):
+    def __init__(self, full_name, password, email, phone):
+        self.full_name = full_name
         self.email = email
         self.phone = phone
         

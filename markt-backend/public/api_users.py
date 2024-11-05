@@ -69,6 +69,7 @@ def register():
                         "data": validation_errors}), 400
 
     user = User(
+        full_name=data["full_name"],
         password=data['password'],
         email=data['email'],
         phone=data['phone'],
@@ -131,7 +132,7 @@ def update():
                         "errors": err.messages}), 400
 
     # Check if user exists
-    user = User.query.filter_by(email=data['verify_email']).first()
+    user = User.query.filter_by(email=data['verification_email']).first()
     if user is None:
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
@@ -139,6 +140,8 @@ def update():
     # If password is changed, set the API rsp
     rsp_password = "Not updated"
 
+    if 'new_full_name'in data:
+        user.full_name = data['new_full_name']
     if 'new_email'in data:
         user.email = data['new_email']
     if 'new_phone'in data:
@@ -155,6 +158,7 @@ def update():
                         "data": "User data not updated"}), 400
 
     rsp = {
+        "full_name": user.full_name,
         "password": rsp_password, # string indicating whether or not password was updated
         "email": user.email,
         "phone": user.phone
