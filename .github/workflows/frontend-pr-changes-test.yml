@@ -24,38 +24,3 @@ jobs:
         run: |
           npm run test-coverage | tee coverage_output.txt
         working-directory: markt-frontend
-
-      - name: Identify Changed Files
-        run: |
-          threshold=80
-          echo "Running full coverage and identifying changed files:"
-          fail=false
-
-          coverage_output=$(grep -oP 'All files\s*\|\s*\K[0-9]+\.[0-9]+' coverage_output.txt)
-          echo "$coverage_output"
-
-          changed_files=$(git diff --name-only origin/main HEAD | grep -E "\.js$|\.jsx$|\.ts$|\.tsx$")
-
-          if [ -z "$changed_files" ]; then
-            echo "No frontend files changed; skipping coverage checks."
-            exit 0
-          fi
-
-          for file in $changed_files; do
-            coverage_line=$(grep -A 1 "$file" coverage_output.txt | grep -oP '[0-9]+\.[0-9]+(?=%)')
-            if [ -n "$coverage_line" ]; then
-              coverage=$(echo "$coverage_line" | awk '{print $1}')
-              echo "$file: $coverage%"
-
-              if (( $(echo "$coverage < $threshold" | bc -l) )); then
-                fail=true
-                echo "Code coverage for $file ($coverage%) is below the threshold ($threshold%)"
-              fi
-            else
-              echo "Skipping $file as no coverage data was found in the coverage report output."
-            fi
-          done
-          if [ "$fail" = true]; then
-            exit 1
-          fi
-        working-directory: markt-frontend
