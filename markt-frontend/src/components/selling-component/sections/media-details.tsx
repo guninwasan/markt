@@ -84,7 +84,7 @@ const MediaSection = ({
             <RemoveButton onClick={handleRemoveDisplay}>✕</RemoveButton>
           </PreviewImagesContainer>
         )}
-
+        <br />
         <Label htmlFor="mediaInput">
           Additional Images and Videos (Max: 7)
         </Label>
