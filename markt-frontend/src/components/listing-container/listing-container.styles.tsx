@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { colors } from "../../utils";
 
 const Container = styled.div`
-  width: 200px;
+  width: 400px;
   padding: 1rem;
   border: 1px solid ${colors.lightGrey};
   border-radius: 0.5rem;
