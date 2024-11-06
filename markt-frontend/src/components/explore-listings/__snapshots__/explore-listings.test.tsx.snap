@@ -31,25 +31,14 @@ exports[`ExploreListings should match the snapshot 1`] = `
   <div
     class="sc-dntaoT dQtacQ"
   >
-    <div
-      class="sc-ivxoEo eOqgiI"
-    >
-      Featured Listing 1
+    <div>
+      New Listing 1
     </div>
-    <div
-      class="sc-ivxoEo eOqgiI"
-    >
-      Featured Listing 2
+    <div>
+      New Listing 1
     </div>
-    <div
-      class="sc-ivxoEo eOqgiI"
-    >
-      Featured Listing 3
-    </div>
-    <div
-      class="sc-ivxoEo eOqgiI"
-    >
-      Featured Listing 4
+    <div>
+      New Listing 1
     </div>
   </div>
 </div>

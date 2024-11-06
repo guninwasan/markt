@@ -1,6 +1,11 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ExploreListings } from "./explore-listings";
+import { ListingContainer } from "../listing-container";
+
+jest.mock("../listing-container", () => ({
+  ListingContainer: () => <div>New Listing 1</div>,
+}));
 
 describe("ExploreListings", () => {
   it("should render the header", () => {
