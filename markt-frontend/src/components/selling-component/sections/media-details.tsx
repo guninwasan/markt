@@ -73,6 +73,7 @@ const MediaSection = ({
           onChange={addDisplayImage}
           style={{ display: "none" }}
           ref={displayImageInputRef}
+          data-testid="displayImageInput"
         />
         {displayImage && (
           <PreviewImagesContainer>
@@ -101,6 +102,7 @@ const MediaSection = ({
           onChange={handleMediaChange}
           style={{ display: "none" }}
           ref={mediaInputRef}
+          data-testid="mediaInput"
         />
         <p>{mediaFiles.length} / 7 files uploaded</p>
         {mediaFiles.map((file, index) => (
