@@ -48,8 +48,8 @@ const ListingContainer = ({
           <FaHeart />
         </WishlistIcon>
         <TextInfo>
-          <Condition>{condition}</Condition>
           <Location>{location}</Location>
+          <Condition>{condition}</Condition>
         </TextInfo>
       </AdditionalInfo>
     </Container>

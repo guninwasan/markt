@@ -1,10 +1,11 @@
 import styled from "styled-components";
+import { colors } from "../../utils";
 
 const Container = styled.div`
-  width: 200px; /* Adjustable for square-ish shape */
-  padding: 16px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  width: 200px;
+  padding: 1rem;
+  border: 1px solid ${colors.lightGrey};
+  border-radius: 0.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -29,10 +30,11 @@ const Image = styled.img`
 
 const InfoContainer = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-top: 8px;
+  margin-top: 0.5rem;
+  justify-content: space-between;
+  overflow: hidden;
 `;
 
 const Title = styled.h4`
@@ -40,17 +42,20 @@ const Title = styled.h4`
   font-weight: bold;
   color: #333;
   margin: 0;
+  padding: 0;
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: left;
 `;
 
 const Price = styled.span`
   font-size: 14px;
-  font-weight: bold;
-  color: #ff5722;
+  font-weight: 1000;
+  color: ${colors.darkerHoverPrimary};
   margin-left: 8px;
+  overflow: hidden;
 `;
 
 const AdditionalInfo = styled.div`
@@ -62,13 +67,13 @@ const AdditionalInfo = styled.div`
 `;
 
 const WishlistIcon = styled.div`
-  color: #ff4081;
+  color: ${colors.grey};
   cursor: pointer;
   font-size: 18px;
   transition: color 0.3s;
 
   &:hover {
-    color: #d81b60;
+    color: ${colors.red};
   }
 `;
 
@@ -77,18 +82,19 @@ const TextInfo = styled.div`
   flex-direction: column;
   align-items: flex-start;
   font-size: 12px;
-  color: #757575;
+  color: ${colors.textBlack};
   margin-left: 8px;
 `;
 
 const Condition = styled.span`
   font-size: 12px;
-  color: #757575;
+  color: ${colors.darkGrey};
 `;
 
 const Location = styled.span`
   font-size: 12px;
-  color: #757575;
+  color: ${colors.darkGrey};
+  font-weight: bold;
 `;
 
 export {
