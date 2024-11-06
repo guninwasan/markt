@@ -44,14 +44,19 @@ const ListingContainer = ({
   };
 
   return (
-    <Container onClick={handleClick}>
+    <Container onClick={handleClick} data-testID="listingContainer">
       <Image src={image} alt={title} />
       <InfoContainer>
         <Title>{title}</Title>
         <Price>{price}</Price>
       </InfoContainer>
       <AdditionalInfo>
-        <WishlistIcon isWishList={isWishList} onClick={handleWishlistClick}>
+        <WishlistIcon
+          isWishList={isWishList}
+          onClick={handleWishlistClick}
+          data-testID="wishlist-button"
+          className={isWishList ? "wishlist-icon-active" : ""}
+        >
           <FaHeart />
         </WishlistIcon>
         <TextInfo>
