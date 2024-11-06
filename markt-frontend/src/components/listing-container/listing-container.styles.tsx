@@ -66,14 +66,15 @@ const AdditionalInfo = styled.div`
   justify-content: space-between;
 `;
 
-const WishlistIcon = styled.div`
-  color: ${colors.grey};
+const WishlistIcon = styled.div<{ isWishList?: boolean }>`
+  color: ${({ isWishList }) => (isWishList ? colors.red : colors.grey)};
   cursor: pointer;
   font-size: 18px;
   transition: color 0.3s;
 
   &:hover {
-    color: ${colors.red};
+    color: ${({ isWishList }) =>
+      isWishList ? colors.darkGrey : colors.redHover};
   }
 `;
 

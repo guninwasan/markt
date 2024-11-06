@@ -12,6 +12,7 @@ import {
   Condition,
   Location,
 } from "./listing-container.styles";
+import { useState } from "react";
 
 type ListingContainerProps = {
   id: string;
@@ -30,7 +31,13 @@ const ListingContainer = ({
   condition,
   location,
 }: ListingContainerProps) => {
+  const [isWishList, setIsWishList] = useState(false);
   const navigate = useNavigate();
+
+  const handleWishlistClick = (e: any) => {
+    setIsWishList(!isWishList);
+    e.stopPropagation();
+  };
 
   const handleClick = () => {
     navigate(`/listing?id=${id}`);
@@ -44,7 +51,7 @@ const ListingContainer = ({
         <Price>{price}</Price>
       </InfoContainer>
       <AdditionalInfo>
-        <WishlistIcon>
+        <WishlistIcon isWishList={isWishList} onClick={handleWishlistClick}>
           <FaHeart />
         </WishlistIcon>
         <TextInfo>
