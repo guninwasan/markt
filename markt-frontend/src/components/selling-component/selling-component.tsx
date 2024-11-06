@@ -35,12 +35,6 @@ const SellingComponent = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleAddMediaClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
-
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -96,6 +90,12 @@ const SellingComponent = () => {
         ...prevData,
         media: [...prevData.media, ...Array.from(files)],
       }));
+    }
+  };
+
+  const handleAddMediaClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   };
 
