@@ -17,6 +17,7 @@ import {
   ModalBackdrop,
   NoteTextArea,
   BottomTabRow,
+  Button,
 } from "./product-listing-component.styles";
 import { ProductSpecs } from "./product-specifications";
 // import { useSearchParams } from "react-router-dom";
@@ -186,12 +187,12 @@ const ProductListingComponent = () => {
               value={note}
               onChange={(e) => setNote(e.target.value)}
             />
-            <div>
-              <button onClick={handleSendEmail}>Share Interest</button>
-              <button onClick={handleCloseModal} style={{ marginLeft: "10px" }}>
-                Close
-              </button>
-            </div>
+            <Button onClick={handleSendEmail} primaryColor>
+              Share Interest
+            </Button>
+            <Button onClick={handleCloseModal} style={{ marginLeft: "10px" }}>
+              Close
+            </Button>
           </ModalContent>
         </ModalBackdrop>
       )}

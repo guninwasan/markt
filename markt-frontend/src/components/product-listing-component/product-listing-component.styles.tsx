@@ -138,25 +138,6 @@ const ModalContent = styled.div`
     font-weight: normal;
     font-style: italic;
   }
-
-  button {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    font-weight: bold;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #0056b3;
-    }
-
-    &:focus {
-      outline: none;
-    }
-  }
 `;
 
 const NoteTextArea = styled.textarea`
@@ -203,6 +184,23 @@ const SpecItem = styled.p`
   color: #555;
 `;
 
+const Button = styled.button<{ primaryColor?: boolean }>`
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background-color: ${(props) =>
+    props.primaryColor ? colors.darkerHoverPrimary : colors.red};
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 1rem;
+  &:hover {
+    background-color: ${(props) =>
+      props.primaryColor ? colors.darkerPrimary : colors.redHover};
+  }
+`;
+
 export {
   ProductListingContainer,
   ProductImages,
@@ -223,4 +221,5 @@ export {
   SpecCategory,
   SpecItem,
   BottomTabRow,
+  Button,
 };
