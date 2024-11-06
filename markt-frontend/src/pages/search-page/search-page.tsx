@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ExploreListings, Navbar, SearchResults } from "../../components";
 
 const SearchPage = () => {

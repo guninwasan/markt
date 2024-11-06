@@ -1,35 +1,14 @@
 import { useSearchParams } from "react-router-dom";
 import { ListingContainer } from "../listing-container";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import { dummyData1, dummyData2, dummyData4 } from "../dummy-listing-data";
-import { colors } from "../../utils";
-
-const SearchResultsContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  margin: 2rem;
-`;
-
-const NoResultsContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  text-align: center;
-  flex-direction: column;
-`;
-
-const NoResultsHeading = styled.h1`
-  font-size: 2rem;
-  color: ${colors.textBlack};
-`;
-
-const NoResultsText = styled.p`
-  font-size: 1rem;
-  color: ${colors.textBlack};
-`;
+import {
+  NoResultsContainer,
+  NoResultsHeading,
+  NoResultsText,
+  SearchResultsContainer,
+  ResultsContainer,
+} from "./search-results.styles";
 
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
@@ -39,12 +18,13 @@ const SearchResults = () => {
 
   useEffect(() => {
     console.log("searching for: ", keywords);
-    setSearchResults([...dummyData4]);
+    // we need to add an API call here to fetch search results
+    setSearchResults([...dummyData1, ...dummyData2]);
   }, [keywords]);
 
   return (
     <>
-      {searchResults.length === 0 && (
+      {searchResults.length === 0 ? (
         <NoResultsContainer>
           <NoResultsHeading>No Results Found</NoResultsHeading>
           <NoResultsText>
@@ -55,6 +35,8 @@ const SearchResults = () => {
             Meanwhile, feel free to browse through our featured listings below.
           </NoResultsText>
         </NoResultsContainer>
+      ) : (
+        <ResultsContainer>Your search results for: {keywords}</ResultsContainer>
       )}
       <SearchResultsContainer>
         {searchResults.map((result: any) => (
