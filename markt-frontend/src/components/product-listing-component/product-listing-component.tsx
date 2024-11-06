@@ -16,10 +16,15 @@ import {
   ModalContent,
   ModalBackdrop,
   NoteTextArea,
+  BottomTabRow,
 } from "./product-listing-component.styles";
 import { ProductSpecs } from "./product-specifications";
+import { ExploreListings } from "../explore-listings";
+// import { useSearchParams } from "react-router-dom";
 
 const ProductListingComponent = () => {
+  // const [searchParams] = useSearchParams();
+  // const id = searchParams.get("id");
   const { isMobile } = useIsMobile();
   const [isBottomTabVisible, setBottomTabVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -59,6 +64,23 @@ const ProductListingComponent = () => {
 
   const handleShareInterestClick = () => {
     setIsModalVisible(true);
+  };
+
+  const ShareInterestButtonContainer = () => {
+    return (
+      <ShareInterestButton onClick={handleShareInterestClick}>
+        Share Interest
+      </ShareInterestButton>
+    );
+  };
+
+  const SellerInfoContainer = () => {
+    return (
+      <div>
+        <div>SELLER ID # 1234</div>
+        Add stars here
+      </div>
+    );
   };
 
   const handleCloseModal = () => {
@@ -133,9 +155,7 @@ const ProductListingComponent = () => {
                 description description description
               </p>
 
-              <ShareInterestButton onClick={handleShareInterestClick}>
-                Share Interest
-              </ShareInterestButton>
+              <ShareInterestButtonContainer />
             </TitleAndDescription>
 
             <PriceBox>
@@ -146,10 +166,7 @@ const ProductListingComponent = () => {
                   src="https://via.placeholder.com/50"
                   alt="Seller Avatar"
                 />
-                <div>
-                  <div>SELLER ID # 1234</div>
-                  add stars here
-                </div>
+                <SellerInfoContainer />
               </SellerInfo>
             </PriceBox>
           </TitleAndPriceContainer>
@@ -182,18 +199,11 @@ const ProductListingComponent = () => {
 
       {isMobile && (
         <BottomTab isVisible={isBottomTabVisible} test-id="bottom-tab">
-          <PriceText>CAD $$$</PriceText>
-          <SellerInfo>
-            <SellerAvatar
-              src="https://via.placeholder.com/50"
-              alt="Seller Avatar"
-            />
-            <div>
-              {/* just create a reusable component for seller */}
-              <div>SELLER ID # 1234</div>
-              add stars
-            </div>
-          </SellerInfo>
+          <BottomTabRow>
+            <SellerInfoContainer />
+            <PriceText>CAD $$$</PriceText>
+          </BottomTabRow>
+          <ShareInterestButtonContainer />
         </BottomTab>
       )}
     </>
