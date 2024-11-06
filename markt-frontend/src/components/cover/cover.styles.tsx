@@ -12,6 +12,10 @@ const CoverContainer = styled.div`
   background: ${colors.darkerPrimary};
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    display: none; 
+  }
 `;
 
 const RightContainer = styled.div`
@@ -25,6 +29,11 @@ const RightContainer = styled.div`
   box-sizing: border-box;
   background: ${colors.white};
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+  @media (max-width: 768px) {
+    width: 100vw; /* Expand RightContainer to full width on mobile */
+    padding: 1rem; /* Adjust padding for mobile if needed */
+  }
 `;
 
 const Subtitle = styled.h2`
@@ -37,6 +46,10 @@ const Subtitle = styled.h2`
   margin-top: 2rem;
   margin-bottom: auto;
   color: ${colors.darkGrey};
+
+  @media (max-width: 768px) {
+    font-size: 2.5rem; 
+  }
 `;
 
 export { CoverContainer, RightContainer, Subtitle };
