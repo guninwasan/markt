@@ -10,3 +10,4 @@ export * from "./login-form";
 export * from "./selling-component";
 export * from "./profile";
 export * from "./listing-container";
+export * from "./search-results";
