@@ -138,6 +138,28 @@ const Button = styled.button`
   }
 `;
 
+const PreviewImagesContainer = styled.div`
+  display: flex;
+  margin: 1rem 0;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const RemoveButton = styled.button`
+  padding: 0.5rem 1rem;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: ${colors.lightGrey};
+  color: ${colors.textBlack};
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: ${colors.grey};
+  }
+  margin-top: 0.5rem;
+  width: 100px;
+`;
+
 export {
   SellingFormContainer,
   SectionHeader,
@@ -150,4 +172,6 @@ export {
   TagContainer,
   Tag,
   Button,
+  PreviewImagesContainer,
+  RemoveButton,
 };

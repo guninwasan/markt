@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { SellingFormContainer, Button } from "./selling-component.styles";
 import {
   EssentialDetails,
@@ -31,9 +31,10 @@ const initialFormData = {
 
 const SellingComponent = () => {
   const [formData, setFormData] = useState<any>(initialFormData);
+  const [displayImage, setDisplayImage] = useState<File | null>(
+    formData.media[0] || null
+  );
   const [priceError, setPriceError] = useState<string>("");
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -93,12 +94,6 @@ const SellingComponent = () => {
     }
   };
 
-  const handleAddMediaClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title || !formData.price || !formData.description) {
@@ -125,10 +120,11 @@ const SellingComponent = () => {
         />
         <MediaSection
           formData={formData}
-          handleAddMediaClick={handleAddMediaClick}
           handleAddMedia={handleAddMedia}
-          fileInputRef={fileInputRef}
+          displayImage={displayImage}
+          setDisplayImage={setDisplayImage}
         />
+
         <ProductFlairs
           formData={formData}
           handleTagSelection={handleTagSelection}
