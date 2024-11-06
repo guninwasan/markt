@@ -9,7 +9,6 @@ import {
   ModalOverlay,
   ModalContent,
 } from "./profile.styles";
-import styled from "styled-components";
 
 const Profile = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);

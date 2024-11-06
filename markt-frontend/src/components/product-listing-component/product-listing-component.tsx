@@ -19,7 +19,6 @@ import {
   BottomTabRow,
 } from "./product-listing-component.styles";
 import { ProductSpecs } from "./product-specifications";
-import { ExploreListings } from "../explore-listings";
 // import { useSearchParams } from "react-router-dom";
 
 const ProductListingComponent = () => {
