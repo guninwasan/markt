@@ -15,6 +15,20 @@ const MediaSection = ({
   <>
     <SectionHeader>Media</SectionHeader>
     <FormGroup>
+      <Label htmlFor="displayImahe">Display Image *</Label>
+      <AddMediaButton type="button" onClick={handleAddMediaClick}>
+        <input
+          id="mediaInput"
+          type="file"
+          multiple
+          accept="image/*,video/*"
+          onChange={handleAddMedia}
+          style={{ display: "none" }}
+          ref={fileInputRef}
+        />
+        Add Display Image
+      </AddMediaButton>
+      <p>{formData.media.length} files uploaded</p>
       <Label htmlFor="mediaInput">Images and Videos</Label>
       <AddMediaButton type="button" onClick={handleAddMediaClick}>
         <input
