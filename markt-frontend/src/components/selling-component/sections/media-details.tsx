@@ -6,6 +6,8 @@ import {
   SectionHeader,
   PreviewImagesContainer,
   RemoveButton,
+  StyledImage,
+  StyledVideo,
 } from "../selling-component.styles";
 
 const MediaSection = ({
@@ -74,16 +76,11 @@ const MediaSection = ({
         />
         {displayImage && (
           <PreviewImagesContainer>
-            {displayImage.type.startsWith("image/") ? (
-              <img
-                src={URL.createObjectURL(displayImage)}
-                alt="display-preview"
-                width="100"
-              />
-            ) : null}
-            <RemoveButton type="button" onClick={handleRemoveDisplay}>
-              Remove Display Image
-            </RemoveButton>
+            <StyledImage
+              src={URL.createObjectURL(displayImage)}
+              alt="display-preview"
+            />
+            <RemoveButton onClick={handleRemoveDisplay}>✕</RemoveButton>
           </PreviewImagesContainer>
         )}
 
@@ -109,21 +106,17 @@ const MediaSection = ({
         {mediaFiles.map((file, index) => (
           <PreviewImagesContainer key={index}>
             {file.type.startsWith("image/") ? (
-              <img
+              <StyledImage
                 src={URL.createObjectURL(file)}
                 alt={`media-preview-${index + 1}`}
-                width="100"
               />
             ) : file.type.startsWith("video/") ? (
-              <video width="100" controls>
+              <StyledVideo controls>
                 <source src={URL.createObjectURL(file)} type={file.type} />
-              </video>
+              </StyledVideo>
             ) : null}
-            <RemoveButton
-              type="button"
-              onClick={() => handleRemoveMedia(index)}
-            >
-              Remove
+            <RemoveButton onClick={() => handleRemoveMedia(index)}>
+              ✕
             </RemoveButton>
           </PreviewImagesContainer>
         ))}
