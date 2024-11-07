@@ -8,7 +8,7 @@ exports[`HomePage should match the snapshot 1`] = `
     Navbar
   </div>
   <img
-    alt="Cover Image"
+    alt="Cover Img"
     src="/cover-image3.jpg"
     style="width: 100%; height: 400px; object-fit: cover; object-position: bottom;"
   />
