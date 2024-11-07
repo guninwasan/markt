@@ -7,8 +7,9 @@ import {
   SellPage,
   ProfilePage,
   NotFoundPage,
+  SearchPage,
+  ProductListingPage,
 } from "./pages";
-import { ProductListingPage } from "./pages";
 import { useIsMobile } from "./hooks";
 import { ProtectedRoute } from "./components";
 
@@ -29,6 +30,7 @@ function App() {
           path="/profile"
           element={<ProtectedRoute element={<ProfilePage />} />}
         />
+        <Route path="/search" element={<SearchPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>

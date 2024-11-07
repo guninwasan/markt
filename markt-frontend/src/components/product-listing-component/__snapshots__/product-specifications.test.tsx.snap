@@ -3,109 +3,109 @@
 exports[`ProductSpecs should match snapshot 1`] = `
 <div>
   <div
-    class="sc-khLCKb bJubZI"
+    class="sc-khLCKb cYlhzu"
   >
     <h2>
       Product Specifications
     </h2>
     <div
-      class="sc-jtQUzJ jShOLM"
+      class="sc-cEzcPc ezsGWm"
     >
       <div
-        class="sc-cEzcPc cynnPr"
+        class="sc-ovuCP bpKGpA"
       >
         <h3>
           Basic Information
         </h3>
         <p
-          class="sc-ovuCP fyMcek"
+          class="sc-eOzmre WmkIh"
         >
           Condition: 
           New
         </p>
         <p
-          class="sc-ovuCP fyMcek"
+          class="sc-eOzmre WmkIh"
         >
           Brand: 
           BrandName
         </p>
         <p
-          class="sc-ovuCP fyMcek"
+          class="sc-eOzmre WmkIh"
         >
           Model: 
           ModelX
         </p>
         <p
-          class="sc-ovuCP fyMcek"
+          class="sc-eOzmre WmkIh"
         >
           Year: 
           2022
         </p>
       </div>
       <div
-        class="sc-cEzcPc cynnPr"
+        class="sc-ovuCP bpKGpA"
       >
         <h3>
           Appearance
         </h3>
         <p
-          class="sc-ovuCP fyMcek"
+          class="sc-eOzmre WmkIh"
         >
           Color: 
           Black
         </p>
         <p
-          class="sc-ovuCP fyMcek"
+          class="sc-eOzmre WmkIh"
         >
           Dimensions: 
           10x5x2 inches
         </p>
         <p
-          class="sc-ovuCP fyMcek"
+          class="sc-eOzmre WmkIh"
         >
           Weight: 
           1.5 lbs
         </p>
         <p
-          class="sc-ovuCP fyMcek"
+          class="sc-eOzmre WmkIh"
         >
           Material: 
           Plastic
         </p>
       </div>
       <div
-        class="sc-cEzcPc cynnPr"
+        class="sc-ovuCP bpKGpA"
       >
         <h3>
           Performance
         </h3>
         <p
-          class="sc-ovuCP fyMcek"
+          class="sc-eOzmre WmkIh"
         >
           Battery Life: 
           10 hours
         </p>
         <p
-          class="sc-ovuCP fyMcek"
+          class="sc-eOzmre WmkIh"
         >
           Storage Capacity: 
           256GB
         </p>
         <p
-          class="sc-ovuCP fyMcek"
+          class="sc-eOzmre WmkIh"
         >
           Features: 
           Waterproof, Bluetooth
         </p>
       </div>
       <div
-        class="sc-cEzcPc cynnPr"
+        class="sc-ovuCP bpKGpA"
       >
         <h3>
           Warranty
         </h3>
         <p
-          class="sc-ovuCP fyMcek"
+          class="sc-eOzmre WmkIh"
         >
           2 years
         </p>

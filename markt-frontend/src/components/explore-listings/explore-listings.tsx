@@ -7,6 +7,7 @@ import {
   ListingsContainer,
 } from "./explore-listings.styles";
 import { ListingContainer } from "../listing-container";
+import { dummyData1, dummyData2, dummyData3 } from "../dummy-listing-data";
 
 type SectionType = "featured" | "new" | "priceDrops";
 
@@ -15,52 +16,9 @@ const ExploreListings = () => {
     useState<SectionType>("featured");
 
   const listings = {
-    featured: [
-      {
-        id: "1",
-        image: "/cover-image.jpg",
-        title: "Sofa",
-        price: "CAD 100.00",
-        condition: "Brand New",
-        location: "Toronto",
-      },
-      {
-        id: "2",
-        image: "/cover-image3.jpg",
-        title: "Table",
-        price: "CAD 100.00",
-        condition: "Brand New",
-        location: "Toronto",
-      },
-      {
-        id: "3",
-        image: "/cover-image.jpg",
-        title: "Books",
-        price: "CAD 1000.00",
-        condition: "Brand New",
-        location: "Toronto",
-      },
-    ],
-    new: [
-      {
-        id: "4",
-        image: "/cover-image.jpg",
-        title: "Chair",
-        price: "CAD 50.00",
-        condition: "Used",
-        location: "Vancouver",
-      },
-    ],
-    priceDrops: [
-      {
-        id: "5",
-        image: "/cover-image3.jpg",
-        title: "Lamp",
-        price: "CAD 20.00",
-        condition: "Used",
-        location: "Montreal",
-      },
-    ],
+    featured: dummyData1,
+    new: dummyData2,
+    priceDrops: dummyData3,
   };
 
   return (
