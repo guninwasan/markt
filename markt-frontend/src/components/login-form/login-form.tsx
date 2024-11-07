@@ -1,72 +1,116 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link, useNavigate } from 'react-router-dom';
 import { LoginInputField } from '../input-field';
 import { loginButtonStyles } from '../input-field/input-field.styles';
+import { ErrorRsp } from '../../errorCodes';
+import { RootState, selectors, setIsLoggedIn } from "../../redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useIsMobile } from "../../hooks";
+import { setUserDetails } from "../../redux/slices/user-auth-slice";
 
 const LoginForm: React.FC = () => {
-  // State to handle email and password inputs
+  const navigate = useNavigate();
+  const { isMobile } = useIsMobile();
+  const dispatch = useDispatch();
+  const { isLoggedIn, name } = useSelector((state: RootState) => ({
+    isLoggedIn: selectors.getIsLoggedIn(state),
+    name: selectors.getName(state),
+  }));
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-
-  // State to handle validation errors
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
-  // State to track if fields have been "touched" (blurred)
   const [touchedFields, setTouchedFields] = useState<{ [key: string]: boolean }>({
     email: false,
     password: false,
   });
-
-  // Track whether the button should be disabled
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 
-  // Handle input changes
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
+  // Validation function
+  const validateEmail = (email: string) => /^[^\s@]+@(mail\.)?utoronto\.ca$/.test(email);
 
-  // Validate the input field when it loses focus (onBlur event)
-  const validateField = (name: string, value: string) => {
-    const newErrors: { [key: string]: string } = { ...errors };
-
-    if (name === 'email' && (!value)) {
-      newErrors.email = 'A valid email is required';
-    }
-    else {
-      delete newErrors[name]; // Remove the error if the field is valid
-    }
-
-    setErrors(newErrors);
+  // Handle input changes and clear specific field errors on change
+  const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>, fieldName: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setter(e.target.value);
+    setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: '' }));
   };
 
   // Mark a field as "touched" when it loses focus
-  const handleBlur = (name: string) => {
+  const handleBlur = (fieldName: string) => {
     setTouchedFields((prevState) => ({
       ...prevState,
-      [name]: true,
+      [fieldName]: true,
     }));
+    validateField(fieldName); // Validate on blur
   };
 
-  // Validate the entire form whenever any input changes and update the button state
-  useEffect(() => {
-    const newErrors: { [key: string]: string } = {};
-
-    if (!email) newErrors.email = 'A valid email is required';
-
+  // Validate a single field
+  const validateField = (name: string) => {
+    const newErrors = { ...errors };
+    if (name === 'email') {
+      newErrors.email = email && validateEmail(email) ? '' : 'A valid UofT email is required';
+    } else if (name === 'password') {
+      newErrors.password = password ? '' : 'Password is required';
+    }
     setErrors(newErrors);
+  };
 
-    // Dynamically enable/disable the button based on errors
-    setIsButtonDisabled(Object.keys(newErrors).length > 0);
+  // Enable/disable the submit button based on form completeness
+  useEffect(() => {
+    setIsButtonDisabled(!(email && password));
   }, [email, password]);
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Mark all fields as touched when submitting the form
-    setTouchedFields({
-      email: true,
-      password: true,
-    });
+    // Mark all fields as touched on submit
+    setTouchedFields({ email: true, password: true });
+    validateField('email');
+    validateField('password');
+
+    // Only submit if there are no client-side validation errors
+    if (!Object.values(errors).some((error) => error)) {
+      try {
+        const response = await fetch('http://localhost:5000/api/user/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          alert("Login successful! Redirecting to Home...");
+          dispatch(setUserDetails({
+            userID: result.userID,
+            name: result.name,
+            email: result.email,
+            phone: result.phone,
+            jwt: result.token,
+          }));
+
+          dispatch(setIsLoggedIn(true));
+          navigate('/'); // Redirect to home
+        } else {
+          // Handle specific backend errors
+          switch (result.status) {
+            case ErrorRsp.ERR_NOT_FOUND:
+              setErrors({ email: "User does not exist" });
+              break;
+            case ErrorRsp.ERR_PARAM:
+              setErrors({ password: "Incorrect password" });
+              break;
+            default:
+              setErrors({ form: "An error occurred. Please try again later." });
+              break;
+          }
+        }
+      } catch (error) {
+        console.error("Login failed:", error);
+        setErrors({ form: "An unexpected error occurred. Please try again later." });
+      }
+    }
   };
 
   return (
@@ -75,8 +119,9 @@ const LoginForm: React.FC = () => {
         type="email"
         placeholder="UofT Email Address"
         value={email}
-        onChange={handleEmailChange}
-        onBlur={() => { validateField('email', email); handleBlur('email'); }} // Validate on blur and mark field as touched
+        onChange={handleInputChange(setEmail, 'email')}
+        onBlur={() => handleBlur('email')}
+        style={{ borderColor: errors.email ? 'red' : undefined }}
       />
       {touchedFields.email && errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
 
@@ -84,8 +129,9 @@ const LoginForm: React.FC = () => {
         type="password"
         placeholder="Password"
         value={password}
-        onChange={handlePasswordChange}
-        onBlur={() => { validateField('password', password); handleBlur('password'); }} // Validate on blur and mark field as touched
+        onChange={handleInputChange(setPassword, 'password')}
+        onBlur={() => handleBlur('password')}
+        style={{ borderColor: errors.password ? 'red' : undefined }}
       />
       {touchedFields.password && errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
 
@@ -96,6 +142,9 @@ const LoginForm: React.FC = () => {
       <div style={{ marginTop: '1rem' }}>
         Don't have an account? <Link to="/register" style={{ color: '#000000' }}><b>Register</b></Link>
       </div>
+
+      {/* General form error */}
+      {errors.form && <p style={{ color: 'red' }}>{errors.form}</p>}
     </form>
   );
 };
