@@ -76,7 +76,17 @@ def test_create_listing(client):
     assert rsp.status_code == 201
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
-    assert rsp['data'] == "Listing created successfully!"
+    assert rsp['data']['id'] is not None
+    assert rsp['data']['title'] == data['title']
+    assert rsp['data']['sold'] == False # check default value
+
+    # Check if listing is in User's listing_not_sold list
+    listing_id = rsp['data']['id']
+    assert test_user.listings_not_sold.filter_by(id=listing_id).first() is not None
+
+    # Check if test_user is listing's owner
+    listing_owner_email = rsp['data']['owner']['email']
+    assert test_user.email == listing_owner_email
 
 def test_get_listing(client):
     # Create a test user
@@ -172,7 +182,6 @@ def test_update_listing(client):
 
     # Wrong listing id
     rsp = client.put(f'/api/listing/update/{9999}/', json=update_data)
-
     assert rsp.status_code == 404
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_NOT_FOUND.value
@@ -184,6 +193,107 @@ def test_update_listing(client):
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
     assert rsp['data']['title'] == update_data["title"]
+
+def test_sell_listing(client):
+    # Create a test user
+    test_user = User(full_name="Test User", password="abC$9082",
+                     email="test@utoronto.ca", phone="6478290835")
+    test_buyer = User(full_name="I am Buyer", password="adddbC$9082",
+                     email="test_buyer@utoronto.ca", phone="6478220835")
+    db.session.add(test_user)
+    db.session.add(test_buyer)
+    db.session.commit()
+
+    # Create a test listing
+    listing = Listing(
+        title="Old Laptop",
+        description="Old Laptop",
+        price=400,
+        quantity=1,
+        condition="used",
+        owner_id=test_user.id
+    )
+    db.session.add(listing)
+    db.session.commit()
+
+    # Invalid update listing: set sold, no buyer_email
+    update_data_only_sold = {
+        "sold": True,
+    }
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_only_sold)
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert rsp['status'] == ErrorRsp.ERR_PARAM_EMAIL.value
+    assert listing.sold == False
+    assert listing.buyer == None
+
+    # Invalid update listing: no sold, set buyer_email
+    update_data_only_email = {
+        "buyer_email": test_buyer.email,
+        "sold": False
+    }
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_only_email)
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert rsp['status'] == ErrorRsp.ERR_PARAM.value
+    assert listing.sold == False
+    assert listing.buyer == None
+
+    # Invalid buyer email
+    update_data_invalid_email = {
+        "sold": True,
+        "buyer_email": "invalid@utoronto.ca",
+    }
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_invalid_email)
+    assert rsp.status_code == 404
+    rsp = rsp.get_json()
+    assert rsp['status'] == ErrorRsp.ERR_NOT_FOUND.value
+    assert listing.sold == False
+    assert listing.buyer == None
+
+    # Invalid buyer email same as owner email
+    update_data_owner_email = {
+        "sold": True,
+        "buyer_email": test_user.email,
+    }
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_owner_email)
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert rsp['status'] == ErrorRsp.ERR_PARAM_EMAIL.value
+    assert listing.sold == False
+    assert listing.buyer == None
+
+    # Valid data
+    update_data_valid = {
+        "sold": True,
+        "buyer_email": test_buyer.email,
+    }
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_valid)
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert rsp['status'] == ErrorRsp.OK.value
+    assert rsp['data']['sold'] == True and listing.sold == True
+    assert (rsp['data']['buyer']['email'] == test_buyer.email and
+            listing.buyer.email == test_buyer.email)
+    # Check if listing is in Buyer's listings_bought list
+    listing_id = rsp['data']['id']
+    assert test_buyer.listings_bought.filter_by(id=listing_id).first() is not None
+    assert test_buyer.listings_of_interest.filter_by(id=listing_id).first() is None
+    # Check if listing is in Owner's listings_sold list
+    assert test_user.listings_sold.filter_by(id=listing_id).first() is not None
+    assert test_user.listings_not_sold.filter_by(id=listing_id).first() is None
+
+    # Try to mark this listing as unsold now
+    update_data_unsold = {
+        "sold": False,
+        "buyer_email": test_buyer.email,
+    }
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_unsold)
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert rsp['status'] == ErrorRsp.ERR_PARAM.value
+    assert listing.sold == True
+    assert listing.buyer == test_buyer
 
 def test_delete_listing(client):
     # Create a test user
@@ -222,49 +332,3 @@ def test_delete_listing(client):
     # Make sure the listing is deleted
     listing_in_db = db.session.get(Listing, listing.id)
     assert listing_in_db is None
-
-def test_buy_item(client):
-    # Create test users
-    test_seller = User(full_name="Test User", password="ab1C#34c",
-                       email="test@utoronto.ca", phone="6478290835")
-
-    test_buyer = User(full_name="Test User", password="09uhD$sk",
-                      email="hello@utoronto.ca", phone="4167892038")
-    db.session.add(test_seller)
-    db.session.add(test_buyer)
-    db.session.commit()
-
-    # Create a test listing
-    listing = Listing(
-        title="Old Laptop",
-        description="Old Laptop",
-        price=400,
-        quantity=1,
-        condition="used",
-        owner_id=test_seller.id
-    )
-    db.session.add(listing)
-    db.session.commit()
-
-    # Invalid buyer
-    invalid_buyer = {
-        "buyer_email": "invalid@utoronto.ca",
-        "sold": True
-    }
-    rsp = client.put(f'/api/listing/update/{listing.id}/', json=invalid_buyer)
-    assert rsp.status_code == 404
-    rsp = rsp.get_json()
-    assert rsp['status'] == ErrorRsp.ERR_NOT_FOUND.value
-    assert rsp['data'] == "User does not exist!"
-
-    # Test_buyer
-    buy_data = {
-        "buyer_email": test_buyer.email,
-        "sold": True
-    }
-    rsp = client.put(f'/api/listing/update/{listing.id}/', json=buy_data)
-    assert rsp.status_code == 200
-    rsp = rsp.get_json()
-    assert rsp['status'] == ErrorRsp.OK.value
-    assert rsp['data']['sold'] == True
-    assert test_buyer.listings_bought[0].id == listing.id

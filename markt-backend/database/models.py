@@ -31,10 +31,10 @@ class User(db.Model):
                                       foreign_keys='Listing.buyer_id', lazy='dynamic')
     # User's inactive listings that have already been sold
     listings_sold = db.relationship('Listing', primaryjoin="and_(User.id == Listing.owner_id, Listing.sold == True)",
-                                    lazy='dynamic')
+                                    lazy='dynamic', overlaps="listings_not_sold")
     # Listings that the User is interested in
     listings_of_interest = db.relationship('Listing', secondary=user_listing_interest,
-                                           back_populates='interested_buyers') # many-to-many
+                                           back_populates='interested_buyers', lazy='dynamic') # many-to-many
 
     def __init__(self, full_name, password, email, phone):
         # Data Validation
@@ -132,7 +132,7 @@ class Listing(db.Model):
     buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
 
     # Relationships
-    owner = db.relationship('User', back_populates='active_listings', foreign_keys=[owner_id])
+    owner = db.relationship('User', back_populates='listings_not_sold', foreign_keys=[owner_id], overlaps="listings_sold")
     buyer = db.relationship('User', back_populates='listings_bought', foreign_keys=[buyer_id])
     # All buyers intersted in this listing
     interested_buyers = db.relationship('User', secondary=user_listing_interest, back_populates='listings_of_interest') # many-to-many
