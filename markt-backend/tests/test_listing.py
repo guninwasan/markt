@@ -17,8 +17,8 @@ def client():
 
 def test_create_listing(client):
     # Create a test user
-    test_user = User(
-        password="abc", email="test@utoronto.ca", phone="6478290835")
+    test_user = User(full_name="Test User", password="abC$9082$9082",
+                     email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 
@@ -80,8 +80,8 @@ def test_create_listing(client):
 
 def test_get_listing(client):
     # Create a test user
-    test_user = User(
-        password="abc", email="test@utoronto.ca", phone="6478290835")
+    test_user = User(full_name="Test User", password="abC$9082$9082",
+                     email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 
@@ -120,8 +120,8 @@ def test_get_all_listings(client):
     assert len(rsp['data']) == 0
 
     # Create a test user
-    test_user = User(
-        password="abc", email="test@utoronto.ca", phone="6478290835")
+    test_user = User(full_name="Test User", password="abC$9082",
+                     email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 
@@ -147,8 +147,8 @@ def test_get_all_listings(client):
 
 def test_update_listing(client):
     # Create a test user
-    test_user = User(
-        password="abc", email="test@utoronto.ca", phone="6478290835")
+    test_user = User(full_name="Test User", password="abC$9082",
+                     email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 
@@ -187,8 +187,8 @@ def test_update_listing(client):
 
 def test_delete_listing(client):
     # Create a test user
-    test_user = User(
-        password="abc", email="test@utoronto.ca", phone="6478290835")
+    test_user = User(full_name="Test User", password="abC$9082",
+                     email="test@utoronto.ca", phone="6478290835")
     db.session.add(test_user)
     db.session.commit()
 
@@ -225,11 +225,11 @@ def test_delete_listing(client):
 
 def test_buy_item(client):
     # Create test users
-    test_seller = User(
-        password="ab1234c", email="test@utoronto.ca", phone="6478290835")
+    test_seller = User(full_name="Test User", password="ab1C#34c",
+                       email="test@utoronto.ca", phone="6478290835")
 
-    test_buyer = User(
-        password="09uhnk", email="hello@utoronto.ca", phone="4167892038")
+    test_buyer = User(full_name="Test User", password="09uhD$sk",
+                      email="hello@utoronto.ca", phone="4167892038")
     db.session.add(test_seller)
     db.session.add(test_buyer)
     db.session.commit()
