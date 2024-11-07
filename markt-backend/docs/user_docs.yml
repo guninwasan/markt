@@ -14,6 +14,9 @@ register:
       schema:
         type: "object"
         properties:
+          full_name:
+            type: "string"
+            required: true
           password:
             type: "string"
             required: true
@@ -73,12 +76,16 @@ update:
       schema:
         type: "object"
         properties:
-          verify_email:
+          verification_email:
             type: "string"
             required: true
+          new_full_name:
+            type: "string"
           new_password:
             type: "string"
           new_email:
             type: "string"
           new_phone:
             type: "string"
+          new_rating:
+            type: "float"

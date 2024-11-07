@@ -4,8 +4,6 @@ import { MemoryRouter } from "react-router-dom";
 import { Navbar } from "./navbar";
 import { store } from "../../redux/store";
 import { useIsMobile } from "../../hooks";
-import { renderWithRedux } from "../../utils/render-with-redux";
-import { MenuItems } from "./menu-items";
 
 jest.mock("../../hooks", () => ({
   useIsMobile: jest.fn(),

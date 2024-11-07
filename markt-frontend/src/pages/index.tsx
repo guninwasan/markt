@@ -5,3 +5,4 @@ export * from "./login-page";
 export * from "./sell-page";
 export * from "./profile-page";
 export * from "./notfound-page";
+export * from "./search-page";

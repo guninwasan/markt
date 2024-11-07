@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchPage should match the snapshot 1`] = `
+<div>
+  <div>
+    Navbar Mock
+  </div>
+  <div>
+    SearchResults Mock
+  </div>
+  <div>
+    ExploreListings Mock
+  </div>
+</div>
+`;
