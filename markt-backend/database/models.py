@@ -65,7 +65,7 @@ class User(db.Model):
     """
     @classmethod
     def validate_email_format(self, email):
-        if ("@mail.utoronto.ca" not in email) and ("@utoronto.ca" not in email):
+        if ("@utoronto.ca" not in email) and (".utoronto.ca" not in email):
             return False
         return True
 
