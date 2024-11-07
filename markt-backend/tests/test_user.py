@@ -43,7 +43,7 @@ def test_register(client):
     rsp = client.post('/api/user/register', json=UofT_valid_buyer)
     assert rsp.status_code != 200
     rsp = rsp.get_json()
-    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+    assert ErrorRsp.ERR_PARAM_DUP.value == rsp["status"]
     assert 'User already exists!' in rsp["data"]
 
 def test_login(client):
