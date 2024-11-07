@@ -9,4 +9,5 @@ class ErrorRsp(Enum):
     ERR_PARAM_PWD = auto()
     ERR_PARAM_PHONE = auto()
     ERR_NOT_FOUND = auto()
+    ERR_NOT_ALLOWED = auto()
     ERR = auto()

@@ -65,6 +65,14 @@ def get(id):
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "Listing does not exist!"}), 404
 
+    buyer_rsp = None
+    if listing.buyer:
+        buyer_rsp = {
+            "full_name": listing.buyer.full_name,
+            "email": listing.buyer.email,
+            "phone": listing.buyer.phone
+        }
+
     # Make listing JSON response
     rsp = {
         "id": listing.id,
@@ -75,9 +83,11 @@ def get(id):
         "sold": listing.sold,
         "condition": listing.condition,
         "seller": {
-            "phone": listing.owner.phone,
-            "email": listing.owner.email
-        }
+            "full_name": listing.owner.full_name,
+            "email": listing.owner.email,
+            "phone": listing.owner.phone
+        },
+        "buyer": buyer_rsp
     }
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": rsp}), 200
@@ -97,6 +107,14 @@ def get_all():
     # Make listing JSON response
     rsp = []
     for listing in listings:
+        buyer_rsp = None
+        if listing.buyer:
+            buyer_rsp = {
+                "full_name": listing.buyer.full_name,
+                "email": listing.buyer.email,
+                "phone": listing.buyer.phone
+            }
+
         rsp.append({
             "id": listing.id,
             "title": listing.title,
@@ -106,9 +124,11 @@ def get_all():
             "condition": listing.condition,
             "sold": listing.sold,
             "seller": {
-                "phone": listing.owner.phone,
-                "email": listing.owner.email
-            }
+                "full_name": listing.owner.full_name,
+                "email": listing.owner.email,
+                "phone": listing.owner.phone
+            },
+            "buyer": buyer_rsp
         })
 
     return jsonify({"status": ErrorRsp.OK.value,
@@ -141,24 +161,52 @@ def update(id):
     buyer_rsp = None
     if 'title'in data:
         listing.title = str(data['title'])
+
     if 'description'in data:
         listing.description = data['description']
+
     if 'price'in data:
         listing.price = data['price']
+
     if 'quantity'in data:
         listing.quantity = data['quantity']
+
     if 'condition'in data:
         listing.condition = data['condition']
+
     if 'sold' in data:
+        # Need buyer_email and sold property to process this request
+        if 'buyer_email' not in data:
+            return jsonify({"status": ErrorRsp.ERR_PARAM_EMAIL.value,
+                            "data": "Buyer email is needed to mark listing as sold"}), 400
+
+        # Update listing
         listing.sold = data['sold']
+
     if 'buyer_email' in data:
+        # Need buyer_email and sold property to process this request
+        if 'sold' not in data:
+            return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                            "data": "Request does not mark listing as sold, but provides buyer email"}), 400
+
+        # Check if listing already has a buyer
+        if listing.buyer_id:
+            return jsonify({"status": ErrorRsp.ERR_NOT_ALLOWED.value,
+                            "data": "Listing already has a buyer"}), 400
+
         # Check if buyer exists
         buyer = User.query.filter_by(email=data['buyer_email']).first()
         if buyer is None:
             return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                             "data": "User does not exist!"}), 404
+        if data['buyer_email'] == listing.owner.email:
+            return jsonify({"status": ErrorRsp.ERR_PARAM_EMAIL.value,
+                            "data": "Listing owner cannot be buyer"}), 400
+
+        # Update listing
         listing.buyer_id = buyer.id
         buyer_rsp = {
+            "full_name": listing.buyer.full_name,
             "email": listing.buyer.email,
             "phone": listing.buyer.phone,
         }
