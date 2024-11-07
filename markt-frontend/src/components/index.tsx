@@ -10,4 +10,5 @@ export * from "./login-form";
 export * from "./selling-component";
 export * from "./profile";
 export * from "./listing-container";
+export * from "./protected-route";
 export * from "./search-results";
