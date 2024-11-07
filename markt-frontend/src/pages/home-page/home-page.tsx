@@ -6,7 +6,7 @@ const HomePage = () => {
       <Navbar />
       <img
         src="/cover-image3.jpg"
-        alt="Cover Image"
+        alt="Cover Img"
         style={{
           width: "100%",
           height: "400px",
