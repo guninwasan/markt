@@ -1,5 +1,6 @@
 import { useIsMobile } from "../../hooks";
 import { ImageGallery } from "../image-gallery";
+import { Rating } from "../rating";
 import { useEffect, useState } from "react";
 import {
   ProductListingContainer,
@@ -74,11 +75,15 @@ const ProductListingComponent = () => {
     );
   };
 
+  // WE HAVE TO CHANGE THIS WITH THE ACTUAL SELLER RATING
+  //USING 3.3 AS PLACEHOLDER
+  const sellerRating = 3.3;
+
   const SellerInfoContainer = () => {
     return (
       <div>
         <div>SELLER ID # 1234</div>
-        Add stars here
+        <Rating rating={sellerRating} />
       </div>
     );
   };
