@@ -62,11 +62,18 @@ const SellerAvatar = styled.img`
 `;
 
 const ProductSpecsContainer = styled.div`
-  margin-top: 2rem;
+  margin: 2rem 0;
   border: 1px solid ${colors.lightGrey};
   padding: 1rem;
   border-radius: 8px;
   background-color: ${colors.white};
+`;
+
+const BottomTabRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 90%;
 `;
 
 const BottomTab = styled.div<{ isVisible: boolean }>`
@@ -75,11 +82,14 @@ const BottomTab = styled.div<{ isVisible: boolean }>`
   width: 100%;
   background-color: ${colors.white};
   border-top: 1px solid ${colors.lightGrey};
-  padding: 1rem;
+  padding: 1rem 0;
   display: ${({ isVisible }) => (isVisible ? "flex" : "none")};
   justify-content: center;
   align-items: center;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 1000;
 `;
 
 const ShareInterestButton = styled.button`
@@ -128,25 +138,6 @@ const ModalContent = styled.div`
     font-weight: normal;
     font-style: italic;
   }
-
-  button {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    font-weight: bold;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #0056b3;
-    }
-
-    &:focus {
-      outline: none;
-    }
-  }
 `;
 
 const NoteTextArea = styled.textarea`
@@ -193,6 +184,23 @@ const SpecItem = styled.p`
   color: #555;
 `;
 
+const Button = styled.button<{ primaryColor?: boolean }>`
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background-color: ${(props) =>
+    props.primaryColor ? colors.darkerHoverPrimary : colors.red};
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 1rem;
+  &:hover {
+    background-color: ${(props) =>
+      props.primaryColor ? colors.darkerPrimary : colors.redHover};
+  }
+`;
+
 export {
   ProductListingContainer,
   ProductImages,
@@ -212,4 +220,6 @@ export {
   SpecGrid,
   SpecCategory,
   SpecItem,
+  BottomTabRow,
+  Button,
 };
