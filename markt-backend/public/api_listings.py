@@ -101,7 +101,8 @@ def get(id):
         "owner": {
             "full_name": listing.owner.full_name,
             "email": listing.owner.email,
-            "phone": listing.owner.phone
+            "phone": listing.owner.phone,
+            "rating": listing.owner.get_average_rating()
         },
         "buyer": buyer_rsp
     }
@@ -119,7 +120,6 @@ def get(id):
 def get_all():
     # Get all listings
     listings = Listing.query.all()
-
     # Make listing JSON response
     rsp = []
     for listing in listings:
@@ -142,7 +142,8 @@ def get_all():
             "owner": {
                 "full_name": listing.owner.full_name,
                 "email": listing.owner.email,
-                "phone": listing.owner.phone
+                "phone": listing.owner.phone,
+                "rating": listing.owner.get_average_rating()
             },
             "buyer": buyer_rsp
         })

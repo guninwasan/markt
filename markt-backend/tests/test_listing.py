@@ -120,6 +120,8 @@ def test_get_listing(client):
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
     assert rsp['data']['title'] == "Used Laptop"
+    assert 'rating' in rsp['data']['owner']
+    assert rsp['data']['owner']['rating'] is not None
 
 def test_get_all_listings(client):
     # empty database
@@ -154,6 +156,9 @@ def test_get_all_listings(client):
     assert len(rsp['data']) == 2
     assert rsp['data'][0]['title'] == "Item 1"
     assert rsp['data'][1]['title'] == "Item 2"
+    for listing in rsp['data']:
+        assert 'rating' in listing['owner']
+        assert listing['owner']['rating'] is not None
 
 def test_update_listing(client):
     # Create a test user
