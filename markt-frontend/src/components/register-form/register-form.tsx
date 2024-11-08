@@ -9,13 +9,11 @@ const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
-  const [studentID, setStudentID] = useState<string>('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({
     fullName: '',
     email: '',
     password: '',
     phone: '',
-    studentID: '',
     form: ''
   });
 
@@ -24,7 +22,6 @@ const RegisterForm: React.FC = () => {
     email: false,
     password: false,
     phone: false,
-    studentID: false
   });
 
   const navigate = useNavigate();
@@ -48,7 +45,6 @@ const handleBlur = (fieldName: string, value: string) => {
       email: "A valid email is required",
       password: "Password is required",
       phone: "Phone number is required",
-      studentID: "Student ID is required"
     };
 
     setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: fieldErrorMessages[fieldName] || "This field is required" }));
@@ -64,7 +60,7 @@ const handleBlur = (fieldName: string, value: string) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          utorid: studentID,
+          full_name: fullName,
           password,
           email,
           phone,
@@ -76,7 +72,7 @@ const handleBlur = (fieldName: string, value: string) => {
       if (response.ok) {
         alert("Registration successful - redirecting to Login!");
         navigate('/login');
-        setErrors({ fullName: '', email: '', password: '', phone: '', studentID: '', form: '' });
+        setErrors({ fullName: '', email: '', password: '', phone: '', form: '' });
       } else {
         console.error("Registration failed:", result);
 
@@ -86,7 +82,6 @@ const handleBlur = (fieldName: string, value: string) => {
           email: '',
           password: '',
           phone: '',
-          studentID: '',
           form: ''
         };
 
@@ -102,7 +97,6 @@ const handleBlur = (fieldName: string, value: string) => {
                 if (error.toLowerCase().includes("email")) fieldErrors.email = error;
                 if (error.toLowerCase().includes("phone")) fieldErrors.phone = error;
                 if (error.toLowerCase().includes("password")) fieldErrors.password = error;
-                if (error.toLowerCase().includes("utorid")) fieldErrors.studentID = error;
                 if (error.toLowerCase().includes("name")) fieldErrors.fullName = error;
               });
             } else {
@@ -158,15 +152,6 @@ const handleBlur = (fieldName: string, value: string) => {
         onBlur={() => handleBlur('phone', phone)}
       />
       {errors.phone && <p style={{ color: 'red' }}>{errors.phone}</p>}
-
-      <RegisterInputField
-        type="text"
-        placeholder="UofT Student ID (for verification)"
-        value={studentID}
-        onChange={handleInputChange(setStudentID, 'studentID')}
-        onBlur={() => handleBlur('studentID', studentID)}
-      />
-      {errors.studentID && <p style={{ color: 'red' }}>{errors.studentID}</p>}
 
       <button type="submit" style={loginButtonStyles}>
         Create Account

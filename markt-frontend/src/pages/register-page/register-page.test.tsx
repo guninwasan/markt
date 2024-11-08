@@ -72,23 +72,18 @@ describe("RegisterPage", () => {
     const phoneInput = screen.getByPlaceholderText(
       "Phone No."
     ) as HTMLInputElement;
-    const studentIDInput = screen.getByPlaceholderText(
-      "UofT Student ID (for verification)"
-    ) as HTMLInputElement;
 
     // Simulate typing in the input fields
     fireEvent.change(fullNameInput, { target: { value: "John Doe" } });
     fireEvent.change(emailInput, { target: { value: "john.doe@utoronto.ca" } });
     fireEvent.change(passwordInput, { target: { value: "password123!" } });
     fireEvent.change(phoneInput, { target: { value: "1234567890" } });
-    fireEvent.change(studentIDInput, { target: { value: "12345678" } });
 
     // Assert that the input fields contain the correct values
     expect(fullNameInput.value).toBe("John Doe");
     expect(emailInput.value).toBe("john.doe@utoronto.ca");
     expect(passwordInput.value).toBe("password123!");
     expect(phoneInput.value).toBe("1234567890");
-    expect(studentIDInput.value).toBe("12345678");
   });
 
   test("submits form and prevents default submission behavior", () => {

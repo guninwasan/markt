@@ -16,12 +16,11 @@ describe("RegisterForm Component", () => {
     );
   });
 
-  it("should render form with full name, email, password, phone, student ID fields and create account button", () => {
+  it("should render form with full name, email, password, phone fields and create account button", () => {
     expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("UofT Email Address")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Phone No.")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("UofT Student ID (for verification)")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Create Account" })).toBeInTheDocument();
   });
 
@@ -45,11 +44,6 @@ describe("RegisterForm Component", () => {
       fireEvent.blur(screen.getByPlaceholderText("Phone No."));
     });
     expect(screen.getByText("Phone number is required")).toBeInTheDocument();
-
-    act(() => {
-      fireEvent.blur(screen.getByPlaceholderText("UofT Student ID (for verification)"));
-    });
-    expect(screen.getByText("Student ID is required")).toBeInTheDocument();
   });
 
   it("should enable create account button when all fields are valid", () => {
@@ -58,7 +52,6 @@ describe("RegisterForm Component", () => {
       fireEvent.change(screen.getByPlaceholderText("UofT Email Address"), { target: { value: "john.doe@mail.utoronto.ca" } });
       fireEvent.change(screen.getByPlaceholderText("Password"), { target: { value: "Password@123" } });
       fireEvent.change(screen.getByPlaceholderText("Phone No."), { target: { value: "1234567890" } });
-      fireEvent.change(screen.getByPlaceholderText("UofT Student ID (for verification)"), { target: { value: "100200300" } });
     });
 
     const createAccountButton = screen.getByRole("button", { name: "Create Account" });
@@ -78,7 +71,6 @@ describe("RegisterForm Component", () => {
       fireEvent.change(screen.getByPlaceholderText("UofT Email Address"), { target: { value: "john@mail.utoronto.ca" } });
       fireEvent.change(screen.getByPlaceholderText("Password"), { target: { value: "password123" } });
       fireEvent.change(screen.getByPlaceholderText("Phone No."), { target: { value: "1234567890" } });
-      fireEvent.change(screen.getByPlaceholderText("UofT Student ID (for verification)"), { target: { value: "123456789" } });
       fireEvent.click(screen.getByRole("button", { name: /create account/i }));
     });
 
@@ -139,7 +131,6 @@ describe("RegisterForm Component", () => {
       fireEvent.change(screen.getByPlaceholderText("UofT Email Address"), { target: { value: "john@mail.utoronto.ca" } });
       fireEvent.change(screen.getByPlaceholderText("Password"), { target: { value: "password123" } });
       fireEvent.change(screen.getByPlaceholderText("Phone No."), { target: { value: "1234567890" } });
-      fireEvent.change(screen.getByPlaceholderText("UofT Student ID (for verification)"), { target: { value: "123456789" } });
       fireEvent.click(screen.getByRole("button", { name: /create account/i }));
     });
 
