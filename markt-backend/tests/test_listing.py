@@ -337,3 +337,154 @@ def test_delete_listing(client):
     # Make sure the listing is deleted
     listing_in_db = db.session.get(Listing, listing.id)
     assert listing_in_db is None
+
+# --- Search API Tests ---
+def test_search_by_query(client):
+    # Create a test user
+    test_user = User(full_name="Test User", password="abC$9082$9082", email="test@utoronto.ca", phone="6478290835")
+    db.session.add(test_user)
+    db.session.commit()
+
+    # Create mock listings
+    listings = [
+        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
+        Listing(title="Blue Chair", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+    ]
+    db.session.add_all(listings)
+    db.session.commit()
+
+    # Search for 'chair'
+    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=1&page_size=3')
+    assert rsp.status_code == 200
+    rsp_json = rsp.get_json()
+    assert rsp_json['status'] == ErrorRsp.OK.value
+    assert len(rsp_json['data']) == 3  # Should return 3 listings, check if search logic works
+
+def test_search_by_invalid_query(client):
+    # Create a test user and listings
+    test_user = User(full_name="Test User", password="abC$9082$9082",
+                     email="test@utoronto.ca", phone="6478290835")
+    db.session.add(test_user)
+    db.session.commit()
+
+    listings = [
+        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
+        Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id)
+    ]
+    db.session.add_all(listings)
+    db.session.commit()
+
+    # Search for 'laptop' (should return no results)
+    rsp = client.get('/api/listing/search?query=laptop&filter=price_low&page=1&page_size=2')
+    assert rsp.status_code == 200
+    rsp_json = rsp.get_json()
+    assert rsp_json['status'] == ErrorRsp.OK.value
+    assert len(rsp_json['data']) == 0  # No listings should match
+
+def test_search_by_price_low(client):
+    # Create a test user and listings
+    test_user = User(full_name="Test User", password="abC$9082$9082",
+                     email="test@utoronto.ca", phone="6478290835")
+    db.session.add(test_user)
+    db.session.commit()
+
+    listings = [
+        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
+        Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+    ]
+    db.session.add_all(listings)
+    db.session.commit()
+
+    # Search and sort by 'price_low'
+    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=1&page_size=3')
+    assert rsp.status_code == 200
+    rsp_json = rsp.get_json()
+    assert rsp_json['status'] == ErrorRsp.OK.value
+    assert rsp_json['data'][0]['price'] == 100  # Green Chair should be first as it's the cheapest
+
+def test_search_by_price_high(client):
+    # Create a test user and listings
+    test_user = User(full_name="Test User", password="abC$9082$9082",
+                     email="test@utoronto.ca", phone="6478290835")
+    db.session.add(test_user)
+    db.session.commit()
+
+    listings = [
+        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
+        Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+    ]
+    db.session.add_all(listings)
+    db.session.commit()
+
+    # Search and sort by 'price_high'
+    rsp = client.get('/api/listing/search?query=chair&filter=price_high&page=1&page_size=3')
+    assert rsp.status_code == 200
+    rsp_json = rsp.get_json()
+    assert rsp_json['status'] == ErrorRsp.OK.value
+    assert rsp_json['data'][0]['price'] == 150  # Red Chair should be the most expensive chair
+
+def test_search_pagination(client):
+    # Create a test user and listings
+    test_user = User(full_name="Test User", password="abC$9082$9082", email="test@utoronto.ca", phone="6478290835")
+    db.session.add(test_user)
+    db.session.commit()
+
+    listings = [
+        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
+        Listing(title="Blue Chair", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+    ]
+    db.session.add_all(listings)
+    db.session.commit()
+
+    # Search and paginate results
+    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=1&page_size=2')
+    assert rsp.status_code == 200
+    rsp_json = rsp.get_json()
+    assert rsp_json['status'] == ErrorRsp.OK.value
+    assert len(rsp_json['data']) == 2  # Only two items should be returned on page 1
+
+    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=2&page_size=2')
+    assert rsp.status_code == 200
+    rsp_json = rsp.get_json()
+    assert rsp_json['status'] == ErrorRsp.OK.value
+    assert len(rsp_json['data']) == 1  # Only one item should be returned on page 2 (Green Chair)
+
+def test_search_top_rated(client):
+    # Create test users with different ratings
+    test_user_1 = User(full_name="Test User 1", password="abC$9082$9082", email="test1@utoronto.ca", phone="6478290835")
+    test_user_2 = User(full_name="Test User 2", password="abC$9082$9082", email="test2@utoronto.ca", phone="6478290836")
+    db.session.add(test_user_1)
+    db.session.add(test_user_2)
+    db.session.commit()
+
+    # Create mock listings with different seller ratings
+    listing_1 = Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user_1.id)
+    listing_2 = Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user_2.id)
+    listing_3 = Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user_1.id)
+    
+    # Set ratings for users
+    test_user_1.update_total_rating(4.5)  # Rating for Test User 1
+    test_user_2.update_total_rating(3.0)  # Rating for Test User 2
+    
+    db.session.add_all([listing_1, listing_2, listing_3])
+    db.session.commit()
+
+    # Search for 'chair' and sort by 'top_rated' filter
+    rsp = client.get('/api/listing/search?query=chair&filter=top_rated&page=1&page_size=3')
+    
+    assert rsp.status_code == 200
+    rsp_json = rsp.get_json()
+    assert rsp_json['status'] == ErrorRsp.OK.value
+    assert len(rsp_json['data']) == 2
+
+    # Verify listings are sorted by seller rating in descending order
+    seller_ratings = [listing['seller']['rating'] for listing in rsp_json['data']]
+    assert seller_ratings == sorted(seller_ratings, reverse=True)  # Ratings should be sorted from high to low

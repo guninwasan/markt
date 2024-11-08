@@ -280,3 +280,71 @@ def delete(id):
 
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": "Listing deleted successfully"}), 200
+
+@listing_api_bp.route('/search', methods=['GET'])
+@swag_from('../docs/listing_docs.yml', endpoint='search')
+def search():
+    query = request.args.get('query', '').strip()
+    filter_type = request.args.get('filter', 'price_low')
+    page = int(request.args.get('page', 1))
+    page_size = int(request.args.get('page_size', 10))
+
+    # Ensure that the query is not empty
+    if not query:
+        return jsonify({
+            "status": ErrorRsp.ERR_PARAM.value,
+            "data": "Query parameter is required"
+        }), 400
+
+    # Set sorting conditions (no rating included here, will handle it after fetching)
+    sort_condition = {
+        'price_high': Listing.price.desc(),
+        'price_low': Listing.price.asc()
+    }.get(filter_type, Listing.price.asc())  # Default sorting is price_low
+
+    # Filter listings by query if provided, and ensure it's checked only in title or description
+    listings_query = Listing.query
+    listings_query = listings_query.filter(
+        (Listing.title.ilike(f"%{query}%")) | 
+        (Listing.description.ilike(f"%{query}%"))
+    )
+
+    # Apply sorting by price and pagination to fetch listings first
+    listings = (listings_query
+                .order_by(sort_condition)
+                .offset((page - 1) * page_size)
+                .limit(page_size)
+                .all())
+
+    # Total listings count for pagination
+    total_listings = listings_query.count()
+    total_pages = (total_listings + page_size - 1) // page_size
+
+    # Now, sort listings based on the seller's rating (get_average_rating)
+    listings = sorted(listings, key=lambda listing: listing.owner.get_average_rating(), reverse=True)
+
+    # Build the response
+    rsp = []
+    for listing in listings:
+        rsp.append({
+            "id": listing.id,
+            "title": listing.title,
+            "description": listing.description,
+            "price": listing.price,
+            "quantity": listing.quantity,
+            "condition": listing.condition,
+            "sold": listing.sold,
+            "seller": {
+                "phone": listing.owner.phone,
+                "email": listing.owner.email,
+                "rating": listing.owner.get_average_rating()
+            }
+        })
+
+    return jsonify({
+        "status": ErrorRsp.OK.value,
+        "data": rsp,
+        "total_listings": total_listings,
+        "total_pages": total_pages,
+        "current_page": page
+    }), 200
