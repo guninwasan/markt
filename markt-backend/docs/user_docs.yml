@@ -71,7 +71,14 @@ update:
     404:
       description: "User does not exist!"
   parameters:
-    - name: "user"
+    - name: "user_email"
+      in: "query"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          email: "string"
+    - name: "update_data"
       in: "body"
       required: True
       schema:
@@ -99,7 +106,14 @@ add_interest:
     404:
       description: "User does not exist!"
   parameters:
-    - name: "user"
+    - name: "user_email"
+      in: "query"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          email: "string"
+    - name: "listings"
       in: "body"
       required: True
       schema:

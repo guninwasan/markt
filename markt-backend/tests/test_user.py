@@ -94,11 +94,11 @@ def test_update(client):
     db.session.commit()
 
     # Invalid user
+    invalid_email = "invalid@mail.utoronto.ca"
     non_existent_user = {
-        "verification_email": "invalid@mail.utoronto.ca",
-        "new_phone": "8394039291"
+        "phone": "8394039291"
     }
-    rsp = client.post('/api/user/update', json=non_existent_user)
+    rsp = client.post(f'/api/user/{invalid_email}/update', json=non_existent_user)
     assert rsp.status_code == 404
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
@@ -106,26 +106,25 @@ def test_update(client):
 
     # Valid update data
     update_data = {
-        "verification_email": user.email,
-        "new_full_name": "John Smith",
-        "new_email": "new_email@mail.utoronto.ca",
-        "new_phone": "1234567890",
-        "new_password": "mY8iwp@ssword"
+        "full_name": "John Smith",
+        "email": "email@mail.utoronto.ca",
+        "phone": "1234567890",
+        "password": "mY8iwp@ssword"
     }
-    rsp = client.post('/api/user/update', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/update', json=update_data)
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
-    assert update_data["new_email"] == rsp["data"]["email"]
-    assert update_data["new_full_name"] == rsp["data"]["full_name"]
-    assert update_data["new_phone"] == rsp["data"]["phone"]
+    assert update_data["email"] == rsp["data"]["email"]
+    assert update_data["full_name"] == rsp["data"]["full_name"]
+    assert update_data["phone"] == rsp["data"]["phone"]
     assert "Updated" == rsp["data"]["password"]
 
     # Verify updates in the database
-    updated_user = User.query.filter_by(email=update_data["new_email"]).first()
-    assert updated_user.email == update_data["new_email"]
-    assert updated_user.phone == update_data["new_phone"]
-    assert updated_user.full_name == update_data["new_full_name"]
+    updated_user = User.query.filter_by(email=update_data["email"]).first()
+    assert updated_user.email == update_data["email"]
+    assert updated_user.phone == update_data["phone"]
+    assert updated_user.full_name == update_data["full_name"]
 
 def test_rating(client):
     # Create a user
@@ -136,31 +135,28 @@ def test_rating(client):
 
     # Invalid rating
     update_data = {
-        "verification_email": user.email,
-        "new_rating": -10
+        "rating": -10
     }
-    rsp = client.post('/api/user/update', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/update', json=update_data)
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
 
     # Rating 1: 5
     update_data = {
-        "verification_email": user.email,
-        "new_rating": 5
+        "rating": 5
     }
-    rsp = client.post('/api/user/update', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/update', json=update_data)
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
-    assert update_data["new_rating"] == rsp["data"]["rating"]
+    assert update_data["rating"] == rsp["data"]["rating"]
 
     # Rating 2: 3.5, Average: 4.25
     update_data = {
-        "verification_email": user.email,
-        "new_rating": 3.5
+        "rating": 3.5
     }
-    rsp = client.post('/api/user/update', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/update', json=update_data)
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]

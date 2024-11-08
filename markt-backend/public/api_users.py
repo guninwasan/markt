@@ -102,13 +102,13 @@ def login():
 
 """
     Endpoint: Updating user details
-    Route: 'api/user/update'
+    Route: 'api/user/<string:email>/update'
 """
-@user_api_bp.route('/update', methods=['POST'])
+@user_api_bp.route('/<string:email>/update', methods=['POST'])
 # Endpoint parameter specification
 @swag_from('../docs/user_docs.yml', endpoint='update')
 # API implementation
-def update():
+def update(email):
     data = request.get_json()
     schema = UserUpdateSchema()
     try:
@@ -119,7 +119,7 @@ def update():
                         "errors": err.messages}), 400
 
     # Check if user exists
-    user = User.query.filter_by(email=data['verification_email']).first()
+    user = User.query.filter_by(email=email).first()
     if user is None:
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
@@ -130,39 +130,39 @@ def update():
     # If password is changed, set the API rsp
     rsp_password = "Not updated"
 
-    if 'new_full_name'in data:
-        user.full_name = data['new_full_name']
+    if 'full_name'in data:
+        user.full_name = data['full_name']
 
-    if 'new_email'in data:
+    if 'email'in data:
         # Validate email
-        if not user.validate_email_format(data["new_email"]):
+        if not user.validate_email_format(data["email"]):
             validation_errors.append("Email must be a valid UofT email!")
         else:
-            user.email = data['new_email']
+            user.email = data['email']
 
-    if 'new_phone'in data:
+    if 'phone'in data:
         # Validate phone number
-        if not user.validate_phone_format(data["new_phone"]):
+        if not user.validate_phone_format(data["phone"]):
             validation_errors.append("Phone number must be of valid format: 123-456-7890, \
                                      (123) 456-7890, or +1-123-456-7890")
         else:
-            user.phone = data['new_phone']
+            user.phone = data['phone']
 
-    if 'new_password' in data:
+    if 'password' in data:
         # Validate password
-        if not user.validate_password_format(data["new_password"]):
+        if not user.validate_password_format(data["password"]):
             validation_errors.append("Password must contain at minimum 8 characters, \
                                      1 lowercase and uppercase letter, 1 digit, 1 special character")
         else:
-            user.set_password(data['new_password'])
+            user.set_password(data['password'])
             rsp_password = "Updated"
 
-    if "new_rating" in data:
+    if "rating" in data:
         # Validate rating
-        if not user.validate_rating_range(data["new_rating"]):
+        if not user.validate_rating_range(data["rating"]):
             validation_errors.append("Rating must be between 0 and 5")
         else:
-            user.update_total_rating(data["new_rating"])
+            user.update_total_rating(data["rating"])
 
     # Return validation errors if any
     if len(validation_errors):
@@ -171,7 +171,7 @@ def update():
 
     # Sanity check for password since it is not secure to send the updated password
     # in the API rsp
-    if 'new_password' in data and not user.check_password(data['new_password']):
+    if 'password' in data and not user.check_password(data['password']):
         return jsonify({"status": ErrorRsp.ERR.value,
                         "data": "User data not updated"}), 400
 
