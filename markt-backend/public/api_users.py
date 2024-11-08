@@ -4,9 +4,14 @@ from flasgger import Swagger, swag_from
 from marshmallow import ValidationError
 
 from database.db import db
-from database.models import User
+from database.models import User, Listing
 from utils.errors import ErrorRsp
-from schemas.user_schema import UserRegistrationSchema, UserLoginSchema, UserUpdateSchema
+from schemas.user_schema import (
+    UserRegistrationSchema,
+    UserLoginSchema,
+    UserUpdateSchema,
+    AddInterestSchema,
+    UserChangePasswordSchema)
 
 user_api_bp = Blueprint('user_api', __name__)
 swagger = Swagger()
@@ -102,13 +107,13 @@ def login():
 
 """
     Endpoint: Updating user details
-    Route: 'api/user/update'
+    Route: 'api/user/<string:email>/update'
 """
-@user_api_bp.route('/update', methods=['POST'])
+@user_api_bp.route('/<string:email>/update', methods=['POST'])
 # Endpoint parameter specification
 @swag_from('../docs/user_docs.yml', endpoint='update')
 # API implementation
-def update():
+def update(email):
     data = request.get_json()
     schema = UserUpdateSchema()
     try:
@@ -119,7 +124,7 @@ def update():
                         "errors": err.messages}), 400
 
     # Check if user exists
-    user = User.query.filter_by(email=data['verification_email']).first()
+    user = User.query.filter_by(email=email).first()
     if user is None:
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
@@ -130,39 +135,39 @@ def update():
     # If password is changed, set the API rsp
     rsp_password = "Not updated"
 
-    if 'new_full_name'in data:
-        user.full_name = data['new_full_name']
+    if 'full_name'in data:
+        user.full_name = data['full_name']
 
-    if 'new_email'in data:
+    if 'email'in data:
         # Validate email
-        if not user.validate_email_format(data["new_email"]):
+        if not user.validate_email_format(data["email"]):
             validation_errors.append("Email must be a valid UofT email!")
         else:
-            user.email = data['new_email']
+            user.email = data['email']
 
-    if 'new_phone'in data:
+    if 'phone'in data:
         # Validate phone number
-        if not user.validate_phone_format(data["new_phone"]):
+        if not user.validate_phone_format(data["phone"]):
             validation_errors.append("Phone number must be of valid format: 123-456-7890, \
                                      (123) 456-7890, or +1-123-456-7890")
         else:
-            user.phone = data['new_phone']
+            user.phone = data['phone']
 
-    if 'new_password' in data:
+    if 'password' in data:
         # Validate password
-        if not user.validate_password_format(data["new_password"]):
+        if not user.validate_password_format(data["password"]):
             validation_errors.append("Password must contain at minimum 8 characters, \
                                      1 lowercase and uppercase letter, 1 digit, 1 special character")
         else:
-            user.set_password(data['new_password'])
+            user.set_password(data['password'])
             rsp_password = "Updated"
 
-    if "new_rating" in data:
+    if "rating" in data:
         # Validate rating
-        if not user.validate_rating_range(data["new_rating"]):
+        if not user.validate_rating_range(data["rating"]):
             validation_errors.append("Rating must be between 0 and 5")
         else:
-            user.update_total_rating(data["new_rating"])
+            user.update_total_rating(data["rating"])
 
     # Return validation errors if any
     if len(validation_errors):
@@ -171,7 +176,7 @@ def update():
 
     # Sanity check for password since it is not secure to send the updated password
     # in the API rsp
-    if 'new_password' in data and not user.check_password(data['new_password']):
+    if 'password' in data and not user.check_password(data['password']):
         return jsonify({"status": ErrorRsp.ERR.value,
                         "data": "User data not updated"}), 400
 
@@ -188,3 +193,97 @@ def update():
 
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": rsp}), 200
+
+"""
+    Endpoint: Change User's Password
+    Route: 'api/user/<string:email>/change_password'
+"""
+@user_api_bp.route('/<string:email>/change_password', methods=['POST'])
+# Endpoint parameter specification
+@swag_from('../docs/user_docs.yml', endpoint='change_password')
+# API implementation
+def change_password(email):
+    data = request.get_json()
+    schema = UserChangePasswordSchema()
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "data": "Missing parameters",
+                        "errors": err.messages}), 400
+
+    # Check if user exists
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
+                        "data": "User does not exist!"}), 404
+
+    # Store all validation errors
+    validation_errors = []
+
+    # Validate current password
+    if not user.check_password(data["current_password"]):
+        validation_errors.append("Current password is incorrect")
+
+    # Validate new password format
+    if not user.validate_password_format(data["new_password"]):
+        validation_errors.append("New password must contain at minimum 8 characters, \
+                                    1 lowercase and uppercase letter, 1 digit, 1 special character")
+        
+    # Return validation errors if any
+    if len(validation_errors):
+        return jsonify({"status": ErrorRsp.ERR_PARAM_PWD.value,
+                        "data": validation_errors}), 400
+
+    user.set_password(data["new_password"])
+
+    db.session.commit()
+
+    return jsonify({"status": ErrorRsp.OK.value,
+                    "data": "Password changed successfully!"}), 200
+
+
+"""
+    Endpoint: Add listings user is interested in
+    Route: 'api/user/<string:email>/add_interest/'
+"""
+@user_api_bp.route('/<string:email>/add_interest/', methods=['POST'])
+# Endpoint parameter specification
+@swag_from('../docs/user_docs.yml', endpoint='add_interest')
+# API implementation
+def interested_listings(email):
+    data = request.get_json()
+    schema = AddInterestSchema()
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "data": "Missing parameters",
+                        "errors": err.messages}), 400
+
+    if not len(data['listing_ids']):
+        return jsonify({"status": ErrorRsp.OK.value,
+                        "data": "No listings provided, nothing changed."}), 200
+
+    # Validate email
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
+                        "data": "User does not exist!"}), 404
+
+    # Get all listings associated with the IDs in the request
+    listings = Listing.query.filter(Listing.id.in_(data['listing_ids'])).all()
+
+    for listing in listings:
+        if listing.owner.email == email:
+            return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                            "data": f"Cannot add listing to owner's interested list, id={listing.id}"}), 400
+
+        # Add the listing to User's interested list if it is not sold and not already present
+        if not listing.sold and not user.listings_of_interest.filter_by(id=listing.id).first():
+            user.listings_of_interest.append(listing)
+
+    db.session.commit()
+
+    return jsonify({"status": ErrorRsp.OK.value,
+                    "data": "Listings added successfully!"}), 200

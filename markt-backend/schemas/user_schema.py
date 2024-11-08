@@ -11,9 +11,15 @@ class UserLoginSchema(Schema):
     password = fields.Str(required=True)
 
 class UserUpdateSchema(Schema):
-    verification_email = fields.Str(required=True)
-    new_full_name = fields.Str(required=False)
-    new_password = fields.Str(required=False)
-    new_email = fields.Str(required=False)
-    new_phone = fields.Int(required=False)
-    new_rating = fields.Float(required=False)
+    full_name = fields.Str(required=False)
+    password = fields.Str(required=False)
+    email = fields.Str(required=False)
+    phone = fields.Int(required=False)
+    rating = fields.Float(required=False)
+
+class UserChangePasswordSchema(Schema):
+    current_password = fields.Str(required=True)
+    new_password = fields.Str(required=True)
+
+class AddInterestSchema(Schema):
+    listing_ids = fields.List(fields.Int(), required=True)

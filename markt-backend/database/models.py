@@ -1,6 +1,13 @@
 import bcrypt
 import re
 from .db import db
+from sqlalchemy import event
+
+# Association table - manage buyers interested in listings
+user_listing_interest_table = db.Table('user_listing_interest',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True)
+)
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -15,8 +22,19 @@ class User(db.Model):
     number_of_ratings = db.Column(db.Integer, default=0)
 
     # Relationships
-    listings_for_selling = db.relationship('Listing', back_populates='owner', foreign_keys='Listing.owner_id', lazy='dynamic')
-    listings_bought = db.relationship('Listing', back_populates='buyer', foreign_keys='Listing.buyer_id', lazy='dynamic')
+    # User's active listings that have not been sold
+    listings_not_sold = db.relationship('Listing', back_populates='owner',
+                                        primaryjoin="and_(User.id == Listing.owner_id, Listing.sold == False)",
+                                        lazy='dynamic')
+    # Listings of products bought by User
+    listings_bought = db.relationship('Listing', back_populates='buyer',
+                                      foreign_keys='Listing.buyer_id', lazy='dynamic')
+    # User's inactive listings that have already been sold
+    listings_sold = db.relationship('Listing', primaryjoin="and_(User.id == Listing.owner_id, Listing.sold == True)",
+                                    lazy='dynamic', overlaps="listings_not_sold")
+    # Listings that the User is interested in
+    listings_of_interest = db.relationship('Listing', secondary=user_listing_interest_table,
+                                           back_populates='interested_buyers', lazy='dynamic') # many-to-many
 
     def __init__(self, full_name, password, email, phone):
         # Data Validation
@@ -114,5 +132,7 @@ class Listing(db.Model):
     buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
 
     # Relationships
-    owner = db.relationship('User', back_populates='listings_for_selling', foreign_keys=[owner_id])
+    owner = db.relationship('User', back_populates='listings_not_sold', foreign_keys=[owner_id], overlaps="listings_sold")
     buyer = db.relationship('User', back_populates='listings_bought', foreign_keys=[buyer_id])
+    # All buyers intersted in this listing
+    interested_buyers = db.relationship('User', secondary=user_listing_interest_table, back_populates='listings_of_interest') # many-to-many
