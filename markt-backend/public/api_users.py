@@ -6,7 +6,12 @@ from marshmallow import ValidationError
 from database.db import db
 from database.models import User, Listing
 from utils.errors import ErrorRsp
-from schemas.user_schema import UserRegistrationSchema, UserLoginSchema, UserUpdateSchema, AddInterestSchema
+from schemas.user_schema import (
+    UserRegistrationSchema,
+    UserLoginSchema,
+    UserUpdateSchema,
+    AddInterestSchema,
+    UserChangePasswordSchema)
 
 user_api_bp = Blueprint('user_api', __name__)
 swagger = Swagger()
@@ -188,6 +193,54 @@ def update(email):
 
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": rsp}), 200
+
+"""
+    Endpoint: Change User's Password
+    Route: 'api/user/<string:email>/change_password'
+"""
+@user_api_bp.route('/<string:email>/change_password', methods=['POST'])
+# Endpoint parameter specification
+@swag_from('../docs/user_docs.yml', endpoint='change_password')
+# API implementation
+def change_password(email):
+    data = request.get_json()
+    schema = UserChangePasswordSchema()
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "data": "Missing parameters",
+                        "errors": err.messages}), 400
+
+    # Check if user exists
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
+                        "data": "User does not exist!"}), 404
+
+    # Store all validation errors
+    validation_errors = []
+
+    # Validate current password
+    if not user.check_password(data["current_password"]):
+        validation_errors.append("Current password is incorrect")
+
+    # Validate new password format
+    if not user.validate_password_format(data["new_password"]):
+        validation_errors.append("New password must contain at minimum 8 characters, \
+                                    1 lowercase and uppercase letter, 1 digit, 1 special character")
+        
+    # Return validation errors if any
+    if len(validation_errors):
+        return jsonify({"status": ErrorRsp.ERR_PARAM_PWD.value,
+                        "data": validation_errors}), 400
+
+    user.set_password(data["new_password"])
+
+    db.session.commit()
+
+    return jsonify({"status": ErrorRsp.OK.value,
+                    "data": "Password changed successfully!"}), 200
 
 
 """

@@ -126,6 +126,48 @@ def test_update(client):
     assert updated_user.phone == update_data["phone"]
     assert updated_user.full_name == update_data["full_name"]
 
+def test_change_password(client):
+    # Create a user
+    user = User(full_name="Test User", password="mY8iw$02j",
+                email="user@mail.utoronto.ca", phone="6478290835")
+    db.session.add(user)
+    db.session.commit()
+
+    # Not enough data
+    update_data = {
+        "current_password": "mY8iwp@ssword"
+    }
+    rsp = client.post(f'/api/user/{user.email}/change_password', json=update_data)
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+
+    # Invalid current password and invalid format of new password
+    update_data = {
+        "current_password": "wrong_password!",
+        "new_password": "hello_new_password"
+    }
+    rsp = client.post(f'/api/user/{user.email}/change_password', json=update_data)
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM_PWD.value == rsp["status"]
+    assert "Current password is incorrect" in rsp["data"]
+    assert "New password must contain at minimum 8 characters," in rsp["data"][1]
+
+    # Valid data
+    update_data = {
+        "current_password": "mY8iw$02j",
+        "new_password": "HeLl0_n#w_password"
+    }
+    rsp = client.post(f'/api/user/{user.email}/change_password', json=update_data)
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert "Password changed successfully!" in rsp["data"]
+
+    # Verify updates in the database
+    assert user.check_password(update_data["new_password"])
+
 def test_rating(client):
     # Create a user
     user = User(full_name="Test User", password="mY8iw$02j",
