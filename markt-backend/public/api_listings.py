@@ -175,7 +175,6 @@ def update(id):
                         "data": "Listing does not exist!"}), 404
 
     buyer_rsp = None
-    valid_selling_process = False
     if 'title'in data:
         listing.title = str(data['title'])
 
@@ -209,9 +208,9 @@ def update(id):
                             "data": "Request does not mark listing as sold, but provides buyer email"}), 400
 
         # Sanity check: Does listing already have a buyer
-        if listing.buyer:
+        if listing.buyer is not None:
             return jsonify({"status": ErrorRsp.ERR_NOT_ALLOWED.value,
-                            "data": "Listing already has a buyer"}), 400
+                            "data": "Listing already has a buyer"}), 405
 
         # Check if buyer exists
         buyer = User.query.filter_by(email=data['buyer_email']).first()
@@ -227,6 +226,15 @@ def update(id):
         # Update listing
         listing.buyer_id = buyer.id
         listing.sold = data['sold']
+
+        # Update other user's interested lists
+        all_interested = listing.interested_buyers
+        for user in all_interested:
+            try:
+                user.listings_of_interest.remove(listing)
+            except Exception as e:
+                print(f"Error processing {user.email}: {e}")
+        listing.interested_buyers.clear()
 
     db.session.commit()
 

@@ -4,9 +4,9 @@ from flasgger import Swagger, swag_from
 from marshmallow import ValidationError
 
 from database.db import db
-from database.models import User
+from database.models import User, Listing
 from utils.errors import ErrorRsp
-from schemas.user_schema import UserRegistrationSchema, UserLoginSchema, UserUpdateSchema
+from schemas.user_schema import UserRegistrationSchema, UserLoginSchema, UserUpdateSchema, AddInterestSchema
 
 user_api_bp = Blueprint('user_api', __name__)
 swagger = Swagger()
@@ -188,3 +188,49 @@ def update():
 
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": rsp}), 200
+
+
+"""
+    Endpoint: Add listings user is interested in
+    Route: 'api/user/<string:email>/add_interest/'
+"""
+@user_api_bp.route('/<string:email>/add_interest/', methods=['POST'])
+# Endpoint parameter specification
+@swag_from('../docs/user_docs.yml', endpoint='add_interest')
+# API implementation
+def interested_listings(email):
+    data = request.get_json()
+    schema = AddInterestSchema()
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "data": "Missing parameters",
+                        "errors": err.messages}), 400
+
+    if not len(data['listing_ids']):
+        return jsonify({"status": ErrorRsp.OK.value,
+                        "data": "No listings provided, nothing changed."}), 200
+
+    # Validate email
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
+                        "data": "User does not exist!"}), 404
+
+    # Get all listings associated with the IDs in the request
+    listings = Listing.query.filter(Listing.id.in_(data['listing_ids'])).all()
+
+    for listing in listings:
+        if listing.owner.email == email:
+            return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                            "data": f"Cannot add listing to owner's interested list, id={listing.id}"}), 400
+
+        # Add the listing to User's interested list if it is not sold and not already present
+        if not listing.sold and not user.listings_of_interest.filter_by(id=listing.id).first():
+            user.listings_of_interest.append(listing)
+
+    db.session.commit()
+
+    return jsonify({"status": ErrorRsp.OK.value,
+                    "data": "Listings added successfully!"}), 200

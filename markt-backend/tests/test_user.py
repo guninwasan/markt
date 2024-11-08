@@ -3,7 +3,7 @@ import pytest
 from utils.errors import ErrorRsp
 from public import create_app_api
 from database.db import db
-from database.models import User
+from database.models import User, Listing
 
 @pytest.fixture
 def client():
@@ -165,3 +165,100 @@ def test_rating(client):
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
     assert 4.25 == rsp["data"]["rating"]
+
+def test_add_interest(client):
+    # Create test users
+    test_user = User(full_name="Test User", password="abC$9082",
+                     email="test@utoronto.ca", phone="6478290835")
+    test_buyer = User(full_name="I am Buyer", password="adddbC$9082",
+                     email="test_buyer@utoronto.ca", phone="6478220835")
+    interested_user = User(full_name="Interested User", password="adddbC$9082",
+                     email="interested_user@utoronto.ca", phone="6478220835")
+    db.session.add(test_user)
+    db.session.add(test_buyer)
+    db.session.add(interested_user)
+    db.session.commit()
+
+    # Create a test listing
+    listing_1 = Listing(
+        title="Old Laptop",
+        description="Old Laptop",
+        price=400,
+        quantity=1,
+        condition="used",
+        owner_id=test_user.id
+    )
+    listing_2 = Listing(
+        title="Old Calculator",
+        description="Old Calculator",
+        price=20,
+        quantity=2,
+        condition="used",
+        owner_id=test_user.id
+    )
+    db.session.add(listing_1)
+    db.session.add(listing_2)
+    db.session.commit()
+
+    # Send empty request
+    listings = { 'listing_ids': [] }
+    rsp = client.post(f'/api/user/{test_buyer.email}/add_interest/', json=listings)
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert "No listings provided, nothing changed." == rsp["data"]
+
+    # Invalid email
+    listings = { 'listing_ids': [listing_2.id] }
+    invalid_email = "invalid@utoronto.ca"
+    rsp = client.post(f'/api/user/{invalid_email}/add_interest/', json=listings)
+    assert rsp.status_code == 404
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
+    assert "User does not exist!" == rsp["data"]
+
+    # Owner marks as interested
+    listings = { 'listing_ids': [listing_1.id] }
+    rsp = client.post(f'/api/user/{test_user.email}/add_interest/', json=listings)
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+    assert str(listing_1.id) in rsp["data"]
+
+    # Both users interested in both listings
+    listings = { 'listing_ids': [listing_1.id, listing_2.id] }
+    rsp = client.post(f'/api/user/{test_buyer.email}/add_interest/', json=listings)
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert "Listings added successfully!" == rsp["data"]
+    assert (listing_1 in test_buyer.listings_of_interest.all() and
+            listing_2 in test_buyer.listings_of_interest.all())
+
+    rsp = client.post(f'/api/user/{interested_user.email}/add_interest/', json=listings)
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert "Listings added successfully!" == rsp["data"]
+    assert (listing_1 in interested_user.listings_of_interest.all() and
+            listing_2 in interested_user.listings_of_interest.all())
+
+    # Listing 1 is sold
+    selling_data = {
+        "sold": True,
+        "buyer_email": test_buyer.email
+    }
+    rsp = client.put(f'/api/listing/update/{listing_1.id}/', json=selling_data)
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+
+    # Make sure the listing is in the correct lists
+    assert (listing_1 not in interested_user.listings_of_interest.all() and
+            listing_2 in interested_user.listings_of_interest.all())
+
+    assert (listing_1 in test_buyer.listings_bought.all() and
+            listing_2 in test_buyer.listings_of_interest.all())
+
+    assert (listing_1 in test_user.listings_sold.all() and
+            listing_1 not in test_user.listings_not_sold.all())

@@ -50,6 +50,7 @@ login:
           password:
             type: "string"
             required: true
+
 update:
   responses:
     200:
@@ -89,3 +90,22 @@ update:
             type: "string"
           new_rating:
             type: "float"
+
+add_interest:
+  responses:
+    200:
+      description: "Listings added successfully!",
+                   "No listings provided, nothing changed!"
+    404:
+      description: "User does not exist!"
+  parameters:
+    - name: "user"
+      in: "body"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          listing_ids:
+            type: array
+            items:
+              type: integer

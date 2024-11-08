@@ -1,9 +1,7 @@
 create:
   responses:
     201:
-      description: "Listing created successfully!"
-    400:
-      description: "Missing parameters"
+      description: JSON response
     404:
       description: "User does not exist!"
   parameters:
@@ -87,6 +85,7 @@ update:
             required: False
           sold:
             type: "boolean"
+            default: False
             required: False
           condition:
             type: "string"

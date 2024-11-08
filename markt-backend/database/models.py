@@ -4,7 +4,7 @@ from .db import db
 from sqlalchemy import event
 
 # Association table - manage buyers interested in listings
-user_listing_interest = db.Table('user_listing_interest',
+user_listing_interest_table = db.Table('user_listing_interest',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
     db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True)
 )
@@ -33,7 +33,7 @@ class User(db.Model):
     listings_sold = db.relationship('Listing', primaryjoin="and_(User.id == Listing.owner_id, Listing.sold == True)",
                                     lazy='dynamic', overlaps="listings_not_sold")
     # Listings that the User is interested in
-    listings_of_interest = db.relationship('Listing', secondary=user_listing_interest,
+    listings_of_interest = db.relationship('Listing', secondary=user_listing_interest_table,
                                            back_populates='interested_buyers', lazy='dynamic') # many-to-many
 
     def __init__(self, full_name, password, email, phone):
@@ -135,13 +135,4 @@ class Listing(db.Model):
     owner = db.relationship('User', back_populates='listings_not_sold', foreign_keys=[owner_id], overlaps="listings_sold")
     buyer = db.relationship('User', back_populates='listings_bought', foreign_keys=[buyer_id])
     # All buyers intersted in this listing
-    interested_buyers = db.relationship('User', secondary=user_listing_interest, back_populates='listings_of_interest') # many-to-many
-
-"""
-Interested buyers and sold listings
-"""
-@event.listens_for(Listing, 'before_update')
-def remove_from_interested(mapper, connection, target):
-    if target.sold: # if listing.sold is True
-        # Remove this listing from all buyer's interested list
-        target.interested_buyers.clear()
+    interested_buyers = db.relationship('User', secondary=user_listing_interest_table, back_populates='listings_of_interest') # many-to-many

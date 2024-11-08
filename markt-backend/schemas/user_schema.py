@@ -17,3 +17,6 @@ class UserUpdateSchema(Schema):
     new_email = fields.Str(required=False)
     new_phone = fields.Int(required=False)
     new_rating = fields.Float(required=False)
+
+class AddInterestSchema(Schema):
+    listing_ids = fields.List(fields.Int(), required=True)
