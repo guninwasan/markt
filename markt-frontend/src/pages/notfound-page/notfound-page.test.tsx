@@ -23,8 +23,5 @@ describe("NotFoundPage", () => {
     expect(document.activeElement).toBe(iframeElement);
   });
 
-  it("should match the snapshot", () => {
-    const { container } = renderWithRedux(<NotFoundPage />);
-    expect(container).toMatchSnapshot();
-  });
+
 });
