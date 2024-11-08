@@ -138,6 +138,43 @@ const Button = styled.button`
   }
 `;
 
+const PreviewImagesContainer = styled.div`
+  display: flex;
+  margin: 1rem 0;
+`;
+
+const StyledImage = styled.img`
+  width: 100px;
+  height: auto;
+  border-radius: 6px;
+  display: block;
+`;
+
+const StyledVideo = styled.video`
+  width: 100px;
+  height: auto;
+  border-radius: 6px;
+  display: block;
+`;
+
+const RemoveButton = styled.button`
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: white;
+  background-color: ${colors.red};
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: ${colors.redHover};
+  }
+`;
+
 export {
   SellingFormContainer,
   SectionHeader,
@@ -150,4 +187,8 @@ export {
   TagContainer,
   Tag,
   Button,
+  PreviewImagesContainer,
+  RemoveButton,
+  StyledImage,
+  StyledVideo,
 };

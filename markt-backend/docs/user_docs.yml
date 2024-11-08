@@ -14,6 +14,9 @@ register:
       schema:
         type: "object"
         properties:
+          full_name:
+            type: "string"
+            required: true
           password:
             type: "string"
             required: true
@@ -47,38 +50,101 @@ login:
           password:
             type: "string"
             required: true
+
 update:
   responses:
     200:
       description: JSON response
-        password:
+        full_name:
           type: "string"
-          details: "Updated", "Not updated"
+          details: User's associated full_name
         email:
           type: "string"
           details: User's associated email
         phone:
           type: "string"
           details: User's associated phone
+        rating:
+          type: "integer"
+          details: User's associated rating
     400:
       description:
         "Missing parameters",
-        "User data not updated" # sanity check on password
     404:
       description: "User does not exist!"
   parameters:
-    - name: "user"
+    - name: "user_email"
+      in: "query"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          email: "string"
+    - name: "update_data"
       in: "body"
       required: True
       schema:
         type: "object"
         properties:
-          verify_email:
+          full_name:
             type: "string"
-            required: true
+          email:
+            type: "string"
+          phone:
+            type: "string"
+          rating:
+            type: "float"
+
+change_password:
+  responses:
+    200:
+      description: "Password changed successfully!"
+    400:
+      description:
+        "Missing parameters"
+    404:
+      description: "User does not exist!"
+  parameters:
+    - name: "user_email"
+      in: "query"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          email: "string"
+    - name: "update_data"
+      in: "body"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          current_password:
+            type: "string"
           new_password:
             type: "string"
-          new_email:
-            type: "string"
-          new_phone:
-            type: "string"
+
+add_interest:
+  responses:
+    200:
+      description: "Listings added successfully!",
+                   "No listings provided, nothing changed!"
+    404:
+      description: "User does not exist!"
+  parameters:
+    - name: "user_email"
+      in: "query"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          email: "string"
+    - name: "listings"
+      in: "body"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          listing_ids:
+            type: array
+            items:
+              type: integer

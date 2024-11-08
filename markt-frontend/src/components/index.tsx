@@ -11,3 +11,5 @@ export * from "./selling-component";
 export * from "./profile";
 export * from "./listing-container";
 export * from "./rating"
+export * from "./protected-route";
+export * from "./search-results";

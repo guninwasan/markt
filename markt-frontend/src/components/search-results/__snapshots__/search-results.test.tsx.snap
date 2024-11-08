@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchResults should match snapshot 1`] = `
+<div
+  class="sc-cHqXqK dGpFxA"
+>
+  Your search results for: 
+  test
+</div>
+`;

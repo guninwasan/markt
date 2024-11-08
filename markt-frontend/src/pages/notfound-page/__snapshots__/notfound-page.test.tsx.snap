@@ -59,20 +59,20 @@ exports[`NotFoundPage should match the snapshot 1`] = `
     </ul>
   </nav>
   <div
-    class="sc-fqujGp iMFSYj"
+    class="sc-DvaoS cLyLMz"
   >
     <h1
-      class="sc-jQybuE kwdmsm"
+      class="sc-dqCRwF jQYXdf"
     >
       Page Not Found
     </h1>
     <p
-      class="sc-erSfwj bSlWAp"
+      class="sc-eXvyUU dfPOPM"
     >
       Oops! It looks like the page you are looking for does not exist. Enjoy this game while we have you here!
     </p>
     <div
-      class="sc-iRVXky llmfGL"
+      class="sc-bOdUTf enuNtq"
     >
       <iframe
         height="100%"
