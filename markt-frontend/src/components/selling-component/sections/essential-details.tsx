@@ -39,16 +39,6 @@ const EssentialDetails = ({
       {priceError && <p style={{ color: "red" }}>{priceError}</p>}
     </FormGroup>
     <FormGroup>
-      <Label>Description *</Label>
-      <TextArea
-        name="description"
-        required
-        placeholder="Provide a detailed description of the item..."
-        value={formData.description}
-        onChange={handleChange}
-      />
-    </FormGroup>
-    <FormGroup>
       <Label>
         <input
           type="checkbox"
@@ -58,6 +48,16 @@ const EssentialDetails = ({
         />
         Price Negotiable
       </Label>
+    </FormGroup>
+    <FormGroup>
+      <Label>Description *</Label>
+      <TextArea
+        name="description"
+        required
+        placeholder="Provide a detailed description of the item..."
+        value={formData.description}
+        onChange={handleChange}
+      />
     </FormGroup>
   </>
 );
