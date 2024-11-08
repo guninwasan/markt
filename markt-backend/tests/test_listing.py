@@ -268,3 +268,122 @@ def test_buy_item(client):
     assert rsp['status'] == ErrorRsp.OK.value
     assert rsp['data']['sold'] == True
     assert test_buyer.listings_bought[0].id == listing.id
+
+# --- Search API Tests ---
+def test_search_by_query(client):
+    # Create a test user
+    test_user = User(full_name="Test User", password="abC$9082$9082", email="test@utoronto.ca", phone="6478290835")
+    db.session.add(test_user)
+    db.session.commit()
+
+    # Create mock listings
+    listings = [
+        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
+        Listing(title="Blue Chair", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+    ]
+    db.session.add_all(listings)
+    db.session.commit()
+
+    # Search for 'chair'
+    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=1&page_size=3')
+    assert rsp.status_code == 200
+    rsp_json = rsp.get_json()
+    assert rsp_json['status'] == ErrorRsp.OK.value
+    assert len(rsp_json['data']) == 3  # Should return 3 listings, check if search logic works
+
+def test_search_by_invalid_query(client):
+    # Create a test user and listings
+    test_user = User(full_name="Test User", password="abC$9082$9082",
+                     email="test@utoronto.ca", phone="6478290835")
+    db.session.add(test_user)
+    db.session.commit()
+
+    listings = [
+        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
+        Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id)
+    ]
+    db.session.add_all(listings)
+    db.session.commit()
+
+    # Search for 'laptop' (should return no results)
+    rsp = client.get('/api/listing/search?query=laptop&filter=price_low&page=1&page_size=2')
+    assert rsp.status_code == 200
+    rsp_json = rsp.get_json()
+    assert rsp_json['status'] == ErrorRsp.OK.value
+    assert len(rsp_json['data']) == 0  # No listings should match
+
+def test_search_by_price_low(client):
+    # Create a test user and listings
+    test_user = User(full_name="Test User", password="abC$9082$9082",
+                     email="test@utoronto.ca", phone="6478290835")
+    db.session.add(test_user)
+    db.session.commit()
+
+    listings = [
+        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
+        Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+    ]
+    db.session.add_all(listings)
+    db.session.commit()
+
+    # Search and sort by 'price_low'
+    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=1&page_size=3')
+    assert rsp.status_code == 200
+    rsp_json = rsp.get_json()
+    assert rsp_json['status'] == ErrorRsp.OK.value
+    assert rsp_json['data'][0]['price'] == 100  # Green Chair should be first as it's the cheapest
+
+def test_search_by_price_high(client):
+    # Create a test user and listings
+    test_user = User(full_name="Test User", password="abC$9082$9082",
+                     email="test@utoronto.ca", phone="6478290835")
+    db.session.add(test_user)
+    db.session.commit()
+
+    listings = [
+        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
+        Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+    ]
+    db.session.add_all(listings)
+    db.session.commit()
+
+    # Search and sort by 'price_high'
+    rsp = client.get('/api/listing/search?query=chair&filter=price_high&page=1&page_size=3')
+    assert rsp.status_code == 200
+    rsp_json = rsp.get_json()
+    assert rsp_json['status'] == ErrorRsp.OK.value
+    assert rsp_json['data'][0]['price'] == 150  # Red Chair should be the most expensive chair
+
+def test_search_pagination(client):
+    # Create a test user and listings
+    test_user = User(full_name="Test User", password="abC$9082$9082", email="test@utoronto.ca", phone="6478290835")
+    db.session.add(test_user)
+    db.session.commit()
+
+    listings = [
+        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
+        Listing(title="Blue Chair", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+    ]
+    db.session.add_all(listings)
+    db.session.commit()
+
+    # Search and paginate results
+    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=1&page_size=2')
+    assert rsp.status_code == 200
+    rsp_json = rsp.get_json()
+    assert rsp_json['status'] == ErrorRsp.OK.value
+    assert len(rsp_json['data']) == 2  # Only two items should be returned on page 1
+
+    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=2&page_size=2')
+    assert rsp.status_code == 200
+    rsp_json = rsp.get_json()
+    assert rsp_json['status'] == ErrorRsp.OK.value
+    assert len(rsp_json['data']) == 1  # Only one item should be returned on page 2 (Green Chair)

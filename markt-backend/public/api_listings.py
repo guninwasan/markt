@@ -198,3 +198,72 @@ def delete(id):
 
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": "Listing deleted successfully"}), 200
+
+"""
+    Endpoint: Search listings
+    Route: 'api/listing/search'
+"""
+@listing_api_bp.route('/search', methods=['GET'])
+# Endpoint parameter specification
+@swag_from('../docs/listing_docs.yml', endpoint='search')
+# API implementation
+def search():
+    query = request.args.get('query', '').strip()
+    filter_type = request.args.get('filter', 'price_low')
+    page = int(request.args.get('page', 1))
+    page_size = int(request.args.get('page_size', 10))
+
+    # Ensure that the query is not empty
+    if not query:
+        return jsonify({
+            "status": ErrorRsp.ERR_PARAM.value,
+            "data": "Query parameter is required"
+        }), 400
+
+    # Set sorting conditions (no rating included)
+    sort_condition = {
+        'price_high': Listing.price.desc(),
+        'price_low': Listing.price.asc()
+    }.get(filter_type, Listing.price.asc())  # Default sorting is price_low
+
+    # Filter listings by query if provided, and ensure it's checked only in title or description
+    listings_query = Listing.query
+    listings_query = listings_query.filter(
+        (Listing.title.ilike(f"%{query}%")) | 
+        (Listing.description.ilike(f"%{query}%"))
+    )
+
+    # Apply sorting and pagination
+    listings = (listings_query
+                .order_by(sort_condition)
+                .offset((page - 1) * page_size)
+                .limit(page_size)
+                .all())
+    
+    total_listings = listings_query.count()
+    total_pages = (total_listings + page_size - 1) // page_size
+
+    # Build the response
+    rsp = []
+    for listing in listings:
+        rsp.append({
+            "id": listing.id,
+            "title": listing.title,
+            "description": listing.description,
+            "price": listing.price,
+            "quantity": listing.quantity,
+            "condition": listing.condition,
+            "sold": listing.sold,
+            "seller": {
+                "phone": listing.owner.phone,
+                "email": listing.owner.email
+            }
+        })
+
+    return jsonify({
+        "status": ErrorRsp.OK.value,
+        "data": rsp,
+        "total_listings": total_listings,
+        "total_pages": total_pages,
+        "current_page": page
+    }), 200
