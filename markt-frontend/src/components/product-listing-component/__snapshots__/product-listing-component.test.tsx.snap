@@ -2,10 +2,10 @@
 
 exports[`ProductListingComponent renders correctly on desktop 1`] = `
 <div
-  class="sc-jtQUzJ iPjHER"
+  class="sc-eauhAA jAyDhK"
 >
   <div
-    class="sc-cEzcPc gRqlWM"
+    class="sc-fFoeYl fCIluL"
   >
     <div
       class="sc-blHHSb kscHbD"
@@ -46,13 +46,13 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
     </div>
   </div>
   <div
-    class="sc-ovuCP ehjNBO"
+    class="sc-gQaihK fyYRag"
   >
     <div
-      class="sc-eOzmre bFDodf"
+      class="sc-iuUfFv fdtKHa"
     >
       <div
-        class="sc-eauhAA ezoNKZ"
+        class="sc-dprtRQ hRaLoZ"
       >
         <h1>
           Product Title
@@ -61,16 +61,16 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
           Description description description description description description description description description description description description description description description description description description
         </p>
         <button
-          class="sc-fwzISk iYdGfy"
+          class="sc-epnzzT loxPQX"
         >
           Share Interest
         </button>
       </div>
       <div
-        class="sc-fFoeYl eTBqH"
+        class="sc-eUlrpB dpSOKc"
       >
         <div
-          class="sc-gQaihK cnwMNn"
+          class="sc-geXuza eLjYnS"
         >
           CAD $$$
         </div>
@@ -78,18 +78,122 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
           Negotiable / Non-negotiable
         </div>
         <div
-          class="sc-iuUfFv hhLigg"
+          class="sc-hJRrWL eLJqsW"
         >
           <img
             alt="Seller Avatar"
-            class="sc-dprtRQ blkaRr"
+            class="sc-fwzISk bdNknI"
             src="https://via.placeholder.com/50"
           />
           <div>
             <div>
               SELLER ID # 1234
             </div>
-            Add stars here
+            <div
+              class="sc-jtQUzJ eyljEe"
+            >
+              <div
+                class="sc-cEzcPc dQkltd"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 576 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                  />
+                </svg>
+              </div>
+              <div
+                class="sc-cEzcPc dQkltd"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 576 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                  />
+                </svg>
+              </div>
+              <div
+                class="sc-cEzcPc dQkltd"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 576 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                  />
+                </svg>
+              </div>
+              <div
+                class="sc-ovuCP cKFxWO"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="color: rgb(184, 173, 173);"
+                  viewBox="0 0 576 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                  />
+                </svg>
+                <div
+                  class="sc-eOzmre lfEzgV"
+                  fillpercentage="29.999999999999982"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    stroke-width="0"
+                    viewBox="0 0 576 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                style="color: rgb(184, 173, 173);"
+                viewBox="0 0 576 512"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
@@ -100,10 +204,10 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
 
 exports[`ProductListingComponent renders correctly on mobile 1`] = `
 <div
-  class="sc-jtQUzJ bimzXR"
+  class="sc-eauhAA eZPQbO"
 >
   <div
-    class="sc-cEzcPc gRqlWM"
+    class="sc-fFoeYl fCIluL"
   >
     <div
       class="sc-blHHSb kscHbD"
@@ -144,13 +248,13 @@ exports[`ProductListingComponent renders correctly on mobile 1`] = `
     </div>
   </div>
   <div
-    class="sc-ovuCP ehjNBO"
+    class="sc-gQaihK fyYRag"
   >
     <div
-      class="sc-eOzmre EJVRr"
+      class="sc-iuUfFv htQkEW"
     >
       <div
-        class="sc-eauhAA ezoNKZ"
+        class="sc-dprtRQ hRaLoZ"
       >
         <h1>
           Product Title
@@ -159,16 +263,16 @@ exports[`ProductListingComponent renders correctly on mobile 1`] = `
           Description description description description description description description description description description description description description description description description description description
         </p>
         <button
-          class="sc-fwzISk iYdGfy"
+          class="sc-epnzzT loxPQX"
         >
           Share Interest
         </button>
       </div>
       <div
-        class="sc-fFoeYl eTBqH"
+        class="sc-eUlrpB dpSOKc"
       >
         <div
-          class="sc-gQaihK cnwMNn"
+          class="sc-geXuza eLjYnS"
         >
           CAD $$$
         </div>
@@ -176,18 +280,122 @@ exports[`ProductListingComponent renders correctly on mobile 1`] = `
           Negotiable / Non-negotiable
         </div>
         <div
-          class="sc-iuUfFv hhLigg"
+          class="sc-hJRrWL eLJqsW"
         >
           <img
             alt="Seller Avatar"
-            class="sc-dprtRQ blkaRr"
+            class="sc-fwzISk bdNknI"
             src="https://via.placeholder.com/50"
           />
           <div>
             <div>
               SELLER ID # 1234
             </div>
-            Add stars here
+            <div
+              class="sc-jtQUzJ eyljEe"
+            >
+              <div
+                class="sc-cEzcPc dQkltd"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 576 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                  />
+                </svg>
+              </div>
+              <div
+                class="sc-cEzcPc dQkltd"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 576 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                  />
+                </svg>
+              </div>
+              <div
+                class="sc-cEzcPc dQkltd"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 576 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                  />
+                </svg>
+              </div>
+              <div
+                class="sc-ovuCP cKFxWO"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  style="color: rgb(184, 173, 173);"
+                  viewBox="0 0 576 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                  />
+                </svg>
+                <div
+                  class="sc-eOzmre lfEzgV"
+                  fillpercentage="29.999999999999982"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    stroke-width="0"
+                    viewBox="0 0 576 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                style="color: rgb(184, 173, 173);"
+                viewBox="0 0 576 512"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
