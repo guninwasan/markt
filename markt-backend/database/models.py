@@ -118,6 +118,18 @@ class User(db.Model):
             return 0
         return round(self.total_ratings / self.number_of_ratings, 2)
 
+    """
+    JSON helpers
+    """
+    def get_json(self):
+        return {
+            "full_name": self.full_name,
+            "email": self.email,
+            "phone": self.phone,
+            "rating": self.get_average_rating()
+        }
+
+
 class Listing(db.Model):
     __tablename__ = 'listings'
 
@@ -136,3 +148,38 @@ class Listing(db.Model):
     buyer = db.relationship('User', back_populates='listings_bought', foreign_keys=[buyer_id])
     # All buyers intersted in this listing
     interested_buyers = db.relationship('User', secondary=user_listing_interest_table, back_populates='listings_of_interest') # many-to-many
+
+    """
+    JSON helpers
+    """
+    def get_json_full(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "price": self.price,
+            "quantity": self.quantity,
+            "sold": self.sold,
+            "condition": self.condition,
+            "owner": {
+                "full_name": self.owner.full_name,
+                "email": self.owner.email,
+                "phone": self.owner.phone,
+            },
+            "buyer": None if not self.buyer else {
+                "full_name": self.buyer.full_name,
+                "email": self.buyer.email,
+                "phone": self.buyer.phone
+            }
+        }
+
+    def get_json_min(self):
+        return {
+            "title": self.title,
+            "description": self.description,
+            "price": self.price,
+            "condition": self.condition,
+            "owner": {
+                "full_name": self.owner.full_name,
+            },
+        }

@@ -300,3 +300,19 @@ def test_add_interest(client):
 
     assert (listing_1 in test_user.listings_sold.all() and
             listing_1 not in test_user.listings_not_sold.all())
+
+def test_get_info(client):
+    # Create a user
+    user = User(full_name="Test User", password="mY8iw$02j",
+                email="user@mail.utoronto.ca", phone="6478290835")
+    db.session.add(user)
+    db.session.commit()
+
+    # Not enough data
+    update_data = {
+        "current_password": "mY8iwp@ssword"
+    }
+    rsp = client.post(f'/api/user/{user.email}/change_password', json=update_data)
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
