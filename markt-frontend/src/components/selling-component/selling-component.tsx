@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import { SellingFormContainer, Button } from "./selling-component.styles";
 import {
   EssentialDetails,
@@ -85,7 +86,7 @@ const SellingComponent = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title || !formData.price || !formData.description) {
       alert("Please fill in all required fields.");
@@ -95,8 +96,34 @@ const SellingComponent = () => {
       alert("Please correct the errors in the form.");
       return;
     }
-    alert("Form Data Submitted");
-    // connect with backend
+
+    console.log("Form data:", formData);
+
+    // try {
+    //   const uploadedMediaUrls = await Promise.all(
+    //     formData.media.map(async (file: File) => {
+    //       const uploadData = new FormData();
+    //       uploadData.append("file", file);
+    //       uploadData.append("upload_preset", "markt-mizzica");
+
+    //       const response = await axios.post<{ secure_url: string }>(
+    //         `https://api.cloudinary.com/v1_1/dywbiovuo/image/upload`,
+    //         uploadData
+    //       );
+    //       return response.data.secure_url;
+    //     })
+    //   );
+
+    //   const updatedFormData = {
+    //     ...formData,
+    //     media: uploadedMediaUrls,
+    //   };
+
+    //   console.log(updatedFormData);
+    // } catch (error) {
+    //   console.error("Error uploading files:", error);
+    //   alert("An error occurred while uploading media files.");
+    // }
   };
 
   return (
