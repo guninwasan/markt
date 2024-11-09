@@ -17,6 +17,8 @@ type MediaSectionProps = {
   setDisplayImage: React.Dispatch<React.SetStateAction<File | null>>;
 };
 
+const maxMediaFiles = 4;
+
 const MediaSection = ({
   mediaFiles,
   setMediaFiles,
@@ -29,17 +31,30 @@ const MediaSection = ({
   const addDisplayImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files ? Array.from(event.target.files) : [];
     if (files.length > 0) {
+      if (files[0].size > 1024 * 1024) {
+        alert("Image size should not exceed 1MB.");
+        return;
+      }
       setDisplayImage(files[0]);
     }
   };
 
   const handleMediaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
-    if (mediaFiles.length + files.length > 7) {
-      alert("You can only upload up to 7 files.");
+    const validFiles = files.filter((file) => {
+      if (file.size > 1024 * 1024) {
+        alert(`File ${file.name} exceeds the 1MB size limit.`);
+        return false;
+      }
+      return true;
+    });
+
+    if (mediaFiles.length + validFiles.length > maxMediaFiles) {
+      alert(`You can only upload up to ${maxMediaFiles} files.`);
       return;
     }
-    setMediaFiles((prevMediaFiles) => [...prevMediaFiles, ...files]);
+
+    setMediaFiles((prevMediaFiles) => [...prevMediaFiles, ...validFiles]);
   };
 
   const handleRemoveDisplay = () => {
@@ -88,7 +103,7 @@ const MediaSection = ({
         )}
         <br />
         <Label htmlFor="mediaInput">
-          Additional Images and Videos (Max: 7)
+          Additional Images and Videos (Max: {maxMediaFiles}) *
         </Label>
         <AddMediaButton
           type="button"
@@ -106,7 +121,9 @@ const MediaSection = ({
           ref={mediaInputRef}
           data-testid="mediaInput"
         />
-        <p>{mediaFiles.length} / 7 files uploaded</p>
+        <p>
+          {mediaFiles.length} / {maxMediaFiles} files uploaded
+        </p>
         {mediaFiles.map((file, index) => (
           <PreviewImagesContainer key={index}>
             {file.type.startsWith("image/") ? (

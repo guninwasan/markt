@@ -4,6 +4,8 @@ import { MediaSection } from "./media-details";
 
 global.URL.createObjectURL = jest.fn(() => "mock-url");
 
+const maxMediaFiles = 4;
+
 describe("MediaSection", () => {
   const mockSetMediaFiles = jest.fn();
   const mockSetDisplayImage = jest.fn();
@@ -52,7 +54,9 @@ describe("MediaSection", () => {
       />
     );
 
-    expect(screen.getByText("2 / 7 files uploaded")).toBeInTheDocument();
+    expect(
+      screen.getByText(`2 / ${maxMediaFiles} files uploaded`)
+    ).toBeInTheDocument();
   });
 
   it("should display preview of uploaded image files", () => {
