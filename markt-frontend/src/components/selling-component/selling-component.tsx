@@ -85,16 +85,6 @@ const SellingComponent = () => {
     }
   };
 
-  const handleAddMedia = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      setFormData((prevData: any) => ({
-        ...prevData,
-        media: [...prevData.media, ...Array.from(files)],
-      }));
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title || !formData.price || !formData.description) {
