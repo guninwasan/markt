@@ -1,9 +1,63 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MediaSection should match snapshot 1`] = `
-<h2
-  class="sc-gtLWhw eYVYUD"
->
-  Media
-</h2>
+exports[`MediaSection Component should match snapshot 1`] = `
+<div>
+  <h2
+    class="sc-gtLWhw eYVYUD"
+  >
+    Media
+  </h2>
+  <div
+    class="sc-egkSDF bHeElY"
+  >
+    <label
+      class="sc-dntaoT bUVQgQ"
+      for="displayImage"
+    >
+      Display Image *
+    </label>
+    <button
+      class="sc-kLhKbu dwqFqP"
+      type="button"
+    >
+      Add Display Image (Max 1 MB)
+    </button>
+    <input
+      accept="image/*"
+      data-testid="displayImageInput"
+      id="displayImageInput"
+      style="display: none;"
+      type="file"
+    />
+    <br />
+    <label
+      class="sc-dntaoT bUVQgQ"
+      for="mediaInput"
+    >
+      Additional Images and Videos (Max 
+      4
+       )
+    </label>
+    <button
+      class="sc-kLhKbu dwqFqP"
+      type="button"
+    >
+      + Add Images or Videos (Max 1 MB)
+    </button>
+    <input
+      accept="image/*,video/*"
+      data-testid="mediaInput"
+      id="mediaInput"
+      multiple=""
+      style="display: none;"
+      type="file"
+    />
+    <p>
+      0
+       / 
+      4
+       files uploaded
+    </p>
+  </div>
+</div>
 `;
