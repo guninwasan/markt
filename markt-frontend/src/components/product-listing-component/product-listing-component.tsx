@@ -100,7 +100,7 @@ const ProductListingComponent = () => {
     const productTitle = "Product Title";
     const productId = "Product ID";
     const productPrice = "Product Price";
-    const buyerName = "Buyer Name";
+    // const buyerName = "Buyer Name";
     const sellerEmail = "hello123@example.com";
     const buyerNote = note;
 
