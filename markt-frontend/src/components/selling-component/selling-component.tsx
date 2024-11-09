@@ -8,6 +8,7 @@ import {
   Specifications,
   AdditionalDetails,
 } from "./sections";
+import { uploadImage } from "../upload-image";
 
 const initialFormData = {
   title: "",
@@ -97,33 +98,20 @@ const SellingComponent = () => {
       return;
     }
 
-    console.log("Form data:", formData);
+    try {
+      const displayMediaUrl = await uploadImage(displayImage as File);
+      console.log("Display media URL:", displayMediaUrl);
 
-    // try {
-    //   const uploadedMediaUrls = await Promise.all(
-    //     formData.media.map(async (file: File) => {
-    //       const uploadData = new FormData();
-    //       uploadData.append("file", file);
-    //       uploadData.append("upload_preset", "markt-mizzica");
+      const getMediaURLs = await Promise.all(
+        mediaFiles.map(async (file: File) => {
+          return await uploadImage(file);
+        })
+      );
 
-    //       const response = await axios.post<{ secure_url: string }>(
-    //         `https://api.cloudinary.com/v1_1/dywbiovuo/image/upload`,
-    //         uploadData
-    //       );
-    //       return response.data.secure_url;
-    //     })
-    //   );
-
-    //   const updatedFormData = {
-    //     ...formData,
-    //     media: uploadedMediaUrls,
-    //   };
-
-    //   console.log(updatedFormData);
-    // } catch (error) {
-    //   console.error("Error uploading files:", error);
-    //   alert("An error occurred while uploading media files.");
-    // }
+      console.log("Media URLs:", getMediaURLs);
+    } catch (error) {
+      console.error("Error uploading images:", error);
+    }
   };
 
   return (
