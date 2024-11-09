@@ -133,33 +133,36 @@ class User(db.Model):
 class Listing(db.Model):
     __tablename__ = 'listings'
 
-    # Internal Details
+    # Backend Specifications
     id = db.Column(db.Integer, primary_key=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    sold = db.Column(db.Boolean, default=False)
+    date_created = db.Column(Date, nullable=False)
 
     # Essential Details
     title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
-    is_price_negotiable = db.Column(db.Boolean, default=False)
-    quantity = db.Column(db.Integer, nullable=False)
-    sold = db.Column(db.Boolean, default=False)
-
-    # Media
+    pickup_location = db.Column(db.String(100), nullable=False)
     display_image = db.Column(dialects.postgresql.JSON, nullable=True)
-    images = db.Column(dialects.postgresql.JSON, nullable=True)
-    videos = db.Column(dialects.postgresql.JSON, nullable=True)
-
-    # Product Flairs
+    # Flairs
+    is_price_negotiable = db.Column(db.Boolean, default=False)
     is_like_new = db.Column(db.Boolean, default=False)
     is_used = db.Column(db.Boolean, default=False)
     is_limited_edition = db.Column(db.Boolean, default=False)
+    is_shipping_free = db.Column(db.Boolean, default=False)
+    is_popular = db.Column(db.Boolean, default=False)
 
-    # Additional Specifications (Optional)
+    # Additional Media
+    images = db.Column(dialects.postgresql.JSON, nullable=True)
+    videos = db.Column(dialects.postgresql.JSON, nullable=True)
+
+    # Additional Specifications
+    description = db.Column(db.Text, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
     brand = db.Column(db.String(50), nullable=False)
     model = db.Column(db.String(50), nullable=False)
-    year_of_manufacture = db.Column(Date, nullable=False)
+    year_of_manufacture = db.Column(db.Integer, nullable=False)
     color = db.Column(db.String(25), nullable=False)
     dimensions = db.Column(db.String(50), nullable=False)
     weight = db.Column(db.String(10), nullable=False)
@@ -179,33 +182,56 @@ class Listing(db.Model):
     """
     def get_json_full(self):
         return {
-            "id": self.id,
-            "title": self.title,
-            "description": self.description,
-            "price": self.price,
-            "quantity": self.quantity,
-            "sold": self.sold,
-            "condition": self.condition,
-            "owner": {
-                "full_name": self.owner.full_name,
-                "email": self.owner.email,
-                "phone": self.owner.phone,
+            "essential": {
+                self.get_json_min()
             },
-            "buyer": None if not self.buyer else {
-                "full_name": self.buyer.full_name,
-                "email": self.buyer.email,
-                "phone": self.buyer.phone
-            }
+            "database": {
+                "id": self.id,
+                "owner": {
+                    "full_name": self.owner.full_name,
+                    "email": self.owner.email,
+                    "phone": self.owner.phone,
+                },
+                "buyer": None if not self.buyer else {
+                    "full_name": self.buyer.full_name,
+                    "email": self.buyer.email,
+                    "phone": self.buyer.phone
+                },
+                "sold": self.sold,
+                "date_created": self.date_created,
+            },
+            "media": {
+                "images": self.images.all(),
+                "videos": self.videos.all()
+            },
+            "specifications": {
+                "description": self.description,
+                "quantity": self.quantity,
+                "brand": self.brand,
+                "model": self.model,
+                "year_of_manufacture": self.year_of_manufacture,
+                "color": self.color,
+                "dimensions": self.dimensions,
+                "weight": self.weight,
+                "material": self.material,
+                "battery_life": self.battery_life,
+                "storage_capacity": self.storage_capacity,
+                "additional_details": self.additional_details,
+            },
         }
 
     def get_json_min(self):
         return {
-            "id": self.id,
             "title": self.title,
-            "description": self.description,
             "price": self.price,
-            "condition": self.condition,
-            "owner": {
-                "full_name": self.owner.full_name,
+            "pickup_location": self.pickup_location,
+            "display_image": self.display_image,
+            "flairs": {
+                "price_negotiable": self.is_price_negotiable,
+                "like_new": self.is_like_new,
+                "used": self.is_used,
+                "limited_edition": self.is_limited_edition,
+                "shipping_free": self.is_shipping_free,
+                "popular": self.is_popular,
             },
         }
