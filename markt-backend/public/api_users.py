@@ -335,19 +335,23 @@ def get_listings(email):
     # Get minimum listing information for all
     if data["get_unsold"]:
         for listing in user.listings_not_sold.all():
-            rsp["unsold_listings"].append(listing.get_json_min())
+            json = listing.get_json_min() if data["minimal"] else listing.get_json_full()
+            rsp["unsold_listings"].append(json)
     
     if data["get_sold"]:
         for listing in user.listings_sold.all():
-            rsp["sold_listings"].append(listing.get_json_min())
+            json = listing.get_json_min() if data["minimal"] else listing.get_json_full()
+            rsp["sold_listings"].append(json)
     
-    if data["interested_listings"]:
+    if data["get_interested"]:
         for listing in user.listings_of_interest.all():
-            rsp["interested_listings"].append(listing.get_json_min())
+            json = listing.get_json_min() if data["minimal"] else listing.get_json_full()
+            rsp["interested_listings"].append(json)
     
-    if data["bought_listings"]:
+    if data["get_bought"]:
         for listing in user.listings_bought.all():
-            rsp["bought_listings"].append(listing.get_json_min())
+            json = listing.get_json_min() if data["minimal"] else listing.get_json_full()
+            rsp["bought_listings"].append(json)
 
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": rsp}), 200

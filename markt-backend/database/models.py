@@ -175,6 +175,7 @@ class Listing(db.Model):
 
     def get_json_min(self):
         return {
+            "id": self.id,
             "title": self.title,
             "description": self.description,
             "price": self.price,
