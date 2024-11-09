@@ -34,6 +34,7 @@ const SellingComponent = () => {
   const [displayImage, setDisplayImage] = useState<File | null>(
     formData.media[0] || null
   );
+  const [mediaFiles, setMediaFiles] = useState<File[]>([]);
   const [priceError, setPriceError] = useState<string>("");
 
   const handleChange = (
@@ -119,8 +120,8 @@ const SellingComponent = () => {
           priceError={priceError}
         />
         <MediaSection
-          formData={formData}
-          handleAddMedia={handleAddMedia}
+          setMediaFiles={setMediaFiles}
+          mediaFiles={mediaFiles}
           displayImage={displayImage}
           setDisplayImage={setDisplayImage}
         />

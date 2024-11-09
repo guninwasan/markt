@@ -10,15 +10,19 @@ import {
   StyledVideo,
 } from "../selling-component.styles";
 
+type MediaSectionProps = {
+  mediaFiles: File[];
+  setMediaFiles: React.Dispatch<React.SetStateAction<File[]>>;
+  displayImage: File | null;
+  setDisplayImage: React.Dispatch<React.SetStateAction<File | null>>;
+};
+
 const MediaSection = ({
-  formData,
-  handleAddMedia,
+  mediaFiles,
+  setMediaFiles,
   displayImage,
   setDisplayImage,
-}: any) => {
-  const [mediaFiles, setMediaFiles] = useState<File[]>(
-    formData.media.slice(1) || []
-  );
+}: MediaSectionProps) => {
   const displayImageInputRef = useRef<HTMLInputElement>(null);
   const mediaInputRef = useRef<HTMLInputElement>(null);
 
@@ -26,7 +30,6 @@ const MediaSection = ({
     const files = event.target.files ? Array.from(event.target.files) : [];
     if (files.length > 0) {
       setDisplayImage(files[0]);
-      handleAddMedia(event);
     }
   };
 
@@ -37,7 +40,6 @@ const MediaSection = ({
       return;
     }
     setMediaFiles((prevMediaFiles) => [...prevMediaFiles, ...files]);
-    handleAddMedia(event);
   };
 
   const handleRemoveDisplay = () => {
