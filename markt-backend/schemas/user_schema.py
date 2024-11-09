@@ -23,3 +23,10 @@ class UserChangePasswordSchema(Schema):
 
 class AddInterestSchema(Schema):
     listing_ids = fields.List(fields.Int(), required=True)
+
+class GetListingsSchema(Schema):
+    minimal = fields.Bool(required=False, load_default=True)
+    get_unsold = fields.Bool(required=False, load_default=False)
+    get_sold = fields.Bool(required=False, load_default=False)
+    get_interested = fields.Bool(required=False, load_default=False)
+    get_bought = fields.Bool(required=False, load_default=False)

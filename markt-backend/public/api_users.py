@@ -11,7 +11,8 @@ from schemas.user_schema import (
     UserLoginSchema,
     UserUpdateSchema,
     AddInterestSchema,
-    UserChangePasswordSchema)
+    UserChangePasswordSchema,
+    GetListingsSchema)
 
 user_api_bp = Blueprint('user_api', __name__)
 swagger = Swagger()
@@ -183,16 +184,12 @@ def update(email):
     # If no errors, commit changes
     db.session.commit()
 
-    rsp = {
-        "full_name": user.full_name,
-        "password": rsp_password, # string indicating whether or not password was updated
-        "email": user.email,
-        "phone": user.phone,
-        "rating": user.get_average_rating()
-    }
+    rsp = user.get_json()
+    rsp["password"] = rsp_password
 
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": rsp}), 200
+
 
 """
     Endpoint: Change User's Password
@@ -287,3 +284,74 @@ def interested_listings(email):
 
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": "Listings added successfully!"}), 200
+    
+
+"""
+    Endpoint: Get user information
+    Route: 'api/user/<string:email>/get_info'
+"""
+@user_api_bp.route('/<string:email>/get_info', methods=['GET'])
+# Endpoint parameter specification
+@swag_from('../docs/user_docs.yml', endpoint='get_info')
+# API implementation
+def get_info(email):
+    # Validate email
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
+                        "data": "User does not exist!"}), 404
+
+    return jsonify({"status": ErrorRsp.OK.value,
+                    "data": user.get_json()}), 200
+
+
+"""
+    Endpoint: Get user's saved listings
+    Route: 'api/user/<string:email>/get_listings'
+"""
+@user_api_bp.route('/<string:email>/get_listings', methods=['GET'])
+# Endpoint parameter specification
+@swag_from('../docs/user_docs.yml', endpoint='get_listings')
+# API implementation
+def get_listings(email):
+    data = request.get_json()
+    schema = GetListingsSchema()
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "data": "Missing parameters",
+                        "errors": err.messages}), 400
+
+    # Check if user exists
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
+                        "data": "User does not exist!"}), 404
+
+    rsp = { "unsold_listings": [], "sold_listings": [],
+            "interested_listings": [], "bought_listings": []}
+
+    # Get minimum listing information for all
+    if data["get_unsold"]:
+        for listing in user.listings_not_sold.all():
+            json = listing.get_json_min() if data["minimal"] else listing.get_json_full()
+            rsp["unsold_listings"].append(json)
+    
+    if data["get_sold"]:
+        for listing in user.listings_sold.all():
+            json = listing.get_json_min() if data["minimal"] else listing.get_json_full()
+            rsp["sold_listings"].append(json)
+    
+    if data["get_interested"]:
+        for listing in user.listings_of_interest.all():
+            json = listing.get_json_min() if data["minimal"] else listing.get_json_full()
+            rsp["interested_listings"].append(json)
+    
+    if data["get_bought"]:
+        for listing in user.listings_bought.all():
+            json = listing.get_json_min() if data["minimal"] else listing.get_json_full()
+            rsp["bought_listings"].append(json)
+
+    return jsonify({"status": ErrorRsp.OK.value,
+                    "data": rsp}), 200
