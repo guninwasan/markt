@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MediaSection should match snapshot 1`] = `
+<h2
+  class="sc-gtLWhw eYVYUD"
+>
+  Media
+</h2>
+`;
