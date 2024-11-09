@@ -3,9 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { LoginInputField } from "../input-field";
 import { loginButtonStyles } from "../input-field/input-field.styles";
 import { ErrorRsp } from "../../errorCodes";
-import { RootState, selectors, setIsLoggedIn } from "../../redux";
-import { useSelector, useDispatch } from "react-redux";
-import { useIsMobile } from "../../hooks";
+import { setIsLoggedIn } from "../../redux";
+import { useDispatch } from "react-redux";
+// import { useIsMobile } from "../../hooks";
 import { setUserDetails } from "../../redux/slices/user-auth-slice";
 
 const LoginForm: React.FC = () => {
