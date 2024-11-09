@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { SellingFormContainer, Button } from "./selling-component.styles";
 import {
   EssentialDetails,
@@ -8,7 +7,7 @@ import {
   Specifications,
   AdditionalDetails,
 } from "./sections";
-import { uploadImage } from "../upload-image";
+import { uploadImage, validateFormData } from "./utils";
 
 const initialFormData = {
   title: "",
@@ -89,26 +88,20 @@ const SellingComponent = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.title || !formData.price || !formData.description) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-    if (priceError) {
-      alert("Please correct the errors in the form.");
+
+    const errors = validateFormData(formData, displayImage);
+    if (errors.length > 0) {
+      alert(errors.join("\n"));
       return;
     }
 
     try {
       const displayMediaUrl = await uploadImage(displayImage as File);
-      console.log("Display media URL:", displayMediaUrl);
-
       const getMediaURLs = await Promise.all(
         mediaFiles.map(async (file: File) => {
           return await uploadImage(file);
         })
       );
-
-      console.log("Media URLs:", getMediaURLs);
     } catch (error) {
       console.error("Error uploading images:", error);
     }
