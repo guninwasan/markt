@@ -168,6 +168,57 @@ def test_change_password(client):
     # Verify updates in the database
     assert user.check_password(update_data["new_password"])
 
+def test_forgot_password(client):
+    # Create a user
+    user = User(full_name="Test User", password="mY8iw$02j",
+                email="user@mail.utoronto.ca", phone="6478290835")
+    db.session.add(user)
+    db.session.commit()
+
+    # Not enough data
+    update_data = {
+        "new_password": "mY8iwp@ssword"
+    }
+    rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data)
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+
+    # Invalid email for verification
+    update_data = {
+        "email": "invalid@utoronto.ca",
+        "new_password": "hello_new_password"
+    }
+    rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data)
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM_EMAIL.value == rsp["status"]
+    assert "Incorrect email provided" in rsp["data"]
+
+    # Invalid password format
+    update_data = {
+        "email": user.email,
+        "new_password": "hello_new_password"
+    }
+    rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data)
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM_PWD.value == rsp["status"]
+
+    # Valid data
+    update_data = {
+        "email": user.email,
+        "new_password": "HeLl0_n#w_password"
+    }
+    rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data)
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert "Password reset successfully!" in rsp["data"]
+
+    # Verify updates in the database
+    assert user.check_password(update_data["new_password"])
+
 def test_rating(client):
     # Create a user
     user = User(full_name="Test User", password="mY8iw$02j",
