@@ -1,7 +1,7 @@
 import bcrypt
 import re
 from .db import db
-from sqlalchemy import event
+from sqlalchemy import dialects, Date
 
 # Association table - manage buyers interested in listings
 user_listing_interest_table = db.Table('user_listing_interest',
@@ -133,15 +133,40 @@ class User(db.Model):
 class Listing(db.Model):
     __tablename__ = 'listings'
 
+    # Internal Details
     id = db.Column(db.Integer, primary_key=True)
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+
+    # Essential Details
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
+    is_price_negotiable = db.Column(db.Boolean, default=False)
     quantity = db.Column(db.Integer, nullable=False)
     sold = db.Column(db.Boolean, default=False)
-    condition = db.Column(db.String(50), nullable=False)
-    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+
+    # Media
+    display_image = db.Column(dialects.postgresql.JSON, nullable=True)
+    images = db.Column(dialects.postgresql.JSON, nullable=True)
+    videos = db.Column(dialects.postgresql.JSON, nullable=True)
+
+    # Product Flairs
+    is_like_new = db.Column(db.Boolean, default=False)
+    is_used = db.Column(db.Boolean, default=False)
+    is_limited_edition = db.Column(db.Boolean, default=False)
+
+    # Additional Specifications (Optional)
+    brand = db.Column(db.String(50), nullable=False)
+    model = db.Column(db.String(50), nullable=False)
+    year_of_manufacture = db.Column(Date, nullable=False)
+    color = db.Column(db.String(25), nullable=False)
+    dimensions = db.Column(db.String(50), nullable=False)
+    weight = db.Column(db.String(10), nullable=False)
+    material = db.Column(db.String(50), nullable=False)
+    battery_life = db.Column(db.String(25), nullable=False)
+    storage_capacity = db.Column(db.String(25), nullable=False)
+    additional_details = db.Column(db.String(200), nullable=False)
 
     # Relationships
     owner = db.relationship('User', back_populates='listings_not_sold', foreign_keys=[owner_id], overlaps="listings_sold")
