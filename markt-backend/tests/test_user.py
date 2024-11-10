@@ -222,16 +222,16 @@ def test_add_interest(client):
         title="Old Laptop",
         description="Old Laptop",
         price=400,
-        quantity=1,
-        condition="used",
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         owner_id=test_user.id
     )
     listing_2 = Listing(
         title="Old Calculator",
         description="Old Calculator",
         price=20,
-        quantity=2,
-        condition="used",
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         owner_id=test_user.id
     )
     db.session.add(listing_1)
@@ -336,16 +336,16 @@ def test_get_listings(client):
         title="Old Laptop",
         description="Old Laptop",
         price=400,
-        quantity=1,
-        condition="used",
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         owner_id=user.id
     )
     listing_2 = Listing(
         title="Old Calculator",
         description="Old Calculator",
         price=20,
-        quantity=2,
-        condition="used",
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         owner_id=user.id
     )
     db.session.add(listing_1)

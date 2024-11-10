@@ -3,6 +3,7 @@ import re
 from .db import db
 from sqlalchemy import dialects, Date
 
+
 # Association table - manage buyers interested in listings
 user_listing_interest_table = db.Table('user_listing_interest',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
@@ -138,7 +139,7 @@ class Listing(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     sold = db.Column(db.Boolean, default=False)
-    date_created = db.Column(Date, nullable=False)
+    datetime_created = db.Column(Date, nullable=False)
 
     # Essential Details
     title = db.Column(db.String(100), nullable=False)
@@ -146,12 +147,11 @@ class Listing(db.Model):
     pickup_location = db.Column(db.String(100), nullable=False)
     display_image = db.Column(dialects.postgresql.JSON, nullable=True)
     # Flairs
-    is_price_negotiable = db.Column(db.Boolean, default=False)
-    is_like_new = db.Column(db.Boolean, default=False)
-    is_used = db.Column(db.Boolean, default=False)
-    is_limited_edition = db.Column(db.Boolean, default=False)
-    is_shipping_free = db.Column(db.Boolean, default=False)
-    is_popular = db.Column(db.Boolean, default=False)
+    price_negotiable = db.Column(db.Boolean, default=False)
+    like_new = db.Column(db.Boolean, default=False)
+    used = db.Column(db.Boolean, default=False)
+    limited_edition = db.Column(db.Boolean, default=False)
+    popular = db.Column(db.Boolean, default=False)
 
     # Additional Media
     images = db.Column(dialects.postgresql.JSON, nullable=True)
@@ -198,7 +198,7 @@ class Listing(db.Model):
                     "phone": self.buyer.phone
                 },
                 "sold": self.sold,
-                "date_created": self.date_created,
+                "datetime_created": self.datetime_created,
             },
             "media": {
                 "images": self.images.all(),
@@ -227,11 +227,10 @@ class Listing(db.Model):
             "pickup_location": self.pickup_location,
             "display_image": self.display_image,
             "flairs": {
-                "price_negotiable": self.is_price_negotiable,
-                "like_new": self.is_like_new,
-                "used": self.is_used,
-                "limited_edition": self.is_limited_edition,
-                "shipping_free": self.is_shipping_free,
-                "popular": self.is_popular,
+                "price_negotiable": self.price_negotiable,
+                "like_new": self.like_new,
+                "used": self.used,
+                "limited_edition": self.limited_edition,
+                "popular": self.popular,
             },
         }

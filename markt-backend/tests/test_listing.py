@@ -25,7 +25,7 @@ def test_create_listing(client):
     # Not enough parameters
     incomplete_data = {
         "title": "Math Textbook",
-        "condition": "used",
+        "used": True,
         "owner_email": test_user.email
     }
     rsp = client.post('/api/listing/create', json=incomplete_data)
@@ -39,8 +39,10 @@ def test_create_listing(client):
         "title": "Math Textbook",
         "description": "A great MAT188 textbook",
         "price": 100,
+        "pickup_location": "UofT Mississauga",
+        "display_image": "temp_url.png",
         "quantity": 1,
-        "condition": "used",
+        "used": True,
         "owner_email": "invalid@gmail.com"
     }
     rsp = client.post('/api/listing/create', json=invalid_user)
@@ -54,8 +56,10 @@ def test_create_listing(client):
         "title": "Math Textbook",
         "description": "A great MAT188 textbook",
         "price": -4848,
+        "pickup_location": "UofT Mississauga",
+        "display_image": "temp_url.png",
         "quantity": 1,
-        "condition": "used",
+        "used": True,
         "owner_email": test_user.email
     }
     rsp = client.post('/api/listing/create', json=invalid_user)
@@ -68,8 +72,10 @@ def test_create_listing(client):
         "title": "Math Textbook",
         "description": "A great MAT188 textbook",
         "price": 100,
+        "pickup_location": "UofT Mississauga",
+        "display_image": "temp_url.png",
         "quantity": 1,
-        "condition": "used",
+        "used": True,
         "owner_email": test_user.email
     }
     rsp = client.post('/api/listing/create', json=data)
@@ -100,6 +106,8 @@ def test_get_listing(client):
         title="Used Laptop",
         description="A second-hand laptop",
         price=300,
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         quantity=1,
         condition="used",
         owner_id=test_user.id
@@ -140,9 +148,11 @@ def test_get_all_listings(client):
     # Create 2 listings
     listing1 = Listing(
         title="Item 1", description="test description",
-        price=100, quantity=1, condition="new", owner_id=test_user.id)
+        price=100, pickup_location="UofT Mississauga",
+        display_image="temp_url.png", owner_id=test_user.id)
     listing2 = Listing(title="Item 2", description="test description",
-        price=500, quantity=1, condition="old", owner_id=test_user.id)
+        price=500, pickup_location="UofT Mississauga",
+        display_image="temp_url.png", owner_id=test_user.id)
 
     db.session.add(listing1)
     db.session.add(listing2)
@@ -172,8 +182,8 @@ def test_update_listing(client):
         title="Old Laptop",
         description="Old Laptop",
         price=400,
-        quantity=1,
-        condition="used",
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         owner_id=test_user.id
     )
     db.session.add(listing)
@@ -214,8 +224,8 @@ def test_sell_listing(client):
         title="Old Laptop",
         description="Old Laptop",
         price=400,
-        quantity=1,
-        condition="used",
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         owner_id=test_user.id
     )
     db.session.add(listing)
@@ -312,8 +322,8 @@ def test_delete_listing(client):
         title="Delete Me",
         description="Delete this item",
         price=100,
-        quantity=1,
-        condition="used",
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         owner_id=test_user.id
     )
     db.session.add(listing)
@@ -347,10 +357,10 @@ def test_search_by_query(client):
 
     # Create mock listings
     listings = [
-        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
-        Listing(title="Blue Chair", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
-        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
-        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+        Listing(title="Red Chair", description="A comfy red chair", price=150, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Blue Chair", description="A large blue sofa", price=450, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id)
     ]
     db.session.add_all(listings)
     db.session.commit()
@@ -370,8 +380,8 @@ def test_search_by_invalid_query(client):
     db.session.commit()
 
     listings = [
-        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
-        Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id)
+        Listing(title="Red Chair", description="A comfy red chair", price=150, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Blue Sofa", description="A large blue sofa", price=450, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id)
     ]
     db.session.add_all(listings)
     db.session.commit()
@@ -391,10 +401,10 @@ def test_search_by_price_low(client):
     db.session.commit()
 
     listings = [
-        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
-        Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
-        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
-        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+        Listing(title="Red Chair", description="A comfy red chair", price=150, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Blue Sofa", description="A large blue sofa", price=450, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id)
     ]
     db.session.add_all(listings)
     db.session.commit()
@@ -414,10 +424,10 @@ def test_search_by_price_high(client):
     db.session.commit()
 
     listings = [
-        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
-        Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
-        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
-        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+        Listing(title="Red Chair", description="A comfy red chair", price=150, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Blue Sofa", description="A large blue sofa", price=450, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id)
     ]
     db.session.add_all(listings)
     db.session.commit()
@@ -436,10 +446,10 @@ def test_search_pagination(client):
     db.session.commit()
 
     listings = [
-        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
-        Listing(title="Blue Chair", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
-        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
-        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+        Listing(title="Red Chair", description="A comfy red chair", price=150, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Blue Chair", description="A large blue sofa", price=450, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id)
     ]
     db.session.add_all(listings)
     db.session.commit()
@@ -466,9 +476,9 @@ def test_search_top_rated(client):
     db.session.commit()
 
     # Create mock listings with different seller ratings
-    listing_1 = Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user_1.id)
-    listing_2 = Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user_2.id)
-    listing_3 = Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user_1.id)
+    listing_1 = Listing(title="Red Chair", description="A comfy red chair", price=150, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user_1.id)
+    listing_2 = Listing(title="Blue Sofa", description="A large blue sofa", price=450, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user_2.id)
+    listing_3 = Listing(title="Green Chair", description="A modern green chair", price=100, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user_1.id)
     
     # Set ratings for users
     test_user_1.update_total_rating(4.5)  # Rating for Test User 1

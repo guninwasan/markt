@@ -11,30 +11,93 @@ create:
       schema:
         type: "object"
         properties:
-          title:
+          # Backend details
+          owner_email:
             type: "string"
             required: True
-          description:
+          # Essential details
+          title:
             type: "string"
             required: True
           price:
             type: "integer"
             minimum: 0
             required: True
+          pickup_location:
+            type: "string"
+            required: True
+          display_image:
+            type: "string"
+            required: True
+          price_negotiable:
+            type: "boolean"
+            required: True
+            default: False
+          like_new:
+            type: "boolean"
+            required: True
+            default: False
+          used:
+            type: "boolean"
+            required: True
+            default: False
+          limited_edition:
+            type: "boolean"
+            required: True
+            default: False
+          popular:
+            type: "boolean"
+            required: True
+            default: False
+          # Media
+          images:
+            type: array
+            items:
+              type: string
+              required: False
+          videos:
+            type: array
+            items:
+              type: string
+              required: False
+          # Additional details
+          description:
+            type: "string"
+            required: False
           quantity:
             type: "integer"
-            required: True
+            required: False
             minimum: 1
-          condition:
+          brand:
             type: "string"
-            required: True
-          sold:
-            type: "boolean"
-            default: false
-            required: True
-          owner_email:
+            required: False
+          model:
             type: "string"
-            required: True
+            required: False
+          year_of_manufacture:
+            type: "integer"
+            required: False
+          color:
+            type: "string"
+            required: False
+          dimensions:
+            type: "string"
+            required: False
+          weight:
+            type: "string"
+            required: False
+          material:
+            type: "string"
+            required: False
+          battery_life:
+            type: "string"
+            required: False
+          storage_capacity:
+            type: "string"
+            required: False
+          additional_details:
+            type: "string"
+            required: False
 
 get:
   responses:
@@ -43,18 +106,37 @@ get:
     404:
       description: "Listing does not exist!"
   parameters:
-    - name: "user"
+    - name: "id"
       in: "query"
       required: True
       schema:
         type: "object"
         properties:
           id: "integer"
+    - name: "detail"
+      in: "body"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          minimal: "boolean"
+            description: Get minimal listing info
+            default: True
 
 get_all:
   responses:
     200:
       description: JSON response
+  parameters:
+    - name: "detail"
+      in: "body"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          minimal: "boolean"
+            description: Get minimal listing info
+            default: True
 
 update:
   responses:
@@ -69,28 +151,94 @@ update:
       schema:
         type: "object"
         properties:
-          title:
+          # Backend
+          buyer_email:
             type: "string"
             required: False
-          description:
+          sold:
+            type: "boolean"
+            required: False
+          # Essential details
+          title:
             type: "string"
             required: False
           price:
             type: "integer"
             minimum: 0
             required: False
-          quantity:
-            type: "integer"
-            minimum: 1
-            required: False
-          sold:
-            type: "boolean"
-            default: False
-            required: False
-          condition:
+          pickup_location:
             type: "string"
             required: False
-          buyer_email:
+          display_image:
+            type: "string"
+            required: False
+          price_negotiable:
+            type: "boolean"
+            required: False
+            default: False
+          like_new:
+            type: "boolean"
+            required: False
+            default: False
+          used:
+            type: "boolean"
+            required: False
+            default: False
+          limited_edition:
+            type: "boolean"
+            required: False
+            default: False
+          popular:
+            type: "boolean"
+            required: False
+            default: False
+          # Media
+          images:
+            type: array
+            items:
+              type: string
+              required: False
+          videos:
+            type: array
+            items:
+              type: string
+              required: False
+          # Additional details
+          description:
+            type: "string"
+            required: False
+          quantity:
+            type: "integer"
+            required: False
+            minimum: 1
+          brand:
+            type: "string"
+            required: False
+          model:
+            type: "string"
+            required: False
+          year_of_manufacture:
+            type: "integer"
+            required: False
+          color:
+            type: "string"
+            required: False
+          dimensions:
+            type: "string"
+            required: False
+          weight:
+            type: "string"
+            required: False
+          material:
+            type: "string"
+            required: False
+          battery_life:
+            type: "string"
+            required: False
+          storage_capacity:
+            type: "string"
+            required: False
+          additional_details:
             type: "string"
             required: False
 
@@ -101,7 +249,7 @@ delete:
     404:
       description: "Listing does not exist!"
   parameters:
-    - name: "user"
+    - name: "id"
       in: "query"
       required: True
       schema:
