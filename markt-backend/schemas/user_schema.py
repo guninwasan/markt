@@ -21,6 +21,10 @@ class UserChangePasswordSchema(Schema):
     current_password = fields.Str(required=True)
     new_password = fields.Str(required=True)
 
+class UserForgotPasswordSchema(Schema):
+    email = fields.Str(required=True)
+    new_password = fields.Str(required=True)
+
 class AddInterestSchema(Schema):
     listing_ids = fields.List(fields.Int(), required=True)
 

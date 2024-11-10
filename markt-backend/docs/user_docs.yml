@@ -125,6 +125,36 @@ change_password:
             type: "string"
             required: True
 
+forgot_password:
+  responses:
+    200:
+      description: "Password reset successfully!"
+    400:
+      description:
+        "Missing parameters", "Invalid format"
+    404:
+      description: "User does not exist!"
+  parameters:
+    - name: "user_email"
+      in: "query"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          email: "string"
+    - name: "verify"
+      in: "body"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          email:
+            type: "string"
+            required: True
+          new_password:
+            type: "string"
+            required: True
+
 add_interest:
   responses:
     200:
