@@ -31,23 +31,23 @@ create:
             required: True
           price_negotiable:
             type: "boolean"
-            required: True
+            required: False
             default: False
           like_new:
             type: "boolean"
-            required: True
+            required: False
             default: False
           used:
             type: "boolean"
-            required: True
+            required: False
             default: False
           limited_edition:
             type: "boolean"
-            required: True
+            required: False
             default: False
           popular:
             type: "boolean"
-            required: True
+            required: False
             default: False
           # Media
           images:
@@ -121,6 +121,7 @@ get:
         properties:
           minimal: "boolean"
             description: Get minimal listing info
+            required: False
             default: True
 
 get_all:
@@ -136,6 +137,7 @@ get_all:
         properties:
           minimal: "boolean"
             description: Get minimal listing info
+            required: False
             default: True
 
 update:

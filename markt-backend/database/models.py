@@ -1,7 +1,9 @@
 import bcrypt
 import re
 from .db import db
-from sqlalchemy import dialects, Date
+from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy import Date
+from datetime import datetime
 
 
 # Association table - manage buyers interested in listings
@@ -139,13 +141,13 @@ class Listing(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     sold = db.Column(db.Boolean, default=False)
-    datetime_created = db.Column(Date, nullable=False)
+    datetime_created = db.Column(Date, default=(((datetime.now()).strftime("%d/%m/%Y %H:%M:%S"))), nullable=False)
 
     # Essential Details
     title = db.Column(db.String(100), nullable=False)
     price = db.Column(db.Float, nullable=False)
     pickup_location = db.Column(db.String(100), nullable=False)
-    display_image = db.Column(dialects.postgresql.JSON, nullable=True)
+    display_image = db.Column(JSON, nullable=True)
     # Flairs
     price_negotiable = db.Column(db.Boolean, default=False)
     like_new = db.Column(db.Boolean, default=False)
@@ -154,22 +156,22 @@ class Listing(db.Model):
     popular = db.Column(db.Boolean, default=False)
 
     # Additional Media
-    images = db.Column(dialects.postgresql.JSON, nullable=True)
-    videos = db.Column(dialects.postgresql.JSON, nullable=True)
+    images = db.Column(JSON, nullable=True)
+    videos = db.Column(JSON, nullable=True)
 
     # Additional Specifications
-    description = db.Column(db.Text, nullable=False)
-    quantity = db.Column(db.Integer, nullable=False)
-    brand = db.Column(db.String(50), nullable=False)
-    model = db.Column(db.String(50), nullable=False)
-    year_of_manufacture = db.Column(db.Integer, nullable=False)
-    color = db.Column(db.String(25), nullable=False)
-    dimensions = db.Column(db.String(50), nullable=False)
-    weight = db.Column(db.String(10), nullable=False)
-    material = db.Column(db.String(50), nullable=False)
-    battery_life = db.Column(db.String(25), nullable=False)
-    storage_capacity = db.Column(db.String(25), nullable=False)
-    additional_details = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    quantity = db.Column(db.Integer, nullable=True)
+    brand = db.Column(db.String(50), nullable=True)
+    model = db.Column(db.String(50), nullable=True)
+    year_of_manufacture = db.Column(db.Integer, nullable=True)
+    color = db.Column(db.String(25), nullable=True)
+    dimensions = db.Column(db.String(50), nullable=True)
+    weight = db.Column(db.String(10), nullable=True)
+    material = db.Column(db.String(50), nullable=True)
+    battery_life = db.Column(db.String(25), nullable=True)
+    storage_capacity = db.Column(db.String(25), nullable=True)
+    additional_details = db.Column(db.String(200), nullable=True)
 
     # Relationships
     owner = db.relationship('User', back_populates='listings_not_sold', foreign_keys=[owner_id], overlaps="listings_sold")
@@ -182,27 +184,17 @@ class Listing(db.Model):
     """
     def get_json_full(self):
         return {
-            "essential": {
-                self.get_json_min()
-            },
+            "essential": self.get_json_min(),
             "database": {
                 "id": self.id,
-                "owner": {
-                    "full_name": self.owner.full_name,
-                    "email": self.owner.email,
-                    "phone": self.owner.phone,
-                },
-                "buyer": None if not self.buyer else {
-                    "full_name": self.buyer.full_name,
-                    "email": self.buyer.email,
-                    "phone": self.buyer.phone
-                },
+                "owner": self.owner.get_json(),
+                "buyer": None if not self.buyer else self.buyer.get_json(),
                 "sold": self.sold,
                 "datetime_created": self.datetime_created,
             },
             "media": {
-                "images": self.images.all(),
-                "videos": self.videos.all()
+                "images": self.images.all() if self.images else [],
+                "videos": self.videos.all() if self.videos else [],
             },
             "specifications": {
                 "description": self.description,
@@ -233,4 +225,5 @@ class Listing(db.Model):
                 "limited_edition": self.limited_edition,
                 "popular": self.popular,
             },
+            "owner_rating": self.owner.get_average_rating()
         }

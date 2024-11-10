@@ -9,11 +9,11 @@ class ListingInformationSchema(Schema):
     price = fields.Float(required=True, validate=validate.Range(min=0, max=10000))
     pickup_location = fields.Str(required=True)
     display_image = fields.Str(required=True)
-    price_negotiable = fields.Bool(required=True, load_default=False)
-    like_new = fields.Bool(required=True, load_default=False)
-    used = fields.Bool(required=True, load_default=False)
-    limited_edition = fields.Bool(required=True, load_default=False)
-    popular = fields.Bool(required=True, load_default=False)
+    price_negotiable = fields.Bool(required=False, load_default=False)
+    like_new = fields.Bool(required=False, load_default=False)
+    used = fields.Bool(required=False, load_default=False)
+    limited_edition = fields.Bool(required=False, load_default=False)
+    popular = fields.Bool(required=False, load_default=False)
 
     # Additional media (optional)
     images = fields.List(fields.Str(required=False))
@@ -34,7 +34,7 @@ class ListingInformationSchema(Schema):
     additional_details = fields.Str(required=False)
 
 class ListingGetSchema(Schema):
-    minimal = fields.Bool(required=True, load_default=True)
+    minimal = fields.Bool(required=False, load_default=True)
 
 class ListingUpdate(Schema):
     # Backend specifications

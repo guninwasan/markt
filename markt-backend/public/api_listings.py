@@ -1,8 +1,6 @@
-import re
 from flask import Blueprint, jsonify, request
 from flasgger import Swagger, swag_from
 from marshmallow import ValidationError
-from datetime import datetime
 
 from database.db import db
 from database.models import Listing, User
@@ -36,15 +34,10 @@ def create():
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
 
-    # Get current date and time
-    now = datetime.now()
-    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-
     # Create listing
     listing = Listing(
         # backend
         owner_id=user.id,
-        datetime_created = dt_string,
         sold=False,
 
         # essential
