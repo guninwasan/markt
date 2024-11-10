@@ -1,3 +1,2 @@
 FLASK_APP=public
 FLASK_DEBUG=True
-DATABASE_URL=postgresql://mizzicabackend_user:OAfgf9d780rVKsp5rF4T9Rc2rzsWj3dP@dpg-csoj84pu0jms73984skg-a.oregon-postgres.render.com/mizzicabackend

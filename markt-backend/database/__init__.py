@@ -9,7 +9,7 @@ def create_app_db(testing):
     if testing:
         url = 'postgresql://postgres:welcome1234@localhost/MizzicaBackendTest'
     else:
-        url = os.getenv('DATABASE_URL')
+        url = 'postgresql://mizzicabackend_user:OAfgf9d780rVKsp5rF4T9Rc2rzsWj3dP@dpg-csoj84pu0jms73984skg-a.oregon-postgres.render.com/mizzicabackend'
 
     app.config['SQLALCHEMY_DATABASE_URI'] = url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
