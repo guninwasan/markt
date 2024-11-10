@@ -8,10 +8,12 @@ import {
   DropdownItem,
 } from "./searchbar.styles";
 import { FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchTerm = e.target.value;
@@ -26,7 +28,7 @@ const SearchBar = () => {
         const data = await response.json();
 
         if (data.status === 1000 && data.data) {
-          setSuggestions(data.data.map((item: any) => item.title));
+          setSuggestions(data.data);
         } else {
           setSuggestions([]);
         }
@@ -67,6 +69,11 @@ const SearchBar = () => {
     });
   };
 
+  const handleDropdownClick = (listingId: number) => {
+    // Navigate to the listing page
+    navigate(`/listing?id=${listingId}`);
+  };
+
   return (
     <SearchBarContainer style={{ position: "relative" }}>
       <InnerSearchBarContainer>
@@ -85,8 +92,11 @@ const SearchBar = () => {
       {suggestions.length > 0 && (
         <Dropdown>
           {suggestions.map((suggestion, index) => (
-            <DropdownItem key={index} onClick={() => setSearchTerm(suggestion)}>
-              {highlightMatch(suggestion)}
+            <DropdownItem
+              key={index}
+              onClick={() => handleDropdownClick(suggestion.id)} // Use listing id to navigate
+            >
+              {highlightMatch(suggestion.title)} {}
             </DropdownItem>
           ))}
         </Dropdown>
