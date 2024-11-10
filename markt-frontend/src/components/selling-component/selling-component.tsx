@@ -102,6 +102,8 @@ const SellingComponent = () => {
           return await uploadImage(file);
         })
       );
+      console.log("Display Media URL:", displayMediaUrl);
+      console.log("Media URLs:", getMediaURLs);
     } catch (error) {
       console.error("Error uploading images:", error);
     }
