@@ -281,6 +281,11 @@ def delete(id):
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": "Listing deleted successfully"}), 200
 
+"""
+    Endpoint: Search listings
+    Route: '/api/listing/search'
+"""
+
 @listing_api_bp.route('/search', methods=['GET'])
 @swag_from('../docs/listing_docs.yml', endpoint='search')
 def search():
@@ -288,6 +293,7 @@ def search():
     filter_type = request.args.get('filter', 'price_low')
     page = int(request.args.get('page', 1))
     page_size = int(request.args.get('page_size', 10))
+    deep_search = request.args.get('deepSearch', 'true').lower() == 'true'  # New argument to control search type
 
     # Ensure that the query is not empty
     if not query:
@@ -302,12 +308,15 @@ def search():
         'price_low': Listing.price.asc()
     }.get(filter_type, Listing.price.asc())  # Default sorting is price_low
 
-    # Filter listings by query if provided, and ensure it's checked only in title or description
+    # Filter listings by query if provided, and ensure it's checked based on deepSearch
     listings_query = Listing.query
-    listings_query = listings_query.filter(
-        (Listing.title.ilike(f"%{query}%")) | 
-        (Listing.description.ilike(f"%{query}%"))
-    )
+    if not deep_search:  # Only search by title if deepSearch is False
+        listings_query = listings_query.filter(Listing.title.ilike(f"%{query}%"))
+    else:  # Search both title and description if deepSearch is True
+        listings_query = listings_query.filter(
+            (Listing.title.ilike(f"%{query}%")) | 
+            (Listing.description.ilike(f"%{query}%"))
+        )
 
     # Apply sorting by price and pagination to fetch listings first
     listings = (listings_query
