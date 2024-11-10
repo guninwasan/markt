@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { ListingContainer } from "../listing-container";
 import { useEffect, useState } from "react";
-import { dummyData1, dummyData2, dummyData4 } from "../dummy-listing-data";
+import { dummyData1, dummyData2 } from "../dummy-listing-data";
 import {
   NoResultsContainer,
   NoResultsHeading,

@@ -1,39 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { LoginInputField } from '../input-field';
-import { loginButtonStyles } from '../input-field/input-field.styles';
-import { ErrorRsp } from '../../errorCodes';
-import { RootState, selectors, setIsLoggedIn } from "../../redux";
-import { useSelector, useDispatch } from "react-redux";
-import { useIsMobile } from "../../hooks";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { LoginInputField } from "../input-field";
+import { loginButtonStyles } from "../input-field/input-field.styles";
+import { ErrorRsp } from "../../errorCodes";
+import { setIsLoggedIn } from "../../redux";
+import { useDispatch } from "react-redux";
+// import { useIsMobile } from "../../hooks";
 import { setUserDetails } from "../../redux/slices/user-auth-slice";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
-  const { isMobile } = useIsMobile();
+  // const { isMobile } = useIsMobile();
   const dispatch = useDispatch();
-  const { isLoggedIn, name } = useSelector((state: RootState) => ({
-    isLoggedIn: selectors.getIsLoggedIn(state),
-    name: selectors.getName(state),
-  }));
+  // const { isLoggedIn, name } = useSelector((state: RootState) => ({
+  //   isLoggedIn: selectors.getIsLoggedIn(state),
+  //   name: selectors.getName(state),
+  // }));
 
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [touchedFields, setTouchedFields] = useState<{ [key: string]: boolean }>({
+  const [touchedFields, setTouchedFields] = useState<{
+    [key: string]: boolean;
+  }>({
     email: false,
     password: false,
   });
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 
   // Validation function
-  const validateEmail = (email: string) => /^[^\s@]+@(mail\.)?utoronto\.ca$/.test(email);
+  const validateEmail = (email: string) =>
+    /^[^\s@]+@(mail\.)?utoronto\.ca$/.test(email);
 
   // Handle input changes and clear specific field errors on change
-  const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>, fieldName: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setter(e.target.value);
-    setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: '' }));
-  };
+  const handleInputChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>, fieldName: string) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setter(e.target.value);
+      setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: "" }));
+    };
 
   // Mark a field as "touched" when it loses focus
   const handleBlur = (fieldName: string) => {
@@ -47,10 +52,11 @@ const LoginForm: React.FC = () => {
   // Validate a single field
   const validateField = (name: string) => {
     const newErrors = { ...errors };
-    if (name === 'email') {
-      newErrors.email = email && validateEmail(email) ? '' : 'A valid UofT email is required';
-    } else if (name === 'password') {
-      newErrors.password = password ? '' : 'Password is required';
+    if (name === "email") {
+      newErrors.email =
+        email && validateEmail(email) ? "" : "A valid UofT email is required";
+    } else if (name === "password") {
+      newErrors.password = password ? "" : "Password is required";
     }
     setErrors(newErrors);
   };
@@ -66,15 +72,15 @@ const LoginForm: React.FC = () => {
 
     // Mark all fields as touched on submit
     setTouchedFields({ email: true, password: true });
-    validateField('email');
-    validateField('password');
+    validateField("email");
+    validateField("password");
 
     // Only submit if there are no client-side validation errors
     if (!Object.values(errors).some((error) => error)) {
       try {
-        const response = await fetch('http://localhost:5000/api/user/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const response = await fetch("http://localhost:5000/api/user/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
         });
 
@@ -82,16 +88,18 @@ const LoginForm: React.FC = () => {
 
         if (response.ok) {
           alert("Login successful! Redirecting to Home...");
-          dispatch(setUserDetails({
-            userID: result.userID,
-            name: result.name,
-            email: result.email,
-            phone: result.phone,
-            jwt: result.token,
-          }));
+          dispatch(
+            setUserDetails({
+              userID: result.userID,
+              name: result.name,
+              email: result.email,
+              phone: result.phone,
+              jwt: result.token,
+            })
+          );
 
           dispatch(setIsLoggedIn(true));
-          navigate('/'); // Redirect to home
+          navigate("/"); // Redirect to home
         } else {
           // Handle specific backend errors
           switch (result.status) {
@@ -108,43 +116,59 @@ const LoginForm: React.FC = () => {
         }
       } catch (error) {
         console.error("Login failed:", error);
-        setErrors({ form: "An unexpected error occurred. Please try again later." });
+        setErrors({
+          form: "An unexpected error occurred. Please try again later.",
+        });
       }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <form
+      onSubmit={handleSubmit}
+      style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+    >
       <LoginInputField
         type="email"
         placeholder="UofT Email Address"
         value={email}
-        onChange={handleInputChange(setEmail, 'email')}
-        onBlur={() => handleBlur('email')}
-        style={{ borderColor: errors.email ? 'red' : undefined }}
+        onChange={handleInputChange(setEmail, "email")}
+        onBlur={() => handleBlur("email")}
+        style={{ borderColor: errors.email ? "red" : undefined }}
       />
-      {touchedFields.email && errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
+      {touchedFields.email && errors.email && (
+        <p style={{ color: "red" }}>{errors.email}</p>
+      )}
 
       <LoginInputField
         type="password"
         placeholder="Password"
         value={password}
-        onChange={handleInputChange(setPassword, 'password')}
-        onBlur={() => handleBlur('password')}
-        style={{ borderColor: errors.password ? 'red' : undefined }}
+        onChange={handleInputChange(setPassword, "password")}
+        onBlur={() => handleBlur("password")}
+        style={{ borderColor: errors.password ? "red" : undefined }}
       />
-      {touchedFields.password && errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
+      {touchedFields.password && errors.password && (
+        <p style={{ color: "red" }}>{errors.password}</p>
+      )}
 
-      <button type="submit" style={loginButtonStyles} disabled={isButtonDisabled}>
+      <button
+        type="submit"
+        style={loginButtonStyles}
+        disabled={isButtonDisabled}
+      >
         Login
       </button>
 
-      <div style={{ marginTop: '1rem' }}>
-        Don't have an account? <Link to="/register" style={{ color: '#000000' }}><b>Register</b></Link>
+      <div style={{ marginTop: "1rem" }}>
+        Don't have an account?{" "}
+        <Link to="/register" style={{ color: "#000000" }}>
+          <b>Register</b>
+        </Link>
       </div>
 
       {/* General form error */}
-      {errors.form && <p style={{ color: 'red' }}>{errors.form}</p>}
+      {errors.form && <p style={{ color: "red" }}>{errors.form}</p>}
     </form>
   );
 };
