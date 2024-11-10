@@ -1,7 +1,10 @@
 import bcrypt
 import re
 from .db import db
-from sqlalchemy import event
+from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy import Date
+from datetime import datetime
+
 
 # Association table - manage buyers interested in listings
 user_listing_interest_table = db.Table('user_listing_interest',
@@ -133,15 +136,42 @@ class User(db.Model):
 class Listing(db.Model):
     __tablename__ = 'listings'
 
+    # Backend Specifications
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    quantity = db.Column(db.Integer, nullable=False)
-    sold = db.Column(db.Boolean, default=False)
-    condition = db.Column(db.String(50), nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    sold = db.Column(db.Boolean, default=False)
+    datetime_created = db.Column(Date, default=(((datetime.now()).strftime("%d/%m/%Y %H:%M:%S"))), nullable=False)
+
+    # Essential Details
+    title = db.Column(db.String(100), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    pickup_location = db.Column(db.String(100), nullable=False)
+    display_image = db.Column(JSON, nullable=True)
+    # Flairs
+    price_negotiable = db.Column(db.Boolean, default=False)
+    like_new = db.Column(db.Boolean, default=False)
+    used = db.Column(db.Boolean, default=False)
+    limited_edition = db.Column(db.Boolean, default=False)
+    popular = db.Column(db.Boolean, default=False)
+
+    # Additional Media
+    images = db.Column(JSON, nullable=True)
+    videos = db.Column(JSON, nullable=True)
+
+    # Additional Specifications
+    description = db.Column(db.Text, nullable=True)
+    quantity = db.Column(db.Integer, nullable=True)
+    brand = db.Column(db.String(50), nullable=True)
+    model = db.Column(db.String(50), nullable=True)
+    year_of_manufacture = db.Column(db.Integer, nullable=True)
+    color = db.Column(db.String(25), nullable=True)
+    dimensions = db.Column(db.String(50), nullable=True)
+    weight = db.Column(db.String(10), nullable=True)
+    material = db.Column(db.String(50), nullable=True)
+    battery_life = db.Column(db.String(25), nullable=True)
+    storage_capacity = db.Column(db.String(25), nullable=True)
+    additional_details = db.Column(db.String(200), nullable=True)
 
     # Relationships
     owner = db.relationship('User', back_populates='listings_not_sold', foreign_keys=[owner_id], overlaps="listings_sold")
@@ -154,33 +184,46 @@ class Listing(db.Model):
     """
     def get_json_full(self):
         return {
-            "id": self.id,
-            "title": self.title,
-            "description": self.description,
-            "price": self.price,
-            "quantity": self.quantity,
-            "sold": self.sold,
-            "condition": self.condition,
-            "owner": {
-                "full_name": self.owner.full_name,
-                "email": self.owner.email,
-                "phone": self.owner.phone,
+            "essential": self.get_json_min(),
+            "database": {
+                "id": self.id,
+                "owner": self.owner.get_json(),
+                "buyer": None if not self.buyer else self.buyer.get_json(),
+                "sold": self.sold,
+                "datetime_created": self.datetime_created,
             },
-            "buyer": None if not self.buyer else {
-                "full_name": self.buyer.full_name,
-                "email": self.buyer.email,
-                "phone": self.buyer.phone
-            }
+            "media": {
+                "images": self.images.all() if self.images else [],
+                "videos": self.videos.all() if self.videos else [],
+            },
+            "specifications": {
+                "description": self.description,
+                "quantity": self.quantity,
+                "brand": self.brand,
+                "model": self.model,
+                "year_of_manufacture": self.year_of_manufacture,
+                "color": self.color,
+                "dimensions": self.dimensions,
+                "weight": self.weight,
+                "material": self.material,
+                "battery_life": self.battery_life,
+                "storage_capacity": self.storage_capacity,
+                "additional_details": self.additional_details,
+            },
         }
 
     def get_json_min(self):
         return {
-            "id": self.id,
             "title": self.title,
-            "description": self.description,
             "price": self.price,
-            "condition": self.condition,
-            "owner": {
-                "full_name": self.owner.full_name,
+            "pickup_location": self.pickup_location,
+            "display_image": self.display_image,
+            "flairs": {
+                "price_negotiable": self.price_negotiable,
+                "like_new": self.like_new,
+                "used": self.used,
+                "limited_edition": self.limited_edition,
+                "popular": self.popular,
             },
+            "owner_rating": self.owner.get_average_rating()
         }

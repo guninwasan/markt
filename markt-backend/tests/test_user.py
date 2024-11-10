@@ -273,16 +273,16 @@ def test_add_interest(client):
         title="Old Laptop",
         description="Old Laptop",
         price=400,
-        quantity=1,
-        condition="used",
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         owner_id=test_user.id
     )
     listing_2 = Listing(
         title="Old Calculator",
         description="Old Calculator",
         price=20,
-        quantity=2,
-        condition="used",
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         owner_id=test_user.id
     )
     db.session.add(listing_1)
@@ -387,16 +387,16 @@ def test_get_listings(client):
         title="Old Laptop",
         description="Old Laptop",
         price=400,
-        quantity=1,
-        condition="used",
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         owner_id=user.id
     )
     listing_2 = Listing(
         title="Old Calculator",
         description="Old Calculator",
         price=20,
-        quantity=2,
-        condition="used",
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         owner_id=user.id
     )
     db.session.add(listing_1)
@@ -413,12 +413,12 @@ def test_get_listings(client):
     assert "User does not exist!" == rsp["data"]
 
     # Check not sold list
-    data = {"get_unsold": True}
+    data = {"get_unsold": True, "minimal": False}
     rsp = client.get(f'/api/user/{user.email}/get_listings', json=data)
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
-    listing_ids = [l.get('id', None) for l in rsp["data"]["unsold_listings"]]
+    listing_ids = [l['database']['id'] for l in rsp["data"]["unsold_listings"]]
     assert listing_1.id in listing_ids
     assert listing_2.id in listing_ids
 
@@ -427,12 +427,12 @@ def test_get_listings(client):
     db.session.commit()
 
     # Check user2 listings
-    data = {"get_interested": True}
+    data = {"get_interested": True, 'minimal': False}
     rsp = client.get(f'/api/user/{user2.email}/get_listings', json=data)
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
-    assert listing_2.id in [l.get('id', None) for l in rsp["data"]["interested_listings"]]
+    assert listing_2.id in [l['database']['id'] for l in rsp["data"]["interested_listings"]]
 
     # Mark listing as sold
     listing_1.sold = True
@@ -440,23 +440,23 @@ def test_get_listings(client):
     db.session.commit()
 
     # Check owner listings
-    data = {"get_sold": True, "get_unsold": True}
+    data = {"get_sold": True, "get_unsold": True, 'minimal': False}
     rsp = client.get(f'/api/user/{user.email}/get_listings', json=data)
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
-    assert listing_1.id in [l.get('id', None) for l in rsp["data"]["sold_listings"]]
-    listing_ids = [l.get('id', None) for l in rsp["data"]["unsold_listings"]]
+    assert listing_1.id in [l['database']['id'] for l in rsp["data"]["sold_listings"]]
+    listing_ids = [l['database']['id'] for l in rsp["data"]["unsold_listings"]]
     assert (listing_2.id in listing_ids and
             listing_1.id not in listing_ids)
 
     # Check buyer listings
-    data = {"get_bought": True}
+    data = {"get_bought": True, 'minimal': False}
     rsp = client.get(f'/api/user/{user2.email}/get_listings', json=data)
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
-    assert listing_1.id in [l.get('id', None) for l in rsp["data"]["bought_listings"]]
+    assert listing_1.id in [l['database']['id'] for l in rsp["data"]["bought_listings"]]
 
     # Check full
     data = {"get_bought": True, "minimal": False}
@@ -464,4 +464,4 @@ def test_get_listings(client):
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
-    assert listing_1.owner.email == rsp["data"]["bought_listings"][0]["owner"]["email"]
+    assert listing_1.owner.email == rsp["data"]["bought_listings"][0]["database"]["owner"]["email"]

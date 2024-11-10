@@ -25,7 +25,7 @@ def test_create_listing(client):
     # Not enough parameters
     incomplete_data = {
         "title": "Math Textbook",
-        "condition": "used",
+        "used": True,
         "owner_email": test_user.email
     }
     rsp = client.post('/api/listing/create', json=incomplete_data)
@@ -39,8 +39,10 @@ def test_create_listing(client):
         "title": "Math Textbook",
         "description": "A great MAT188 textbook",
         "price": 100,
+        "pickup_location": "UofT Mississauga",
+        "display_image": "temp_url.png",
         "quantity": 1,
-        "condition": "used",
+        "used": True,
         "owner_email": "invalid@gmail.com"
     }
     rsp = client.post('/api/listing/create', json=invalid_user)
@@ -54,8 +56,10 @@ def test_create_listing(client):
         "title": "Math Textbook",
         "description": "A great MAT188 textbook",
         "price": -4848,
+        "pickup_location": "UofT Mississauga",
+        "display_image": "temp_url.png",
         "quantity": 1,
-        "condition": "used",
+        "used": True,
         "owner_email": test_user.email
     }
     rsp = client.post('/api/listing/create', json=invalid_user)
@@ -68,24 +72,26 @@ def test_create_listing(client):
         "title": "Math Textbook",
         "description": "A great MAT188 textbook",
         "price": 100,
+        "pickup_location": "UofT Mississauga",
+        "display_image": "temp_url.png",
         "quantity": 1,
-        "condition": "used",
+        "used": True,
         "owner_email": test_user.email
     }
     rsp = client.post('/api/listing/create', json=data)
     assert rsp.status_code == 201
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
-    assert rsp['data']['id'] is not None
-    assert rsp['data']['title'] == data['title']
-    assert rsp['data']['sold'] == False # check default value
+    assert rsp['data']['database']['id'] is not None
+    assert rsp['data']["essential"]['title'] == data['title']
+    assert rsp['data']['database']['sold'] == False # check default value
 
     # Check if listing is in User's listing_not_sold list
-    listing_id = rsp['data']['id']
+    listing_id = rsp['data']['database']['id']
     assert test_user.listings_not_sold.filter_by(id=listing_id).first() is not None
 
     # Check if test_user is listing's owner
-    listing_owner_email = rsp['data']['owner']['email']
+    listing_owner_email = rsp['data']['database']['owner']['email']
     assert test_user.email == listing_owner_email
 
 def test_get_listing(client):
@@ -100,32 +106,33 @@ def test_get_listing(client):
         title="Used Laptop",
         description="A second-hand laptop",
         price=300,
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         quantity=1,
-        condition="used",
         owner_id=test_user.id
     )
     db.session.add(listing)
     db.session.commit()
 
     # Invalid listing ID
-    rsp = client.get(f'/api/listing/get/{999}/')
+    rsp = client.get(f'/api/listing/get/{999}/', json={})
     assert rsp.status_code == 404
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_NOT_FOUND.value
     assert rsp['data'] == "Listing does not exist!"
 
     # Valid request
-    rsp = client.get(f'/api/listing/get/{listing.id}/')
+    rsp = client.get(f'/api/listing/get/{listing.id}/', json={'minimal': False})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
-    assert rsp['data']['title'] == "Used Laptop"
-    assert 'rating' in rsp['data']['owner']
-    assert rsp['data']['owner']['rating'] is not None
+    assert rsp['data']['essential']['title'] == "Used Laptop"
+    assert 'rating' in rsp['data']['database']['owner']
+    assert rsp['data']['database']['owner']['rating'] is not None
 
 def test_get_all_listings(client):
     # empty database
-    rsp = client.get('/api/listing/all')
+    rsp = client.get('/api/listing/all', json={})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
@@ -140,25 +147,27 @@ def test_get_all_listings(client):
     # Create 2 listings
     listing1 = Listing(
         title="Item 1", description="test description",
-        price=100, quantity=1, condition="new", owner_id=test_user.id)
+        price=100, pickup_location="UofT Mississauga",
+        display_image="temp_url.png", owner_id=test_user.id)
     listing2 = Listing(title="Item 2", description="test description",
-        price=500, quantity=1, condition="old", owner_id=test_user.id)
+        price=500, pickup_location="UofT Mississauga",
+        display_image="temp_url.png", owner_id=test_user.id)
 
     db.session.add(listing1)
     db.session.add(listing2)
     db.session.commit()
 
     # Get listings
-    rsp = client.get('/api/listing/all')
+    rsp = client.get('/api/listing/all', json={'minimal': False})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
     assert len(rsp['data']) == 2
-    assert rsp['data'][0]['title'] == "Item 1"
-    assert rsp['data'][1]['title'] == "Item 2"
+    assert rsp['data'][0]['essential']['title'] == "Item 1"
+    assert rsp['data'][1]['essential']['title'] == "Item 2"
     for listing in rsp['data']:
-        assert 'rating' in listing['owner']
-        assert listing['owner']['rating'] is not None
+        assert 'rating' in listing['database']['owner']
+        assert listing['database']['owner']['rating'] is not None
 
 def test_update_listing(client):
     # Create a test user
@@ -172,8 +181,8 @@ def test_update_listing(client):
         title="Old Laptop",
         description="Old Laptop",
         price=400,
-        quantity=1,
-        condition="used",
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         owner_id=test_user.id
     )
     db.session.add(listing)
@@ -197,7 +206,7 @@ def test_update_listing(client):
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
-    assert rsp['data']['title'] == update_data["title"]
+    assert rsp['data']['essential']['title'] == update_data["title"]
 
 def test_sell_listing(client):
     # Create a test user
@@ -214,8 +223,8 @@ def test_sell_listing(client):
         title="Old Laptop",
         description="Old Laptop",
         price=400,
-        quantity=1,
-        condition="used",
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         owner_id=test_user.id
     )
     db.session.add(listing)
@@ -277,11 +286,11 @@ def test_sell_listing(client):
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
-    assert rsp['data']['sold'] == True and listing.sold == True
-    assert (rsp['data']['buyer']['email'] == test_buyer.email and
+    assert rsp['data']['database']['sold'] == True and listing.sold == True
+    assert (rsp['data']['database']['buyer']['email'] == test_buyer.email and
             listing.buyer.email == test_buyer.email)
     # Check if listing is in Buyer's listings_bought list
-    listing_id = rsp['data']['id']
+    listing_id = rsp['data']['database']['id']
     assert test_buyer.listings_bought.filter_by(id=listing_id).first() is not None
     assert test_buyer.listings_of_interest.filter_by(id=listing_id).first() is None
     # Check if listing is in Owner's listings_sold list
@@ -312,8 +321,8 @@ def test_delete_listing(client):
         title="Delete Me",
         description="Delete this item",
         price=100,
-        quantity=1,
-        condition="used",
+        pickup_location="UofT Mississauga",
+        display_image="temp_url.png",
         owner_id=test_user.id
     )
     db.session.add(listing)
@@ -347,10 +356,10 @@ def test_search_by_query(client):
 
     # Create mock listings
     listings = [
-        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
-        Listing(title="Blue Chair", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
-        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
-        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+        Listing(title="Red Chair", description="A comfy red chair", price=150, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Blue Chair", description="A large blue sofa", price=450, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id)
     ]
     db.session.add_all(listings)
     db.session.commit()
@@ -370,8 +379,8 @@ def test_search_by_invalid_query(client):
     db.session.commit()
 
     listings = [
-        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
-        Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id)
+        Listing(title="Red Chair", description="A comfy red chair", price=150, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Blue Sofa", description="A large blue sofa", price=450, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id)
     ]
     db.session.add_all(listings)
     db.session.commit()
@@ -391,10 +400,10 @@ def test_search_by_price_low(client):
     db.session.commit()
 
     listings = [
-        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
-        Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
-        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
-        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+        Listing(title="Red Chair", description="A comfy red chair", price=150, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Blue Sofa", description="A large blue sofa", price=450, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id)
     ]
     db.session.add_all(listings)
     db.session.commit()
@@ -414,10 +423,10 @@ def test_search_by_price_high(client):
     db.session.commit()
 
     listings = [
-        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
-        Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
-        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
-        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+        Listing(title="Red Chair", description="A comfy red chair", price=150, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Blue Sofa", description="A large blue sofa", price=450, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id)
     ]
     db.session.add_all(listings)
     db.session.commit()
@@ -436,10 +445,10 @@ def test_search_pagination(client):
     db.session.commit()
 
     listings = [
-        Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user.id),
-        Listing(title="Blue Chair", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user.id),
-        Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user.id),
-        Listing(title="Wooden Table", description="A rustic wooden table", price=200, quantity=10, condition="used", owner_id=test_user.id)
+        Listing(title="Red Chair", description="A comfy red chair", price=150, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Blue Chair", description="A large blue sofa", price=450, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Green Chair", description="A modern green chair", price=100, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id),
+        Listing(title="Wooden Table", description="A rustic wooden table", price=200, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user.id)
     ]
     db.session.add_all(listings)
     db.session.commit()
@@ -466,9 +475,9 @@ def test_search_top_rated(client):
     db.session.commit()
 
     # Create mock listings with different seller ratings
-    listing_1 = Listing(title="Red Chair", description="A comfy red chair", price=150, quantity=5, condition="new", owner_id=test_user_1.id)
-    listing_2 = Listing(title="Blue Sofa", description="A large blue sofa", price=450, quantity=2, condition="used", owner_id=test_user_2.id)
-    listing_3 = Listing(title="Green Chair", description="A modern green chair", price=100, quantity=8, condition="new", owner_id=test_user_1.id)
+    listing_1 = Listing(title="Red Chair", description="A comfy red chair", price=150, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user_1.id)
+    listing_2 = Listing(title="Blue Sofa", description="A large blue sofa", price=450, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user_2.id)
+    listing_3 = Listing(title="Green Chair", description="A modern green chair", price=100, pickup_location="UofT Mississauga", display_image="temp_url.png", owner_id=test_user_1.id)
     
     # Set ratings for users
     test_user_1.update_total_rating(4.5)  # Rating for Test User 1
@@ -486,5 +495,5 @@ def test_search_top_rated(client):
     assert len(rsp_json['data']) == 2
 
     # Verify listings are sorted by seller rating in descending order
-    seller_ratings = [listing['seller']['rating'] for listing in rsp_json['data']]
+    seller_ratings = [listing['owner_rating'] for listing in rsp_json['data']]
     assert seller_ratings == sorted(seller_ratings, reverse=True)  # Ratings should be sorted from high to low

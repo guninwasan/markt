@@ -1,4 +1,3 @@
-import re
 from flask import Blueprint, jsonify, request
 from flasgger import Swagger, swag_from
 from marshmallow import ValidationError
@@ -6,7 +5,7 @@ from marshmallow import ValidationError
 from database.db import db
 from database.models import Listing, User
 from utils.errors import ErrorRsp
-from schemas.listing_schema import ListingInformationSchema, ListingUpdate
+from schemas.listing_schema import ListingInformationSchema, ListingUpdate, ListingGetSchema
 
 listing_api_bp = Blueprint('listing_api', __name__)
 swagger = Swagger()
@@ -37,34 +36,44 @@ def create():
 
     # Create listing
     listing = Listing(
+        # backend
+        owner_id=user.id,
+        sold=False,
+
+        # essential
         title=data['title'],
-        description=data['description'],
         price=data['price'],
-        quantity=data['quantity'],
-        sold=data['sold'],
-        condition=data['condition'],
-        owner_id=user.id
+        pickup_location=data['pickup_location'],
+        display_image=data['display_image'],
+        price_negotiable=data['price_negotiable'],
+        like_new=data['like_new'],
+        used=data['used'],
+        limited_edition=data['limited_edition'],
+        popular=data['popular'],
+
+        # media
+        images=data['images'] if 'images' in data else None,
+        videos=data['videos'] if 'videos' in data else None,
+
+        # additional
+        description=data['description'] if 'description' in data else None,
+        quantity=data['quantity'] if 'quantity' in data else None,
+        brand=data['brand'] if 'brand' in data else None,
+        model=data['model'] if 'model' in data else None,
+        year_of_manufacture=data['year_of_manufacture'] if 'year_of_manufacture' in data else None,
+        color=data['color'] if 'color' in data else None,
+        dimensions=data['dimensions'] if 'dimensions' in data else None,
+        weight=data['weight'] if 'weight' in data else None,
+        material=data['material'] if 'material' in data else None,
+        battery_life=data['battery_life'] if 'battery_life' in data else None,
+        storage_capacity=data['storage_capacity'] if 'storage_capacity' in data else None,
+        additional_details=data['additional_details'] if 'additional_details' in data else None,
     )
     db.session.add(listing)
     db.session.commit()
 
-    rsp = {
-        "id": listing.id,
-        "title": listing.title,
-        "description": listing.description,
-        "price": listing.price,
-        "quantity": listing.quantity,
-        "sold": listing.sold,
-        "condition": listing.condition,
-        "owner": {
-            "full_name": listing.owner.full_name,
-            "email": listing.owner.email,
-            "phone": listing.owner.phone
-        }
-    }
-
     return jsonify({"status": ErrorRsp.OK.value,
-                    "data": rsp}), 201
+                    "data": listing.get_json_full()}), 201
 
 """
     Endpoint: Retrieve listings
@@ -75,37 +84,22 @@ def create():
 @swag_from('../docs/listing_docs.yml', endpoint='get')
 # API implementation
 def get(id):
+    data = request.get_json()
+    schema = ListingGetSchema()
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "data": "Missing parameters",
+                        "errors": err.messages}), 400
+
     # Check if listing exists
     listing = db.session.get(Listing, id)
     if listing is None:
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "Listing does not exist!"}), 404
 
-    buyer_rsp = None
-    if listing.buyer:
-        buyer_rsp = {
-            "full_name": listing.buyer.full_name,
-            "email": listing.buyer.email,
-            "phone": listing.buyer.phone
-        }
-
-    # Make listing JSON response
-    rsp = {
-        "id": listing.id,
-        "title": listing.title,
-        "description": listing.description,
-        "price": listing.price,
-        "quantity": listing.quantity,
-        "sold": listing.sold,
-        "condition": listing.condition,
-        "owner": {
-            "full_name": listing.owner.full_name,
-            "email": listing.owner.email,
-            "phone": listing.owner.phone,
-            "rating": listing.owner.get_average_rating()
-        },
-        "buyer": buyer_rsp
-    }
+    rsp = listing.get_json_min() if data['minimal'] else listing.get_json_full()
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": rsp}), 200
 
@@ -118,35 +112,22 @@ def get(id):
 @swag_from('../docs/listing_docs.yml', endpoint='get_all')
 # API implementation
 def get_all():
+    data = request.get_json()
+    schema = ListingGetSchema()
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "data": "Missing parameters",
+                        "errors": err.messages}), 400
+
     # Get all listings
     listings = Listing.query.all()
     # Make listing JSON response
     rsp = []
     for listing in listings:
-        buyer_rsp = None
-        if listing.buyer:
-            buyer_rsp = {
-                "full_name": listing.buyer.full_name,
-                "email": listing.buyer.email,
-                "phone": listing.buyer.phone
-            }
-
-        rsp.append({
-            "id": listing.id,
-            "title": listing.title,
-            "description": listing.description,
-            "price": listing.price,
-            "quantity": listing.quantity,
-            "condition": listing.condition,
-            "sold": listing.sold,
-            "owner": {
-                "full_name": listing.owner.full_name,
-                "email": listing.owner.email,
-                "phone": listing.owner.phone,
-                "rating": listing.owner.get_average_rating()
-            },
-            "buyer": buyer_rsp
-        })
+        json = listing.get_json_min() if data['minimal'] else listing.get_json_full()
+        rsp.append(json)
 
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": rsp}), 200
@@ -175,22 +156,7 @@ def update(id):
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "Listing does not exist!"}), 404
 
-    buyer_rsp = None
-    if 'title'in data:
-        listing.title = str(data['title'])
-
-    if 'description'in data:
-        listing.description = data['description']
-
-    if 'price'in data:
-        listing.price = data['price']
-
-    if 'quantity'in data:
-        listing.quantity = data['quantity']
-
-    if 'condition'in data:
-        listing.condition = data['condition']
-
+    # Backend
     # sold is always defaulted to False and is part of all requests
     if 'sold' in data and data['sold'] == True and 'buyer_email' not in data:
         # Need buyer_email to process the sold request
@@ -237,28 +203,62 @@ def update(id):
                 print(f"Error processing {user.email}: {e}")
         listing.interested_buyers.clear()
 
+    # Essential
+    if 'title'in data:
+        listing.title = str(data['title'])
+    if 'price'in data:
+        listing.price = data['price']
+    if 'pickup_location'in data:
+        listing.pickup_location = data['pickup_location']
+    if 'display_image'in data:
+        listing.display_image = data['display_image']
+    if 'price_negotiable'in data:
+        listing.price_negotiable = data['price_negotiable']
+    if 'like_new'in data:
+        listing.like_new = data['like_new']
+    if 'used'in data:
+        listing.used = data['used']
+    if 'limited_edition'in data:
+        listing.limited_edition = data['limited_edition']
+    if 'popular'in data:
+        listing.popular = data['popular']
+
+    # Media
+    if 'images'in data:
+        listing.images = data['images']
+    if 'videos'in data:
+        listing.videos = data['videos']
+
+    # Additional
+    if 'description'in data:
+        listing.description = data['description']
+    if 'quantity'in data:
+        listing.quantity = data['quantity']
+    if 'brand'in data:
+        listing.brand = data['brand']
+    if 'model'in data:
+        listing.model = data['model']
+    if 'year_of_manufacture'in data:
+        listing.year_of_manufacture = data['year_of_manufacture']
+    if 'color'in data:
+        listing.color = data['color']
+    if 'dimensions'in data:
+        listing.dimensions = data['dimensions']
+    if 'weight'in data:
+        listing.weight = data['weight']
+    if 'material'in data:
+        listing.material = data['material']
+    if 'battery_life'in data:
+        listing.battery_life = data['battery_life']
+    if 'storage_capacity'in data:
+        listing.storage_capacity = data['storage_capacity']
+    if 'additional_details'in data:
+        listing.additional_details = data['additional_details']    
+
     db.session.commit()
 
-    if listing.buyer:
-        buyer_rsp = {
-            "full_name": listing.buyer.full_name,
-            "email": listing.buyer.email,
-            "phone": listing.buyer.phone,
-        }
-
-    rsp = {
-        "id": listing.id,
-        "title": listing.title,
-        "description": listing.description,
-        "price": listing.price,
-        "quantity": listing.quantity,
-        "condition": listing.condition,
-        "sold": listing.sold,
-        "buyer": buyer_rsp
-    }
-
     return jsonify({"status": ErrorRsp.OK.value,
-                    "data": rsp}), 200
+                    "data": listing.get_json_full()}), 200
 
 """
     Endpoint: Delete a listing
@@ -335,20 +335,7 @@ def search():
     # Build the response
     rsp = []
     for listing in listings:
-        rsp.append({
-            "id": listing.id,
-            "title": listing.title,
-            "description": listing.description,
-            "price": listing.price,
-            "quantity": listing.quantity,
-            "condition": listing.condition,
-            "sold": listing.sold,
-            "seller": {
-                "phone": listing.owner.phone,
-                "email": listing.owner.email,
-                "rating": listing.owner.get_average_rating()
-            }
-        })
+        rsp.append(listing.get_json_min())
 
     return jsonify({
         "status": ErrorRsp.OK.value,
