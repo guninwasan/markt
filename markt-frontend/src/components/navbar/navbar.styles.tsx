@@ -15,6 +15,7 @@ const NavbarContainer = styled.nav`
 const MarktHeaderText = styled(NavLink)`
   font-size: 1.5rem;
   font-weight: 1000;
+  padding-right: 20%;
   color: ${colors.textBlack};
   text-transform: uppercase;
   letter-spacing: 2px;

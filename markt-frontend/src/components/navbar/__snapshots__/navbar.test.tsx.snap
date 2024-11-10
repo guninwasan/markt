@@ -6,25 +6,26 @@ exports[`Navbar should match the snapshot on desktop 1`] = `
 >
   <a
     aria-current="page"
-    class="sc-gtLWhw dEihEB active"
+    class="sc-gtLWhw kNiwoB active"
     href="/"
   >
     Markt
   </a>
   <div
-    class="sc-eauhAA gTACkZ"
+    class="sc-eauhAA fOFlbM"
+    style="position: relative;"
   >
     <div
-      class="sc-fFoeYl fxsTkD"
+      class="sc-fFoeYl iOTRZw"
     >
       <input
-        class="sc-gQaihK gTtECY"
-        placeholder="Search...."
+        class="sc-gQaihK dHYmdf"
+        placeholder="Search..."
         type="text"
         value=""
       />
       <button
-        class="sc-iuUfFv dXDhOe"
+        class="sc-iuUfFv CbmBm"
       >
         <svg
           fill="currentColor"
@@ -51,7 +52,7 @@ exports[`Navbar should match the snapshot on mobile 1`] = `
 >
   <a
     aria-current="page"
-    class="sc-gtLWhw dEihEB active"
+    class="sc-gtLWhw kNiwoB active"
     href="/"
   >
     Markt
