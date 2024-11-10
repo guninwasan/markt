@@ -3,4 +3,4 @@
   to = "/index.html"
   status = 200
 [build]
-  ignore = "echo 'Ignoring build warnings'"
+  ignore = "echo 'Ignoring build warnings' > /dev/null"
