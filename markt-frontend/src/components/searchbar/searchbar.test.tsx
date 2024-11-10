@@ -1,46 +1,71 @@
 import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
-// import '@testing-library/jest-dom/extend-expect';
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { SearchBar } from "./searchbar";
 
-describe("SearchBar component", () => {
-  test("renders search input and search button", () => {
-    render(<SearchBar />);
+// Explicitly type fetch as jest.Mock
+(global.fetch as jest.Mock) = jest.fn();
 
-    const inputElement = screen.getByPlaceholderText(/Search..../i);
-    const buttonElement = screen.getByRole("button");
-
-    expect(inputElement).toBeInTheDocument();
-    expect(buttonElement).toBeInTheDocument();
+describe("SearchBar Component", () => {
+  beforeEach(() => {
+    // Clear any mock calls before each test
+    (fetch as jest.Mock).mockClear();
   });
 
-  test("updates input value when typing", () => {
+  test("renders search input and button", () => {
     render(<SearchBar />);
-
-    const inputElement = screen.getByPlaceholderText(/Search..../i);
-    fireEvent.change(inputElement, { target: { value: "test search" } });
-
-    expect(inputElement).toHaveValue("test search");
+    expect(screen.getByPlaceholderText("Search...")).toBeInTheDocument();
+    expect(screen.getByRole("button")).toBeInTheDocument();
   });
 
-  test("submits search on button click", () => {
-    const consoleSpy = jest.spyOn(console, "log");
+  test("updates input value on typing", () => {
     render(<SearchBar />);
+    const input = screen.getByPlaceholderText("Search...");
+    fireEvent.change(input, { target: { value: "Test" } });
+    expect(input).toHaveValue("Test");
+  });
 
-    const inputElement = screen.getByPlaceholderText(/Search..../i);
-    const buttonElement = screen.getByRole("button");
+  test("does not fetch suggestions if input is empty", async () => {
+    render(<SearchBar />);
+    fireEvent.change(screen.getByPlaceholderText("Search..."), { target: { value: "" } });
+    expect(fetch).not.toHaveBeenCalled();
+  });
 
-    // Simulate typing in input
-    fireEvent.change(inputElement, { target: { value: "test search" } });
+  test("displays error message if API request fails", async () => {
+    console.error = jest.fn(); // Suppress error log in test output
+    (fetch as jest.Mock).mockRejectedValueOnce(new Error("API Error"));
 
-    // Simulate clicking the search button
-    fireEvent.click(buttonElement);
+    render(<SearchBar />);
+    fireEvent.change(screen.getByPlaceholderText("Search..."), { target: { value: "Test" } });
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      "Search submitted: ",
-      "test search"
-    );
+    await waitFor(() => {
+      expect(console.error).toHaveBeenCalledWith("Error fetching suggestions:", expect.any(Error));
+      expect(screen.queryByText("Test Item 1")).not.toBeInTheDocument();
+    });
+  });
 
-    consoleSpy.mockRestore();
+  test("displays suggestions with highlighted search term", async () => {
+    const mockData = { status: 1000, data: [{ title: "Test Item 1" }] };
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      json: async () => mockData,
+    });
+
+    render(<SearchBar />);
+    fireEvent.change(screen.getByPlaceholderText("Search..."), { target: { value: "Test" } });
+
+    await waitFor(() => {
+      const highlighted = screen.getByText("Test");
+      expect(highlighted.tagName).toBe("STRONG");
+      expect(highlighted).toHaveStyle("font-weight: bold");
+    });
+  });
+
+  test("triggers search submission on button click", () => {
+    console.log = jest.fn();
+    render(<SearchBar />);
+    const input = screen.getByPlaceholderText("Search...");
+    fireEvent.change(input, { target: { value: "Submit Test" } });
+
+    fireEvent.click(screen.getByRole("button"));
+    expect(console.log).toHaveBeenCalledWith("Search submitted: ", "Submit Test");
   });
 });
