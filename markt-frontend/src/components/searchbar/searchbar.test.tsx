@@ -97,6 +97,6 @@ describe("SearchBar Component", () => {
     fireEvent.change(input, { target: { value: "Submit Test" } });
 
     fireEvent.click(screen.getByRole("button"));
-    expect(console.log).toHaveBeenCalledWith("Search submitted: ", "Submit Test");
+    expect(console.log).toHaveBeenCalledWith("Search submitted:", "Submit Test");
   });
 });

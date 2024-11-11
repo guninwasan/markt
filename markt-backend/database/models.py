@@ -193,8 +193,8 @@ class Listing(db.Model):
                 "datetime_created": self.datetime_created,
             },
             "media": {
-                "images": self.images.all() if self.images else [],
-                "videos": self.videos.all() if self.videos else [],
+                "images": self.images if self.images else [],
+                "videos": self.videos if self.videos else [],
             },
             "specifications": {
                 "description": self.description,
