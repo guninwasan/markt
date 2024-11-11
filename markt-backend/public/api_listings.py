@@ -269,11 +269,27 @@ def update(id):
 @swag_from('../docs/listing_docs.yml', endpoint='delete')
 # API implementation
 def delete(id):
+
+    data = request.get_json()
+    # Check if request includes the user's email
+    if 'user_email' not in data:
+        return jsonify({
+            "status": ErrorRsp.ERR_PARAM.value,
+            "data": "User email is required to delete a listing."
+        }), 400
+    
     # Check if listing exists
     listing = db.session.get(Listing, id)
     if listing is None:
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "Listing does not exist!"}), 404
+    
+    # Check if the user trying to delete the listing is the owner
+    if listing.owner.email != data['user_email']:
+        return jsonify({
+            "status": ErrorRsp.ERR_NOT_ALLOWED.value,
+            "data": "You are not authorized to delete this listing."
+        }), 403
 
     db.session.delete(listing)
     db.session.commit()
