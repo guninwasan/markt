@@ -12,20 +12,20 @@ exports[`Navbar should match the snapshot on desktop 1`] = `
     Markt
   </a>
   <div
-    class="sc-eauhAA fOFlbM"
+    class="sc-fFoeYl hDYBDy"
     style="position: relative;"
   >
     <div
-      class="sc-fFoeYl iOTRZw"
+      class="sc-gQaihK cSTRIi"
     >
       <input
-        class="sc-gQaihK dHYmdf"
+        class="sc-iuUfFv dXOudh"
         placeholder="Search..."
         type="text"
         value=""
       />
       <button
-        class="sc-iuUfFv CbmBm"
+        class="sc-dprtRQ ficVTY"
       >
         <svg
           fill="currentColor"

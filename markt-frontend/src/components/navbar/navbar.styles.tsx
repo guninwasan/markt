@@ -160,7 +160,7 @@ const Dropdown = styled.div`
   top: 100%;
   right: 0;
   transform: translateX(calc(0%));
-  background-color: ${colors.white};
+  background-color: ${colors.darkerPrimary};
   border: 1px solid #ddd;
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -172,7 +172,7 @@ const Dropdown = styled.div`
 const DropdownItem = styled.a`
   display: block;
   padding: 0.5rem 1rem;
-  color: ${colors.textBlack};
+  color: ${colors.white};
   text-decoration: none;
 
   &:hover {
@@ -217,6 +217,11 @@ const SpotlightModal = styled.div`
   min-height: 100px;
 `;
 
+const StyledProfilePhoto = styled.img`
+  width: 1.5rem;
+  height: 1.5rem;
+`;
+
 export {
   NavbarContainer,
   MarktHeaderText,
@@ -237,4 +242,5 @@ export {
   SearchButtonMobile,
   ModalBackdrop,
   SpotlightModal,
+  StyledProfilePhoto,
 };
