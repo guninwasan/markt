@@ -1,77 +1,82 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { LoginInputField } from "../input-field";
+import { useNavigate } from "react-router-dom";
+import { InputField } from "../input-field";
 import { ErrorRsp } from "../../errorCodes";
 import { setIsLoggedIn } from "../../redux";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "../../redux/slices/user-auth-slice";
 import { API_BASE_URL } from "../api";
-import { LoginButton } from "./login-form.styles";
+import {
+  LoginButton,
+  FormContainer,
+  ErrorText,
+  LinkText,
+  LinkStyled,
+} from "./login-form.styles";
+import { PasswordInput } from "../password-input";
+import { passwordCheck } from "../../utils/password-check";
 
-const LoginForm: React.FC = () => {
+const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [touchedFields, setTouchedFields] = useState<{
-    [key: string]: boolean;
-  }>({
-    email: false,
-    password: false,
-  });
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 
-  // Validation function
+  const standardErrorMessage =
+    "This email and password combination doesn't exist in our records. Please try again.";
+
   const validateEmail = (email: string) =>
     /^[^\s@]+@(mail\.)?utoronto\.ca$/.test(email);
 
-  // Handle input changes and clear specific field errors on change
-  const handleInputChange =
-    (setter: React.Dispatch<React.SetStateAction<string>>, fieldName: string) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setter(e.target.value);
-      setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: "" }));
-    };
+  useEffect(() => {
+    setIsButtonDisabled(!email || !password);
+  }, [email, password, errors]);
 
-  // Mark a field as "touched" when it loses focus
-  const handleBlur = (fieldName: string) => {
-    setTouchedFields((prevState) => ({
-      ...prevState,
-      [fieldName]: true,
-    }));
-    validateField(fieldName); // Validate on blur
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
   };
 
-  // Validate a single field
-  const validateField = (name: string) => {
-    const newErrors = { ...errors };
-    if (name === "email") {
-      newErrors.email =
-        email && validateEmail(email) ? "" : "A valid UofT email is required";
-    } else if (name === "password") {
-      newErrors.password = password ? "" : "Password is required";
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+  };
+
+  const validationCheck = (email: string, password: string) => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!password) {
+      newErrors.password = "Please enter a password.";
     }
+
+    if (!email) {
+      newErrors.email = "Please enter a valid UofT email.";
+    }
+
+    if (
+      (!passwordCheck(password) && email) ||
+      (!validateEmail(email) && password && email)
+    ) {
+      // we can also load here for a couple of seconds
+      newErrors.form = standardErrorMessage;
+    }
+
     setErrors(newErrors);
   };
 
-  // Enable/disable the submit button based on form completeness
-  useEffect(() => {
-    setIsButtonDisabled(!(email && password));
-  }, [email, password]);
-
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Mark all fields as touched on submit
-    setTouchedFields({ email: true, password: true });
-    validateField("email");
-    validateField("password");
+    validationCheck(email, password);
 
-    // Only submit if there are no client-side validation errors
-    if (!Object.values(errors).some((error) => error)) {
+    const checkErrors = Object.values(errors).some((error) => error);
+
+    if (checkErrors || !email || !password) {
+      return;
+    }
+
+    if (!checkErrors) {
       try {
         const response = await fetch(`${API_BASE_URL}/api/user/login`, {
           method: "POST",
@@ -96,22 +101,24 @@ const LoginForm: React.FC = () => {
           dispatch(setIsLoggedIn(true));
           navigate("/"); // Redirect to home
         } else {
-          // Handle specific backend errors
+          const newErrors = { ...errors };
           switch (result.status) {
             case ErrorRsp.ERR_NOT_FOUND:
-              setErrors({ email: "User does not exist" });
+              newErrors.email = standardErrorMessage;
               break;
             case ErrorRsp.ERR_PARAM:
-              setErrors({ password: "Incorrect password" });
+              newErrors.password = standardErrorMessage;
               break;
             default:
-              setErrors({ form: "An error occurred. Please try again later." });
+              newErrors.form = standardErrorMessage;
               break;
           }
+          setErrors({ ...errors, ...newErrors });
         }
       } catch (error) {
         console.error("Login failed:", error);
         setErrors({
+          ...errors,
           form: "An unexpected error occurred. Please try again later.",
         });
       }
@@ -119,48 +126,34 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-    >
-      <LoginInputField
+    <FormContainer onSubmit={handleSubmit}>
+      <InputField
         type="email"
-        placeholder="UofT Email Address"
-        value={email}
-        onChange={handleInputChange(setEmail, "email")}
-        onBlur={() => handleBlur("email")}
-        style={{ borderColor: errors.email ? "red" : undefined }}
+        placeholder="Enter Your UofT Email Address"
+        onChange={handleEmailChange}
+        errorMessage={errors.email || ""}
       />
-      {touchedFields.email && errors.email && (
-        <p style={{ color: "red" }}>{errors.email}</p>
-      )}
 
-      <LoginInputField
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={handleInputChange(setPassword, "password")}
-        onBlur={() => handleBlur("password")}
-        style={{ borderColor: errors.password ? "red" : undefined }}
+      <PasswordInput
+        onPasswordChange={handlePasswordChange}
+        errorMessage={errors.password || ""}
+        dontShowRequirements
+        placeholder="Enter Your Password"
       />
-      {touchedFields.password && errors.password && (
-        <p style={{ color: "red" }}>{errors.password}</p>
-      )}
 
-      <LoginButton type="submit" disabled={isButtonDisabled}>
+      <LoginButton type="submit" isDisabled={isButtonDisabled}>
         Login
       </LoginButton>
 
-      <div style={{ marginTop: "1rem" }}>
+      <LinkText>
         Don't have an account?{" "}
-        <Link to="/register" style={{ color: "#000000" }}>
+        <LinkStyled to="/register">
           <b>Register</b>
-        </Link>
-      </div>
+        </LinkStyled>
+      </LinkText>
 
-      {/* General form error */}
-      {errors.form && <p style={{ color: "red" }}>{errors.form}</p>}
-    </form>
+      {errors.form && <ErrorText>{errors.form}</ErrorText>}
+    </FormContainer>
   );
 };
 

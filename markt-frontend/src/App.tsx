@@ -10,36 +10,49 @@ import {
   SearchPage,
   ProductListingPage,
 } from "./pages";
-import { useIsMobile } from "./hooks";
-import { ProtectedRoute, RedirectToHomeRoute } from "./components";
+import {
+  Footer,
+  LoadingModal,
+  ProtectedRoute,
+  RedirectToHomeRoute,
+} from "./components";
+import { useSelector } from "react-redux";
+import { RootState, selectors } from "./redux";
 
 function App() {
-  useIsMobile();
+  const { isLoading } = useSelector((state: RootState) => ({
+    isLoading: selectors.getIsLoading(state),
+  }));
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route
-          path="/login"
-          element={<RedirectToHomeRoute element={<LoginPage />} />}
-        />
-        <Route
-          path="/register"
-          element={<RedirectToHomeRoute element={<RegisterPage />} />}
-        />
-        <Route path="/listing" element={<ProductListingPage />} />
-        <Route
-          path="/sell"
-          element={<ProtectedRoute element={<SellPage />} />}
-        />
-        <Route
-          path="/profile"
-          element={<ProtectedRoute element={<ProfilePage />} />}
-        />
-        <Route path="/search" element={<SearchPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </Router>
+    <>
+      {isLoading && <LoadingModal />}
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/login"
+            element={<RedirectToHomeRoute element={<LoginPage />} />}
+          />
+          <Route
+            path="/register"
+            element={<RedirectToHomeRoute element={<RegisterPage />} />}
+          />
+          <Route path="/listing" element={<ProductListingPage />} />
+          <Route
+            path="/sell"
+            element={<ProtectedRoute element={<SellPage />} />}
+          />
+          <Route
+            path="/profile"
+            element={<ProtectedRoute element={<ProfilePage />} />}
+          />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Router>
+      <Footer />
+    </>
   );
 }
 

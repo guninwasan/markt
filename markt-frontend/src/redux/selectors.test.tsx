@@ -49,4 +49,9 @@ describe("Selectors", () => {
     const isLoggedIn = selectors.getIsLoggedIn(mockState);
     expect(isLoggedIn).toBe(false);
   });
+
+  it("should return if the app is loading", () => {
+    const isLoading = selectors.getIsLoading(mockState);
+    expect(isLoading).toBe(false);
+  });
 });

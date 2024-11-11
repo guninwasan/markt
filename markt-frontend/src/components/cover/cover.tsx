@@ -1,6 +1,12 @@
 import React from "react";
-import { CoverContainer, RightContainer, Subtitle } from "./cover.styles";
-import { useIsMobile } from "../../hooks/use-is-mobile"; 
+import {
+  MainContainer,
+  CoverContainer,
+  RightContainer,
+  Subtitle,
+  Title,
+} from "./cover.styles";
+import { useIsMobile } from "../../hooks/use-is-mobile";
 
 type CoverProps = {
   children: React.ReactNode;
@@ -8,11 +14,11 @@ type CoverProps = {
 };
 
 const Cover = ({ children, title }: CoverProps) => {
-  const { isMobile } = useIsMobile(); 
+  const { isMobile } = useIsMobile();
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      {!isMobile && ( 
+    <MainContainer>
+      {!isMobile && (
         <CoverContainer>
           <Subtitle>
             Your Campus.
@@ -23,10 +29,10 @@ const Cover = ({ children, title }: CoverProps) => {
       )}
 
       <RightContainer>
-        <h2>{title}</h2>
+        <Title>{title}</Title>
         {children}
       </RightContainer>
-    </div>
+    </MainContainer>
   );
 };
 

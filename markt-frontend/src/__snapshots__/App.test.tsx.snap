@@ -5,5 +5,54 @@ exports[`App should match the snapshot 1`] = `
   <div>
     Markt Home Page
   </div>
+  <footer
+    class="sc-boxNXC ctCtme"
+  >
+    <p
+      class="sc-ebFFfp hLobXl"
+    >
+      MARKT by 
+      <i>
+        Mizzica
+      </i>
+    </p>
+    <nav
+      aria-label="Footer navigation"
+    >
+      <div
+        class="sc-fIymDE eJjCHM"
+      >
+        <a
+          class="sc-bdbhkv DoqVF"
+          href="/about"
+        >
+          About
+        </a>
+        <a
+          class="sc-bdbhkv DoqVF"
+          href="/privacy-policy"
+        >
+          Privacy Policy
+        </a>
+        <a
+          class="sc-bdbhkv DoqVF"
+          href="/terms-of-use"
+        >
+          Terms of Use
+        </a>
+        <a
+          class="sc-bdbhkv DoqVF"
+          href="/support"
+        >
+          Support / Report an issue
+        </a>
+      </div>
+    </nav>
+    <p
+      class="sc-cJTOIK GbdKN"
+    >
+      © 2024 All rights reserved.
+    </p>
+  </footer>
 </div>
 `;
