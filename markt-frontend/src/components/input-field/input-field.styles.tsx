@@ -15,7 +15,7 @@ const InputWrapper = styled.div`
   width: 100%;
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ errorMessage?: string }>`
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -32,6 +32,7 @@ const Input = styled.input`
     outline: none;
     box-shadow: 0px 0px 5px 2px ${colors.primary};
   }
+  ${(props) => props.errorMessage && `border: 1px solid ${colors.red};`}
 `;
 
 const ErrorMessage = styled.div`

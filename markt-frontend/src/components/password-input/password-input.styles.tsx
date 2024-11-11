@@ -35,7 +35,7 @@ const PasswordWrapper = styled.div`
   width: 100%;
 `;
 
-const Input = styled.input<{ showPassword: boolean }>`
+const Input = styled.input<{ showPassword: boolean; errorMessage?: string }>`
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -60,6 +60,8 @@ const Input = styled.input<{ showPassword: boolean }>`
     -webkit-text-security: none; 
     text-security: none; 
   `}
+
+  ${(props) => props.errorMessage && `border: 1px solid ${colors.red};`}
 `;
 
 const EyeButton = styled.button`

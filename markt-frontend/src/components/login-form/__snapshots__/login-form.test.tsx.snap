@@ -12,7 +12,8 @@ exports[`LoginForm should match snapshot 1`] = `
         class="sc-gtLWhw dewetd"
       >
         <input
-          class="sc-egkSDF kTgjUu"
+          class="sc-egkSDF hTIQeX"
+          errormessage=""
           placeholder="Enter Your UofT Email Address"
           type="email"
           value=""
@@ -26,7 +27,8 @@ exports[`LoginForm should match snapshot 1`] = `
         class="sc-dstKZu gWvLJd"
       >
         <input
-          class="sc-keTIit eUyVsS"
+          class="sc-keTIit fcmgxr"
+          errormessage=""
           placeholder="Enter Your Password"
           type="password"
           value=""

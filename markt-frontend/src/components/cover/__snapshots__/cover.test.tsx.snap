@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Cover should match snapshot 1`] = `
+<div>
+  <div
+    class="sc-blHHSb cgxrDM"
+  >
+    <div
+      class="sc-gtLWhw eCKWsw"
+    >
+      <h2
+        class="sc-dntaoT chJTIi"
+      >
+        Your Campus.
+        <br />
+        Your Marketplace.
+      </h2>
+    </div>
+    <div
+      class="sc-egkSDF eHyuTo"
+    >
+      <h2
+        class="sc-fAUdSK djnvGh"
+      >
+        Test Title
+      </h2>
+      <div>
+        Test Children
+      </div>
+    </div>
+  </div>
+</div>
+`;
