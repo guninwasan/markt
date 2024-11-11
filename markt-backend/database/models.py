@@ -31,7 +31,7 @@ class User(db.Model):
         Unset = 0,
         CodeSent = 1,
         CodeVerified = 2
-    forget_pwd = db.Column(ForgetPasswordState, nullable=False, default=ForgetPasswordState.Unset)
+    forget_pwd = db.Column(db.Enum(ForgetPasswordState), nullable=False, default=ForgetPasswordState.Unset)
 
     total_ratings = db.Column(db.Float, default=0.0)
     number_of_ratings = db.Column(db.Integer, default=0)

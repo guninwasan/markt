@@ -1,6 +1,6 @@
 import pytest
 
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from utils.errors import ErrorRsp
 from public import create_app_api
 from database.db import db
@@ -16,7 +16,10 @@ def client():
         db.session.remove()  # Clear session to prevent dirty reads
         db.drop_all()  # teardown
 
-def test_register(client):
+@patch('public.mail.send')
+def test_register(mock_mail_send, client):
+    mock_mail_send.return_value = MagicMock()
+
     # Not enough parameters
     wrong_data = {"email": "hello"}
     rsp = client.post('/api/user/register', json=wrong_data)
@@ -40,7 +43,25 @@ def test_register(client):
     assert rsp.status_code == 201
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
-    assert 'User registered successfully!' in rsp["data"]
+    assert 'User registered, email verification pending' in rsp["data"]
+    mock_mail_send.assert_called_once()
+
+    # verify email
+    email = UofT_valid_buyer['email']
+    # Invalid code
+    rsp = client.post(f'/api/user/{email}/verify_email', json={"code": 9999})
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+    assert 'Invalid validation code' in rsp["data"]
+    # correct code
+    user = User.query.filter_by(email=email).first()
+    code = user.validation_code
+    rsp = client.post(f'/api/user/{email}/verify_email', json={"code": code})
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert 'User email verified successfully!' in rsp["data"]
 
     # Try to register same user twice
     rsp = client.post('/api/user/register', json=UofT_valid_buyer)
@@ -109,8 +130,7 @@ def test_update(client):
     update_data = {
         "full_name": "John Smith",
         "email": "email@mail.utoronto.ca",
-        "phone": "1234567890",
-        "password": "mY8iwp@ssword"
+        "phone": "1234567890"
     }
     rsp = client.post(f'/api/user/{user.email}/update', json=update_data)
     assert rsp.status_code == 200
@@ -119,7 +139,6 @@ def test_update(client):
     assert update_data["email"] == rsp["data"]["email"]
     assert update_data["full_name"] == rsp["data"]["full_name"]
     assert update_data["phone"] == rsp["data"]["phone"]
-    assert "Updated" == rsp["data"]["password"]
 
     # Verify updates in the database
     updated_user = User.query.filter_by(email=update_data["email"]).first()
@@ -169,7 +188,10 @@ def test_change_password(client):
     # Verify updates in the database
     assert user.check_password(update_data["new_password"])
 
-def test_forgot_password(client):
+@patch('public.mail.send')
+def test_forgot_password(mock_mail_send, client):
+    mock_mail_send.return_value = MagicMock()
+
     # Create a user
     user = User(full_name="Test User", password="mY8iw$02j",
                 email="user@mail.utoronto.ca", phone="6478290835")
@@ -177,28 +199,57 @@ def test_forgot_password(client):
     db.session.commit()
 
     # Not enough data
-    update_data = {
-        "new_password": "mY8iwp@ssword"
-    }
-    rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/forgot_password', json={})
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
 
     # Invalid email for verification
     update_data = {
-        "email": "invalid@utoronto.ca",
         "new_password": "hello_new_password"
+    }
+    rsp = client.post('/api/user/invalid@utoronto.ca/forgot_password', json=update_data)
+    assert rsp.status_code == 404
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
+    assert "User does not exist!" in rsp["data"]
+
+    # Call forget password without email validation
+    update_data = {
+        "new_password": "HeLl0_n#w_password"
     }
     rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data)
     assert rsp.status_code == 400
     rsp = rsp.get_json()
-    assert ErrorRsp.ERR_PARAM_EMAIL.value == rsp["status"]
-    assert "Incorrect email provided" in rsp["data"]
+    assert ErrorRsp.ERR.value == rsp["status"]
+    assert "User email must be verified before resetting password" in rsp["data"]
+
+    # Email verification process
+    # Call verify_email for forgot password, state=UNSET
+    rsp = client.post(f'/api/user/{user.email}/verify_email', json={'code': 999, 'for_forget_pwd': True})
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR.value == rsp["status"]
+    assert "Email verification code has not been sent" in rsp["data"]
+
+    # Call send_code
+    rsp = client.post(f'/api/user/{user.email}/send_code', json={'for_forget_pwd': True})
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert "Verification code sent to user's email" in rsp["data"]
+    mock_mail_send.assert_called_once()
+    assert user.forget_pwd == User.ForgetPasswordState.CodeSent
+
+    # Call verify_email with code
+    rsp = client.post(f'/api/user/{user.email}/verify_email', json={'code': user.validation_code, 'for_forget_pwd': True})
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert "User email verified successfully!" in rsp["data"]
 
     # Invalid password format
     update_data = {
-        "email": user.email,
         "new_password": "hello_new_password"
     }
     rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data)
@@ -208,7 +259,6 @@ def test_forgot_password(client):
 
     # Valid data
     update_data = {
-        "email": user.email,
         "new_password": "HeLl0_n#w_password"
     }
     rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data)
@@ -306,6 +356,20 @@ def test_add_interest(client):
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
     assert "User does not exist!" == rsp["data"]
+
+    # Add interest without verified email
+    listings = { 'listing_ids': [listing_1.id] }
+    rsp = client.post(f'/api/user/{test_buyer.email}/add_interest/', json=listings)
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR.value == rsp["status"]
+    assert "User email not verified yet" in rsp["data"]
+
+    # Set email verified to True
+    test_buyer.email_verified = True
+    test_user.email_verified = True
+    interested_user.email_verified = True
+    db.session.commit()
 
     # Owner marks as interested
     listings = { 'listing_ids': [listing_1.id] }
