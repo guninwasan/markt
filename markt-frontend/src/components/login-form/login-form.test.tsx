@@ -1,130 +1,104 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import { LoginForm } from "./login-form";
-import { BrowserRouter as Router } from "react-router-dom";
-import { Provider } from "react-redux";
-import { store } from "../../redux/store";
-import { ErrorRsp } from "../../errorCodes";
+import { API_BASE_URL } from "../api";
+import { renderWithRedux } from "../../utils/render-with-redux";
 
-// Mock fetch for API calls
-global.fetch = jest.fn();
-
-// Mock useDispatch globally
-const mockDispatch = jest.fn();
-jest.mock("react-redux", () => ({
-  ...jest.requireActual("react-redux"),
-  useDispatch: () => mockDispatch,
-}));
-
-describe("LoginForm Component", () => {
+describe("LoginForm", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    render(
-      <Provider store={store}>
-        <Router>
-          <LoginForm />
-        </Router>
-      </Provider>
+    renderWithRedux(<LoginForm />);
+  });
+
+  it("should render email and password input fields", () => {
+    expect(
+      screen.getByPlaceholderText("Enter Your UofT Email Address")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Enter Your Password")
+    ).toBeInTheDocument();
+  });
+
+  it("should display error messages for empty fields", () => {
+    fireEvent.click(screen.getByText("Login"));
+
+    expect(screen.getByText("Please enter a password.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Please enter a valid UofT email.")
+    ).toBeInTheDocument();
+  });
+
+  it("should display error message for invalid email", () => {
+    fireEvent.change(
+      screen.getByPlaceholderText("Enter Your UofT Email Address"),
+      {
+        target: { value: "invalidemail" },
+      }
+    );
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Password"), {
+      target: { value: "validpassword123" },
+    });
+    fireEvent.click(screen.getByText("Login"));
+
+    expect(
+      screen.getByText(
+        "This email and password combination doesn't exist in our records. Please try again."
+      )
+    ).toBeInTheDocument();
+  });
+
+  it("should display error message for invalid password", () => {
+    fireEvent.change(
+      screen.getByPlaceholderText("Enter Your UofT Email Address"),
+      {
+        target: { value: "test@mail.utoronto.ca" },
+      }
+    );
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Password"), {
+      target: { value: "short" },
+    });
+    fireEvent.click(screen.getByText("Login"));
+
+    expect(
+      screen.getByText(
+        "This email and password combination doesn't exist in our records. Please try again."
+      )
+    ).toBeInTheDocument();
+  });
+
+  it("should call API on valid form submission", async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            userID: 1,
+            name: "Test User",
+            email: "test@mail.utoronto.ca",
+            phone: "1234567890",
+            token: "fake-jwt-token",
+          }),
+      })
+    ) as jest.Mock;
+
+    fireEvent.change(
+      screen.getByPlaceholderText("Enter Your UofT Email Address"),
+      {
+        target: { value: "test@mail.utoronto.ca" },
+      }
+    );
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Password"), {
+      target: { value: "validpassword123" },
+    });
+    fireEvent.click(screen.getByText("Login"));
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${API_BASE_URL}/api/user/login`,
+      expect.any(Object)
     );
   });
 
-  it("submits successfully with valid credentials", async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        userID: "12345",
-        name: "Test User",
-        email: "test@utoronto.ca",
-        phone: "123-456-7890",
-        token: "test-jwt-token",
-      }),
-    });
-  
-    // Mock window.alert to verify it was called
-    const alertMock = jest.spyOn(window, "alert").mockImplementation();
-  
-    // Fill in valid credentials
-    fireEvent.change(screen.getByPlaceholderText("UofT Email Address"), {
-      target: { value: "test@utoronto.ca" },
-    });
-    fireEvent.change(screen.getByPlaceholderText("Password"), {
-      target: { value: "password123" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: /login/i }));
-  
-    // Wait for async actions to complete
-    await waitFor(() => {
-      expect(alertMock).toHaveBeenCalledWith("Login successful! Redirecting to Home...");
-      expect(mockDispatch).toHaveBeenCalledWith(expect.anything());
-    });
-  
-    // Clean up the mock
-    alertMock.mockRestore();
-  });
-
-  it("shows error for invalid email format", async () => {
-    fireEvent.change(screen.getByPlaceholderText("UofT Email Address"), {
-      target: { value: "invalid-email" },
-    });
-    fireEvent.blur(screen.getByPlaceholderText("UofT Email Address"));
-
-    expect(screen.getByText("A valid UofT email is required")).toBeInTheDocument();
-  });
-
-  it("shows error when backend responds with incorrect password error", async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({ status: ErrorRsp.ERR_PARAM }),
-    });
-
-    fireEvent.change(screen.getByPlaceholderText("UofT Email Address"), {
-      target: { value: "test@utoronto.ca" },
-    });
-    fireEvent.change(screen.getByPlaceholderText("Password"), {
-      target: { value: "wrongpassword" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: /login/i }));
-
-    await waitFor(() => {
-      expect(screen.getByText("Incorrect password")).toBeInTheDocument();
-    });
-  });
-
-  it("shows a general error message on unexpected server error", async () => {
-    (fetch as jest.Mock).mockRejectedValueOnce(new Error("Server is down"));
-
-    fireEvent.change(screen.getByPlaceholderText("UofT Email Address"), {
-      target: { value: "test@utoronto.ca" },
-    });
-    fireEvent.change(screen.getByPlaceholderText("Password"), {
-      target: { value: "password123" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: /login/i }));
-
-    await waitFor(() => {
-      expect(screen.getByText("An unexpected error occurred. Please try again later.")).toBeInTheDocument();
-    });
-  });
-
-  it("disables the submit button if email or password fields are empty", () => {
-    const loginButton = screen.getByRole("button", { name: /login/i });
-
-    // Check initially disabled
-    expect(loginButton).toBeDisabled();
-
-    // Fill email only
-    fireEvent.change(screen.getByPlaceholderText("UofT Email Address"), {
-      target: { value: "test@utoronto.ca" },
-    });
-    expect(loginButton).toBeDisabled();
-
-    // Fill password only
-    fireEvent.change(screen.getByPlaceholderText("Password"), {
-      target: { value: "" },
-    });
-    fireEvent.change(screen.getByPlaceholderText("Password"), {
-      target: { value: "password123" },
-    });
-    expect(loginButton).not.toBeDisabled();
+  it("should match snapshot", () => {
+    const { container } = renderWithRedux(<LoginForm />);
+    expect(container).toMatchSnapshot();
   });
 });

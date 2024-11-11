@@ -9,14 +9,19 @@ import {
   Requirements,
   RequirementItem,
 } from "./password-input.styles";
+
 type PasswordInputProps = {
+  placeholder?: string;
   onPasswordChange?: (password: string) => void;
   errorMessage?: string;
+  dontShowRequirements?: boolean;
 };
 
 const PasswordInput = ({
+  placeholder,
   onPasswordChange,
   errorMessage,
+  dontShowRequirements,
 }: PasswordInputProps) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -42,7 +47,7 @@ const PasswordInput = ({
       <PasswordWrapper>
         <Input
           type={showPassword ? "text" : "password"}
-          placeholder="Enter your password"
+          placeholder={placeholder || "Enter your password"}
           value={password}
           onChange={handlePasswordChange}
           showPassword={showPassword}
@@ -52,7 +57,7 @@ const PasswordInput = ({
         </EyeButton>
       </PasswordWrapper>
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      {password && (
+      {password && !dontShowRequirements && (
         <Requirements>
           <RequirementItem fulfilled={isAtLeast8Chars}>
             {isAtLeast8Chars ? <FaCheck /> : <FaTimes />}

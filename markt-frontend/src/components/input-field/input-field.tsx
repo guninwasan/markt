@@ -1,31 +1,47 @@
-import React from 'react';
+import React, { useState } from "react";
+import {
+  Container,
+  InputWrapper,
+  Input,
+  ErrorMessage,
+} from "./input-field.styles";
 
-import { inputStyles } from './input-field.styles';
-
-interface LoginInputFieldProps {
-    type: string;
-    placeholder: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-    style?: React.CSSProperties; // Add this line
-}
-
-interface RegisterInputFieldProps {
-    type: string;
-    placeholder: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-    style?: React.CSSProperties;
-}
-
-const LoginInputField: React.FC<LoginInputFieldProps> = ({ type, placeholder, onChange, onBlur }) => {
-    return <input type={type} placeholder={placeholder} style={inputStyles} onChange={onChange} onBlur={onBlur} />;
+type InputFieldProps = {
+  type?: string;
+  placeholder?: string;
+  onChange?: any;
+  errorMessage?: string;
+  pattern?: string;
+  inputMode?: string;
 };
 
-const RegisterInputField: React.FC<RegisterInputFieldProps> = ({ type, placeholder, onChange, onBlur }) => {
-    return <input type={type} placeholder={placeholder} style={inputStyles} onChange={onChange} onBlur={onBlur} />;
+const InputField = ({
+  type,
+  placeholder,
+  onChange,
+  errorMessage,
+}: InputFieldProps) => {
+  const [value, setValue] = useState("");
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    setValue(newValue);
+    onChange?.(newValue);
+  };
+
+  return (
+    <Container>
+      <InputWrapper>
+        <Input
+          type={type || "text"}
+          placeholder={placeholder || "Enter text"}
+          value={value}
+          onChange={handleInputChange}
+        />
+      </InputWrapper>
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+    </Container>
+  );
 };
 
-export { LoginInputField, RegisterInputField };
+export { InputField };

@@ -1,201 +1,236 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { RegisterInputField } from "../input-field";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { ErrorRsp } from "../../errorCodes";
 import { API_BASE_URL } from "../api";
-import { RegisterButton } from "./register-form.styles";
+import {
+  RegisterButton,
+  FormContainer,
+  ErrorText,
+  LinkText,
+  LinkStyled,
+} from "./register-form.styles";
 import { PasswordInput } from "../password-input";
+import { InputField } from "../input-field";
+import { passwordCheck } from "../../utils/password-check";
 
 const REGISTER_URL = `${API_BASE_URL}/api/user/register`;
 
-const RegisterForm: React.FC = () => {
-  const [fullName, setFullName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [errors, setErrors] = useState<{ [key: string]: string }>({
+type FormFields = {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  phone: string;
+};
+
+type FormErrors = {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  phone: string;
+  form: string;
+};
+
+const RegisterForm = () => {
+  const [formFields, setFormFields] = useState<FormFields>({
     fullName: "",
     email: "",
     password: "",
+    confirmPassword: "",
+    phone: "",
+  });
+
+  const [disabled, setDisabled] = useState<boolean>(true);
+  const [errors, setErrors] = useState<FormErrors>({
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
     phone: "",
     form: "",
   });
 
-  const [touchedFields, setTouchedFields] = useState<{
-    [key: string]: boolean;
-  }>({
-    fullName: false,
-    email: false,
-    password: false,
-    phone: false,
-  });
-
-  console.log(touchedFields);
-
+  const [showErrors, setShowErrors] = useState(false);
   const navigate = useNavigate();
 
-  // Handle input changes and clear specific field errors on input
-  const handleInputChange =
-    (setter: React.Dispatch<React.SetStateAction<string>>, fieldName: string) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setter(e.target.value);
-      setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: "" })); // Clear error on input change
+  const validateEmail = (email: string) =>
+    /^[^\s@]+@(mail\.)?utoronto\.ca$/.test(email);
+
+  const validateFields = () => {
+    const newErrors: FormErrors = {
+      fullName: formFields.fullName ? "" : "Full Name is required.",
+      email: validateEmail(formFields.email) ? "" : "Invalid UofT email.",
+      password: passwordCheck(formFields.password)
+        ? ""
+        : "Password must meet the requirements.",
+      confirmPassword:
+        formFields.password === formFields.confirmPassword
+          ? ""
+          : "Passwords do not match.",
+      phone: formFields.phone ? "" : "Phone number is required.",
+      form: "",
     };
+    setErrors(newErrors);
 
-  // Handle onBlur for each input to show specific "required" error messages if empty
-  const handleBlur = (fieldName: string, value: string) => {
-    // Mark the field as touched
-    setTouchedFields((prevTouched) => ({ ...prevTouched, [fieldName]: true }));
+    return !Object.values(newErrors).some((error) => error);
+  };
 
-    // Show specific "required" error messages if the field is empty
-    if (!value) {
-      const fieldErrorMessages: { [key: string]: string } = {
-        fullName: "Full Name is required",
-        email: "A valid email is required",
-        password: "Password is required",
-        phone: "Phone number is required",
-      };
+  useEffect(() => {
+    const allFieldsFilled = Object.values(formFields).every(Boolean);
+    setDisabled(!allFieldsFilled);
+  }, [formFields]);
 
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [fieldName]: fieldErrorMessages[fieldName] || "This field is required",
+  const handleInputChange = (field: keyof FormFields) => (value: string) => {
+    setFormFields((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: "" }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setShowErrors(true);
+
+    if (validateFields()) {
+      try {
+        const response = await fetch(REGISTER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            full_name: formFields.fullName,
+            password: formFields.password,
+            email: formFields.email,
+            phone: formFields.phone,
+          }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          alert("Registration successful - redirecting to Login!");
+          setErrors({
+            fullName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            phone: "",
+            form: "",
+          });
+          navigate("/login");
+        } else {
+          handleErrors(result);
+        }
+      } catch (error) {
+        setErrors((prev) => ({
+          ...prev,
+          form: "An unexpected error occurred. Please try again later.",
+        }));
+      }
+    } else {
+      setErrors((prev) => ({
+        ...prev,
+        form: "Please fill in all fields correctly before submitting.",
       }));
     }
   };
 
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleErrors = (result: any) => {
+    const fieldErrors: FormErrors = {
+      fullName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      phone: "",
+      form: "",
+    };
 
-    try {
-      const response = await fetch(REGISTER_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          full_name: fullName,
-          password,
-          email,
-          phone,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        alert("Registration successful - redirecting to Login!");
-        navigate("/login");
-        setErrors({
-          fullName: "",
-          email: "",
-          password: "",
-          phone: "",
-          form: "",
-        });
-      } else {
-        console.error("Registration failed:", result);
-
-        // Clear all field-specific errors before handling new ones
-        const fieldErrors: { [key: string]: string } = {
-          fullName: "",
-          email: "",
-          password: "",
-          phone: "",
-          form: "",
-        };
-
-        // Interpret backend error code and assign errors to respective fields
-        switch (result.status) {
-          case ErrorRsp.ERR_PARAM_DUP:
-            fieldErrors.email = "User already exists!";
-            break;
-          case ErrorRsp.ERR_PARAM:
-            if (Array.isArray(result.data)) {
-              // Loop through array of validation errors and assign to respective fields
-              result.data.forEach((error: string) => {
-                if (error.toLowerCase().includes("email"))
-                  fieldErrors.email = error;
-                if (error.toLowerCase().includes("phone"))
-                  fieldErrors.phone = error;
-                if (error.toLowerCase().includes("password"))
-                  fieldErrors.password = error;
-                if (error.toLowerCase().includes("name"))
-                  fieldErrors.fullName = error;
-              });
-            } else {
-              fieldErrors.form = result.data;
-            }
-            break;
-          default:
-            fieldErrors.form =
-              "An unexpected error occurred. Please try again later.";
-            break;
+    switch (result.status) {
+      case ErrorRsp.ERR_PARAM_DUP:
+        fieldErrors.email = "User already exists!";
+        break;
+      case ErrorRsp.ERR_PARAM:
+        if (Array.isArray(result.data)) {
+          result.data.forEach((error: string) => {
+            if (error.toLowerCase().includes("email"))
+              fieldErrors.email = error;
+            if (error.toLowerCase().includes("phone"))
+              fieldErrors.phone = error;
+            if (error.toLowerCase().includes("password"))
+              fieldErrors.password = error;
+            if (error.toLowerCase().includes("name"))
+              fieldErrors.fullName = error;
+          });
+        } else {
+          fieldErrors.form = result.data;
         }
-        setErrors(fieldErrors);
-      }
-    } catch (error) {
-      console.error("Registration failed:", error);
-      setErrors({
-        ...errors,
-        form: "An unexpected error occurred. Please try again later.",
-      });
+        break;
+      default:
+        fieldErrors.form =
+          "An unexpected error occurred. Please try again later.";
+        break;
     }
+    setErrors(fieldErrors);
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-    >
-      <RegisterInputField
+    <FormContainer onSubmit={handleSubmit}>
+      <InputField
         type="text"
-        placeholder="Full Name"
-        value={fullName}
-        onChange={handleInputChange(setFullName, "fullName")}
-        onBlur={() => handleBlur("fullName", fullName)}
+        placeholder="Enter Your Full Name"
+        onChange={handleInputChange("fullName")}
+        errorMessage={showErrors ? errors.fullName : ""}
       />
-      {errors.fullName && <p style={{ color: "red" }}>{errors.fullName}</p>}
 
-      <RegisterInputField
+      <InputField
         type="email"
-        placeholder="UofT Email Address"
-        value={email}
-        onChange={handleInputChange(setEmail, "email")}
-        onBlur={() => handleBlur("email", email)}
+        placeholder="Enter Your UofT Email Address"
+        onChange={handleInputChange("email")}
+        errorMessage={showErrors ? errors.email : ""}
       />
-      {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
 
-      <RegisterInputField
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={handleInputChange(setPassword, "password")}
-        onBlur={() => handleBlur("password", password)}
+      <PasswordInput
+        onPasswordChange={handleInputChange("password")}
+        errorMessage={showErrors ? errors.password : ""}
+        placeholder="Enter Your Password"
       />
-      <PasswordInput onPasswordChange={setPassword} />
-      {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
 
-      <RegisterInputField
+      <PasswordInput
+        onPasswordChange={handleInputChange("confirmPassword")}
+        errorMessage={showErrors ? errors.confirmPassword : ""}
+        dontShowRequirements
+        placeholder="Confirm Your Password"
+      />
+
+      <InputField
         type="tel"
-        placeholder="Phone No."
-        value={phone}
-        onChange={handleInputChange(setPhone, "phone")}
-        onBlur={() => handleBlur("phone", phone)}
+        placeholder="Enter Your Phone No."
+        onChange={handleInputChange("phone")}
+        errorMessage={showErrors ? errors.phone : ""}
       />
-      {errors.phone && <p style={{ color: "red" }}>{errors.phone}</p>}
 
-      {/* add disabled option here */}
-      <RegisterButton type="submit">Create Account</RegisterButton>
+      <RegisterButton
+        type="submit"
+        isDisabled={disabled}
+        onClick={() => {
+          if (disabled) {
+            setErrors((prev) => ({
+              ...prev,
+              form: "Please complete all fields correctly to proceed.",
+            }));
+          }
+        }}
+      >
+        Create Account
+      </RegisterButton>
 
-      <div style={{ marginTop: "1rem" }}>
+      <LinkText>
         Already have an account?{" "}
-        <Link to="/login" style={{ color: "#000000" }}>
+        <LinkStyled to="/login">
           <b>Sign In</b>
-        </Link>
-      </div>
+        </LinkStyled>
+      </LinkText>
 
-      {/* General form error */}
-      {errors.form && <p style={{ color: "red" }}>{errors.form}</p>}
-    </form>
+      {errors.form && <ErrorText>{errors.form}</ErrorText>}
+    </FormContainer>
   );
 };
 

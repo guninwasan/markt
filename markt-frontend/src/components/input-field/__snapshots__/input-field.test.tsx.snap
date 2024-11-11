@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InputField should match snapshot 1`] = `
+<div>
+  <div
+    class="sc-blHHSb fpPZQa"
+  >
+    <div
+      class="sc-gtLWhw dewetd"
+    >
+      <input
+        class="sc-egkSDF kTgjUu"
+        placeholder="Enter text"
+        type="text"
+        value=""
+      />
+    </div>
+  </div>
+</div>
+`;
