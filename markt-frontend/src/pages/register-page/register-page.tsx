@@ -1,4 +1,3 @@
-// register-page.tsx
 import { Navbar, Cover, RegisterForm } from "../../components";
 import React from "react";
 
