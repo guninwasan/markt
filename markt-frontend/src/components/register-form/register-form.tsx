@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { RegisterInputField } from "../input-field";
-import { loginButtonStyles } from "../input-field/input-field.styles";
 import { ErrorRsp } from "../../errorCodes";
+import { API_BASE_URL } from "../api";
+import { RegisterButton } from "./register-form.styles";
 
-// At the top of your RegisterForm component file (e.g., register-form.tsx)
-const BASE_URL = process.env.NODE_ENV === 'test' ? 'http://localhost:5000' : 'https://project-1-web-application-design-group15.onrender.com';
-const REGISTER_URL = `${BASE_URL}/api/user/register`;
+const REGISTER_URL = `${API_BASE_URL}/api/user/register`;
 
 const RegisterForm: React.FC = () => {
   const [fullName, setFullName] = useState<string>("");
@@ -182,9 +181,8 @@ const RegisterForm: React.FC = () => {
       />
       {errors.phone && <p style={{ color: "red" }}>{errors.phone}</p>}
 
-      <button type="submit" style={loginButtonStyles}>
-        Create Account
-      </button>
+      {/* add disabled option here */}
+      <RegisterButton type="submit">Create Account</RegisterButton>
 
       <div style={{ marginTop: "1rem" }}>
         Already have an account?{" "}
