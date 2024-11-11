@@ -4,6 +4,10 @@ import { RegisterInputField } from "../input-field";
 import { loginButtonStyles } from "../input-field/input-field.styles";
 import { ErrorRsp } from "../../errorCodes";
 
+// At the top of your RegisterForm component file (e.g., register-form.tsx)
+const BASE_URL = process.env.NODE_ENV === 'test' ? 'http://localhost:5000' : 'https://project-1-web-application-design-group15.onrender.com';
+const REGISTER_URL = `${BASE_URL}/api/user/register`;
+
 const RegisterForm: React.FC = () => {
   const [fullName, setFullName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -64,7 +68,7 @@ const RegisterForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://project-1-web-application-design-group15.onrender.com/api/user/register", {
+      const response = await fetch(REGISTER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
