@@ -4,6 +4,10 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { RegisterForm } from "./register-form";
 import { ErrorRsp } from "../../errorCodes";
 
+// At the top of your RegisterForm component file (e.g., register-form.tsx)
+const BASE_URL = process.env.NODE_ENV === 'test' ? 'http://localhost:5000' : 'https://project-1-web-application-design-group15.onrender.com';
+const REGISTER_URL = `${BASE_URL}/api/user/register`;
+
 // Mock window.alert
 window.alert = jest.fn();
 
@@ -75,7 +79,7 @@ describe("RegisterForm Component", () => {
     });
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith("http://localhost:5000/api/user/register", expect.anything());
+      expect(global.fetch).toHaveBeenCalledWith(REGISTER_URL, expect.anything());
       expect(window.alert).toHaveBeenCalledWith("Registration successful - redirecting to Login!");
     });
   });
