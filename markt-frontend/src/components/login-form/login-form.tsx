@@ -78,7 +78,7 @@ const LoginForm: React.FC = () => {
     // Only submit if there are no client-side validation errors
     if (!Object.values(errors).some((error) => error)) {
       try {
-        const response = await fetch("http://localhost:5000/api/user/login", {
+        const response = await fetch("https://project-1-web-application-design-group15.onrender.com/api/user/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
