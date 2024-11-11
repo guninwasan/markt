@@ -21,9 +21,7 @@ const Footer = () => {
           <FooterLink href="/support">Support / Report an issue</FooterLink>
         </LinksContainer>
       </nav>
-      <RightsReserved>
-        © {new Date().getFullYear()} All rights reserved.
-      </RightsReserved>
+      <RightsReserved>© 2024 All rights reserved.</RightsReserved>
     </FooterContainer>
   );
 };

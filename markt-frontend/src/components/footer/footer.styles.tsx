@@ -4,7 +4,9 @@ import { colors } from "../../utils";
 const FooterContainer = styled.footer`
   background-color: ${colors.darkerHoverPrimary};
   color: ${colors.white};
-  padding: 5rem 2rem;
+  margin-top: 4rem;
+  padding: 2rem;
+  padding-bottom: 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,11 +15,22 @@ const FooterContainer = styled.footer`
 `;
 
 const MarktText = styled.p`
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-  color: ${colors.lightGrey};
-  font-weight: bold;
-  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+  background: linear-gradient(
+    90deg,
+    ${colors.primary} 0%,
+    ${colors.lightGrey} 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+
+  i {
+    font-weight: 400;
+    color: ${colors.lightGrey};
+  }
 `;
 
 const LinksContainer = styled.div`
