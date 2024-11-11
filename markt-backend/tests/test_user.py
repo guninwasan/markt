@@ -1,5 +1,6 @@
 import pytest
 
+from datetime import datetime, timedelta
 from unittest.mock import patch, MagicMock
 from utils.errors import ErrorRsp
 from public import create_app_api
@@ -552,3 +553,202 @@ def test_delete(client):
     # Check user in database
     user_in_db = User.query.filter_by(email=user.email).first()
     assert user_in_db is None
+
+def test_delete(client):
+    # Create a user
+    user = User(full_name="Test User", password="mY8iw$02j",
+                email="user@mail.utoronto.ca", phone="6478290835")
+    db.session.add(user)
+    db.session.commit()
+
+    # Invalid email
+    rsp = client.delete('/api/user/invalid@utoronto.ca/delete')
+    assert rsp.status_code == 404
+
+    # Delete user
+    rsp = client.delete(f'/api/user/{user.email}/delete')
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert rsp["data"] == "Deleted user successfully!"
+
+    # Check user in database
+    user_in_db = User.query.filter_by(email=user.email).first()
+    assert user_in_db is None
+
+@patch('public.mail.send')
+def test_send_code(mock_mail_send, client):
+    mock_mail_send.return_value = MagicMock()
+
+    # Create a user
+    user = User(full_name="Test User", password="mY8iw$02j",
+                email="user@mail.utoronto.ca", phone="6478290835")
+    db.session.add(user)
+    db.session.commit()
+    
+    # Invalid email
+    rsp = client.post('/api/user/invalid@mail.com/send_code', json={})
+    assert rsp.status_code == 404
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
+    assert 'User does not exist!' in rsp["data"]
+
+    # valid email
+    rsp = client.post(f'/api/user/{user.email}/send_code', json={})
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert 'Verification code sent to user\'s email' in rsp["data"]
+    mock_mail_send.assert_called_once()
+
+    # email already verified
+    user.email_verified = True
+    db.session.commit()
+    rsp = client.post(f'/api/user/{user.email}/send_code', json={})
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert 'User email is already verified!' in rsp["data"]
+
+def test_verify_email(client):
+    # Create a user
+    user = User(full_name="Test User", password="mY8iw$02j",
+                email="user@mail.utoronto.ca", phone="6478290835")
+    
+    # Mock set validation code and expiry
+    code = 568392
+    expiration_time = datetime.now() + timedelta(minutes=10)
+    user.set_validation_code(code, expiration_time)
+    db.session.add(user)
+    db.session.commit()
+
+    # Not enough data
+    rsp = client.post('/api/user/invalid@mail.com/verify_email', json={})
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+    assert 'Missing parameters' in rsp["data"]
+
+    # Invalid email
+    rsp = client.post('/api/user/invalid@mail.com/verify_email', json={'code': 999})
+    assert rsp.status_code == 404
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
+    assert 'User does not exist!' in rsp["data"]
+
+    # Invalid code
+    rsp = client.post(f'/api/user/{user.email}/verify_email', json={'code': 999})
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+    assert 'Invalid validation code' in rsp["data"]
+
+    # Past expiration time
+    previous_time = user.validation_code_expiration
+    # Change expiration to be 11 minutes ago
+    user.validation_code_expiration = datetime.now() - timedelta(minutes=11)
+    db.session.commit()
+
+    rsp = client.post(f'/api/user/{user.email}/verify_email', json={'code': user.validation_code})
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+    assert 'Validation code has expired' in rsp["data"]
+
+    user.validation_code_expiration = previous_time # restore
+    db.session.commit()
+
+    # Valid request
+    rsp = client.post(f'/api/user/{user.email}/verify_email', json={'code': user.validation_code})
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert 'User email verified successfully!' in rsp["data"]
+@patch('public.mail.send')
+def test_send_code(mock_mail_send, client):
+    mock_mail_send.return_value = MagicMock()
+
+    # Create a user
+    user = User(full_name="Test User", password="mY8iw$02j",
+                email="user@mail.utoronto.ca", phone="6478290835")
+    db.session.add(user)
+    db.session.commit()
+    
+    # Invalid email
+    rsp = client.post('/api/user/invalid@mail.com/send_code', json={})
+    assert rsp.status_code == 404
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
+    assert 'User does not exist!' in rsp["data"]
+
+    # valid email
+    rsp = client.post(f'/api/user/{user.email}/send_code', json={})
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert 'Verification code sent to user\'s email' in rsp["data"]
+    mock_mail_send.assert_called_once()
+
+    # email already verified
+    user.email_verified = True
+    db.session.commit()
+    rsp = client.post(f'/api/user/{user.email}/send_code', json={})
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert 'User email is already verified!' in rsp["data"]
+
+def test_verify_email(client):
+    # Create a user
+    user = User(full_name="Test User", password="mY8iw$02j",
+                email="user@mail.utoronto.ca", phone="6478290835")
+    
+    # Mock set validation code and expiry
+    code = 568392
+    expiration_time = datetime.now() + timedelta(minutes=10)
+    user.set_validation_code(code, expiration_time)
+    db.session.add(user)
+    db.session.commit()
+
+    # Not enough data
+    rsp = client.post('/api/user/invalid@mail.com/verify_email', json={})
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+    assert 'Missing parameters' in rsp["data"]
+
+    # Invalid email
+    rsp = client.post('/api/user/invalid@mail.com/verify_email', json={'code': 999})
+    assert rsp.status_code == 404
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
+    assert 'User does not exist!' in rsp["data"]
+
+    # Invalid code
+    rsp = client.post(f'/api/user/{user.email}/verify_email', json={'code': 999})
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+    assert 'Invalid validation code' in rsp["data"]
+
+    # Past expiration time
+    previous_time = user.validation_code_expiration
+    # Change expiration to be 11 minutes ago
+    user.validation_code_expiration = datetime.now() - timedelta(minutes=11)
+    db.session.commit()
+
+    rsp = client.post(f'/api/user/{user.email}/verify_email', json={'code': user.validation_code})
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+    assert 'Validation code has expired' in rsp["data"]
+
+    user.validation_code_expiration = previous_time # restore
+    db.session.commit()
+
+    # Valid request
+    rsp = client.post(f'/api/user/{user.email}/verify_email', json={'code': user.validation_code})
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert 'User email verified successfully!' in rsp["data"]
