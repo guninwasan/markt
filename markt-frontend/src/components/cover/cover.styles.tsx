@@ -6,7 +6,6 @@ const MainContainer = styled.div`
   height: 100%;
   width: 100%;
   flex: 1;
-  margin-bottom: 5rem;
 `;
 
 const CoverContainer = styled.div`
@@ -31,6 +30,7 @@ const RightContainer = styled.div`
   padding: 0 3rem;
   background: ${colors.white};
   gap: 3rem;
+  margin-bottom: 4rem;
 `;
 
 const Title = styled.h2`
