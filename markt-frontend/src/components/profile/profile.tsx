@@ -6,15 +6,12 @@ import {
   ProfileDetailsHeading,
   ButtonContainer,
   Button,
-  ModalOverlay,
-  ModalContent,
 } from "./profile.styles";
 import { useSelector } from "react-redux";
 import { RootState, selectors, setIsLoading, setIsLoggedIn } from "../../redux";
 import { useDispatch } from "react-redux";
 
 const Profile = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -56,12 +53,6 @@ const Profile = () => {
           <Button onClick={handleLogout}>Logout</Button>
         </ButtonContainer>
       </div>
-
-      {isModalVisible && (
-        <ModalOverlay>
-          <ModalContent>You have been logged out.</ModalContent>
-        </ModalOverlay>
-      )}
     </div>
   );
 };
