@@ -32,9 +32,7 @@ const Profile = () => {
   };
 
   //CHANGE PASSWORD FUNCTIONALITY NEEDS TO BE ADDED
-  const handleChangePassword = () => {
-    console.log("Changing password");
-  };
+  const handleChangePassword = () => {};
 
   return (
     <div>
