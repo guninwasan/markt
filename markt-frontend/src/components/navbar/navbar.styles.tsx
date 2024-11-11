@@ -41,12 +41,6 @@ const MenuLink = styled(NavLink)`
   color: ${colors.textBlack};
   text-decoration: none;
   padding: 0.5rem 1rem;
-
-  &.active {
-    background-color: #555;
-    border-radius: 4px;
-    color: #f9f9f9;
-  }
 `;
 
 const LogoutButton = styled.div`
@@ -126,6 +120,42 @@ const ProfileContainer = styled.div`
   flex-direction: column;
 `;
 
+const SellItem = styled.a`
+  color: ${colors.white};
+  text-decoration: none;
+  user-select: none;
+  cursor: pointer;
+`;
+
+const SellButton = styled.button`
+  background-color: ${colors.darkerPrimary};
+  border: none;
+  cursor: pointer;
+  padding: 1rem 2rem;
+  position: relative;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${colors.white};
+  border-radius: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 14px;
+  user-select: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${colors.darkerHoverPrimary};
+  }
+
+  a {
+    color: ${colors.white};
+    text-decoration: none;
+  }
+`;
+
 const ProfileButton = styled.button`
   background-color: #e0e0e0;
   border: none;
@@ -159,10 +189,11 @@ const Dropdown = styled.div`
   position: absolute;
   top: 100%;
   right: 0;
+  margin: 0.25rem 0.5rem;
   transform: translateX(calc(0%));
   background-color: ${colors.darkerPrimary};
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 7px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1001;
   padding: 0.5rem 0;
@@ -243,4 +274,6 @@ export {
   ModalBackdrop,
   SpotlightModal,
   StyledProfilePhoto,
+  SellButton,
+  SellItem,
 };
