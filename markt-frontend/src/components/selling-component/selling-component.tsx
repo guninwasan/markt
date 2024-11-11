@@ -16,6 +16,7 @@ const initialFormData = {
   negotiable: false,
   condition: "",
   flairs: [],
+  pickupLocation: "",
   media: [],
   brand: "",
   model: "",
@@ -96,16 +97,56 @@ const SellingComponent = () => {
     }
 
     try {
-      const displayMediaUrl = await uploadImage(displayImage as File);
-      const getMediaURLs = await Promise.all(
-        mediaFiles.map(async (file: File) => {
-          return await uploadImage(file);
-        })
-      );
-      console.log("Display Media URL:", displayMediaUrl);
-      console.log("Media URLs:", getMediaURLs);
+      // Mock display and media URLs
+      const displayMediaUrl = "https://res.cloudinary.com/dywbiovuo/image/upload/v1731303570/rkyfsoggeclvefxzebrm.jpg";
+      const mediaUrls = [
+        "https://res.cloudinary.com/dywbiovuo/image/upload/v1731303570/qmbxpqfndolr6bqmlei8.jpg",
+        "https://res.cloudinary.com/dywbiovuo/image/upload/v1731303570/dhvkdsjk1hl0qzrjg9zt.jpg"
+      ];
+      // Prepare the data to send to the backend, ensuring keys align with backend schema
+      const requestData = {
+        owner_email: "shikhxr@utoronto.ca", // replace with dynamic email as needed
+        title: formData.title,
+        price: parseFloat(formData.price), // ensure price is a number
+        description: formData.description,
+        negotiable: formData.negotiable,
+        condition: formData.condition,
+        flairs: formData.flairs,
+        pickup_location: formData.pickupLocation,
+        media: formData.media,
+        brand: formData.brand,
+        model: formData.model,
+        color: formData.color,
+        dimensions: formData.dimensions,
+        weight: formData.weight,
+        material: formData.material,
+        battery_life: formData.batteryLife,
+        storage_capacity: formData.storageCapacity,
+        additional_details: formData.additionalDetails,
+        display_image: displayMediaUrl,
+        ...(formData.yearOfManufacture && { year_of_manufacture: parseInt(formData.yearOfManufacture) })
+    };
+          
+      console.log("Request Data:", requestData); // Debugging: Log requestData
+      // Make the POST request using fetch
+      const response = await fetch("http://localhost:5000/api/listing/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+      if (response.ok) {
+        const result = await response.json();
+        alert("Listing created successfully!");
+        console.log("Listing created:", result);
+      } else {
+        const errorData = await response.json();
+        alert(`Error creating listing: ${errorData.data}`);
+        console.error("Error:", errorData);
+      }
     } catch (error) {
-      console.error("Error uploading images:", error);
+      console.error("Error uploading listing:", error);
     }
   };
 

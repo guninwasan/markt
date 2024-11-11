@@ -1,7 +1,7 @@
 create:
   responses:
     201:
-      description: JSON response
+      description: "Listing created successfully"
     404:
       description: "User does not exist!"
   parameters:
@@ -20,7 +20,7 @@ create:
             type: "string"
             required: True
           price:
-            type: "integer"
+            type: "number"
             minimum: 0
             required: True
           pickup_location:
@@ -29,45 +29,32 @@ create:
           display_image:
             type: "string"
             required: True
-          price_negotiable:
+          negotiable:
             type: "boolean"
             required: False
             default: False
-          like_new:
-            type: "boolean"
+          condition:
+            type: "string"
             required: False
-            default: False
-          used:
-            type: "boolean"
+          flairs:
+            type: "array"
+            items:
+              type: "string"
             required: False
-            default: False
-          limited_edition:
-            type: "boolean"
-            required: False
-            default: False
-          popular:
-            type: "boolean"
-            required: False
-            default: False
           # Media
-          images:
-            type: array
+          media:
+            type: "array"
             items:
-              type: string
-              required: False
-          videos:
-            type: array
-            items:
-              type: string
-              required: False
+              type: "string"
+            required: False
           # Additional details
           description:
             type: "string"
             required: False
           quantity:
             type: "integer"
-            required: False
             minimum: 1
+            required: False
           brand:
             type: "string"
             required: False
@@ -102,7 +89,7 @@ create:
 get:
   responses:
     200:
-      description: JSON response
+      description: "Listing details retrieved successfully"
     404:
       description: "Listing does not exist!"
   parameters:
@@ -110,40 +97,40 @@ get:
       in: "query"
       required: True
       schema:
-        type: "object"
-        properties:
-          id: "integer"
+        type: "integer"
     - name: "detail"
       in: "body"
-      required: True
+      required: False
       schema:
         type: "object"
         properties:
-          minimal: "boolean"
-            description: Get minimal listing info
+          minimal:
+            type: "boolean"
+            description: "Get minimal listing info"
             required: False
             default: True
 
 get_all:
   responses:
     200:
-      description: JSON response
+      description: "All listings retrieved successfully"
   parameters:
     - name: "detail"
       in: "body"
-      required: True
+      required: False
       schema:
         type: "object"
         properties:
-          minimal: "boolean"
-            description: Get minimal listing info
+          minimal:
+            type: "boolean"
+            description: "Get minimal listing info"
             required: False
             default: True
 
 update:
   responses:
     200:
-      description: JSON response
+      description: "Listing updated successfully"
     404:
       description: "Listing does not exist!"
   parameters:
@@ -165,7 +152,7 @@ update:
             type: "string"
             required: False
           price:
-            type: "integer"
+            type: "number"
             minimum: 0
             required: False
           pickup_location:
@@ -174,45 +161,32 @@ update:
           display_image:
             type: "string"
             required: False
-          price_negotiable:
+          negotiable:
             type: "boolean"
             required: False
             default: False
-          like_new:
-            type: "boolean"
+          condition:
+            type: "string"
             required: False
-            default: False
-          used:
-            type: "boolean"
+          flairs:
+            type: "array"
+            items:
+              type: "string"
             required: False
-            default: False
-          limited_edition:
-            type: "boolean"
-            required: False
-            default: False
-          popular:
-            type: "boolean"
-            required: False
-            default: False
           # Media
-          images:
-            type: array
+          media:
+            type: "array"
             items:
-              type: string
-              required: False
-          videos:
-            type: array
-            items:
-              type: string
-              required: False
+              type: "string"
+            required: False
           # Additional details
           description:
             type: "string"
             required: False
           quantity:
             type: "integer"
-            required: False
             minimum: 1
+            required: False
           brand:
             type: "string"
             required: False

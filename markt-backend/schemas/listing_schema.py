@@ -9,15 +9,10 @@ class ListingInformationSchema(Schema):
     price = fields.Float(required=True, validate=validate.Range(min=0, max=10000))
     pickup_location = fields.Str(required=True)
     display_image = fields.Str(required=True)
-    price_negotiable = fields.Bool(required=False, load_default=False)
-    like_new = fields.Bool(required=False, load_default=False)
-    used = fields.Bool(required=False, load_default=False)
-    limited_edition = fields.Bool(required=False, load_default=False)
-    popular = fields.Bool(required=False, load_default=False)
-
-    # Additional media (optional)
-    images = fields.List(fields.Str(required=False))
-    videos = fields.List(fields.Str(required=False))
+    negotiable = fields.Bool(required=False, load_default=False)  # updated to match "negotiable" term
+    condition = fields.Str(required=False)  # new field for item condition
+    flairs = fields.List(fields.Str(), required=False)  # new field for product flairs
+    media = fields.List(fields.Str(), required=False)  # updated to represent media files
 
     # Additional specifications (optional)
     description = fields.Str(required=False)
@@ -31,7 +26,7 @@ class ListingInformationSchema(Schema):
     material = fields.Str(required=False)
     battery_life = fields.Str(required=False)
     storage_capacity = fields.Str(required=False)
-    additional_details = fields.Str(required=False)
+    additional_details = fields.Str(required=False)  # added to match frontend
 
 class ListingGetSchema(Schema):
     minimal = fields.Bool(required=False, load_default=True)
@@ -46,15 +41,10 @@ class ListingUpdate(Schema):
     price = fields.Float(required=False, validate=validate.Range(min=0, max=10000))
     pickup_location = fields.Str(required=False)
     display_image = fields.Str(required=False)
-    price_negotiable = fields.Bool(required=False, load_default=False)
-    like_new = fields.Bool(required=False, load_default=False)
-    used = fields.Bool(required=False, load_default=False)
-    limited_edition = fields.Bool(required=False, load_default=False)
-    popular = fields.Bool(required=False, load_default=False)
-
-    # Additional media
-    images = fields.List(fields.Str(required=False))
-    videos = fields.List(fields.Str(required=False))
+    negotiable = fields.Bool(required=False, load_default=False)  # updated to match "negotiable" term
+    condition = fields.Str(required=False)  # added condition field
+    flairs = fields.List(fields.Str(), required=False)  # added flairs field
+    media = fields.List(fields.Str(), required=False)  # updated media field
 
     # Additional specifications (optional)
     description = fields.Str(required=False)

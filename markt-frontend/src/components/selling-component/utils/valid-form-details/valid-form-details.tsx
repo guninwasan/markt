@@ -5,6 +5,7 @@ type FormData = {
   negotiable: boolean;
   condition: string;
   flairs: string[];
+  pickupLocation: string;
   media: File[];
   brand: string;
   model: string;
@@ -28,6 +29,7 @@ const validateFormData = (
   if (!formData.title) errors.push("Title is required.");
   if (!formData.price) errors.push("Price is required.");
   if (!formData.description) errors.push("Description is required.");
+  if (!formData.pickupLocation) errors.push("Pickup Location is required.");
 
   const priceAsNumber = parseFloat(formData.price);
   if (isNaN(priceAsNumber) || priceAsNumber < 0) {
