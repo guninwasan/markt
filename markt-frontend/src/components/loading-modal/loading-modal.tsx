@@ -7,21 +7,14 @@ import {
   SupportLink,
 } from "./loading-modal.styles";
 import { useSelector } from "react-redux";
-import { RootState, selectors, setIsLoading } from "../../redux";
-import { useDispatch } from "react-redux";
+import { RootState, selectors } from "../../redux";
 
 const LoadingModal = () => {
   const [message, setMessage] = useState<any>("");
-  const dispatch = useDispatch();
 
   const { isLoading } = useSelector((state: RootState) => ({
     isLoading: selectors.getIsLoading(state),
   }));
-
-  const handleOnClick = (e: any) => {
-    e.preventDefault();
-    dispatch(setIsLoading(false));
-  };
 
   useEffect(() => {
     let timer1: NodeJS.Timeout;
@@ -36,10 +29,7 @@ const LoadingModal = () => {
         setMessage(
           <>
             Still no luck? Try contacting support{" "}
-            <SupportLink href="/support" onClick={handleOnClick}>
-              here
-            </SupportLink>
-            .
+            <SupportLink href="/support">here</SupportLink>.
           </>
         );
       }, 20000);
