@@ -42,7 +42,7 @@ const PasswordInput = ({
   const hasLowerCase = /[a-z]/.test(password);
   const hasUpperCase = /[A-Z]/.test(password);
   const hasNumber = /\d/.test(password);
-  const hasSpecialChar = /[@$!%*?&#]/.test(password);
+  const hasSpecialChar = /[@$!%*?&#-]/.test(password);
 
   return (
     <Container>
@@ -78,7 +78,7 @@ const PasswordInput = ({
           </RequirementItem>
           <RequirementItem fulfilled={hasSpecialChar}>
             {hasSpecialChar ? <FaCheck /> : <FaTimes />}A special character
-            (@$!%*?&#)
+            (@$!%*?&#-)
           </RequirementItem>
         </Requirements>
       )}
