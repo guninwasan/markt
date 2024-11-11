@@ -53,6 +53,13 @@ const Input = styled.input<{ showPassword: boolean }>`
     outline: none;
     box-shadow: 0px 0px 5px 2px ${colors.primary};
   }
+
+  ${({ showPassword }) =>
+    showPassword &&
+    `
+    -webkit-text-security: none; 
+    text-security: none; 
+  `}
 `;
 
 const EyeButton = styled.button`
