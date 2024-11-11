@@ -248,13 +248,24 @@ delete:
   responses:
     200:
       description: "Listing deleted successfully"
+    400:
+      description: "User email is required to delete a listing."
+    403:
+      description: "You are not authorized to delete this listing."
     404:
       description: "Listing does not exist!"
   parameters:
     - name: "id"
-      in: "query"
+      in: "path"
+      required: True
+      schema:
+        type: "integer"
+    - name: "user_email"
+      in: "body"
       required: True
       schema:
         type: "object"
         properties:
-          id: "integer"
+          user_email:
+            type: "string"
+            format: "email"

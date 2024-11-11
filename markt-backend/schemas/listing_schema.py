@@ -69,3 +69,6 @@ class ListingUpdate(Schema):
     battery_life = fields.Str(required=False)
     storage_capacity = fields.Str(required=False)
     additional_details = fields.Str(required=False)
+
+class ListingDeleteSchema(Schema):
+    user_email = fields.Str(required=True, validate=validate.Email(error="Invalid email format"))

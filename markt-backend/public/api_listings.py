@@ -5,7 +5,7 @@ from marshmallow import ValidationError
 from database.db import db
 from database.models import Listing, User
 from utils.errors import ErrorRsp
-from schemas.listing_schema import ListingInformationSchema, ListingUpdate, ListingGetSchema
+from schemas.listing_schema import ListingInformationSchema, ListingUpdate, ListingGetSchema, ListingDeleteSchema
 
 listing_api_bp = Blueprint('listing_api', __name__)
 swagger = Swagger()
@@ -269,11 +269,31 @@ def update(id):
 @swag_from('../docs/listing_docs.yml', endpoint='delete')
 # API implementation
 def delete(id):
+
+    data = request.get_json()
+    schema = ListingDeleteSchema()
+
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
+        return jsonify({
+            "status": ErrorRsp.ERR_PARAM.value,
+            "data": "Invalid parameters",
+            "errors": err.messages
+        }), 400
+    
     # Check if listing exists
     listing = db.session.get(Listing, id)
     if listing is None:
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "Listing does not exist!"}), 404
+    
+    # Check if the user trying to delete the listing is the owner
+    if listing.owner.email != data['user_email']:
+        return jsonify({
+            "status": ErrorRsp.ERR_NOT_ALLOWED.value,
+            "data": "You are not authorized to delete this listing."
+        }), 403
 
     db.session.delete(listing)
     db.session.commit()

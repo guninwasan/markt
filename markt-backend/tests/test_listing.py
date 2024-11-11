@@ -329,15 +329,21 @@ def test_delete_listing(client):
     db.session.commit()
 
     # Wrong listing id
-    rsp = client.delete(f'/api/listing/delete/{9999}/')
+    rsp = client.delete(f'/api/listing/delete/{9999}/', json={"user_email": "test@utoronto.ca"})
 
     assert rsp.status_code == 404
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_NOT_FOUND.value
     assert rsp['data'] == "Listing does not exist!"
 
+    rsp = client.delete(f'/api/listing/delete/{listing.id}/', json={"user_email": "not_test@utoronto.ca"})
+    assert rsp.status_code == 403  # Assuming 403 Forbidden for unauthorized action
+    rsp = rsp.get_json()
+    assert rsp['status'] == ErrorRsp.ERR_NOT_ALLOWED.value
+    assert rsp['data'] == "You are not authorized to delete this listing."
+
     # Correct listing id
-    rsp = client.delete(f'/api/listing/delete/{listing.id}/')
+    rsp = client.delete(f'/api/listing/delete/{listing.id}/', json={"user_email": "test@utoronto.ca"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
