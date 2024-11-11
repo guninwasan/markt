@@ -1,11 +1,16 @@
-from flask import Blueprint, jsonify, request
+import random
+import pytz
+from flask import Blueprint, jsonify, request, render_template
 from flasgger import Swagger, swag_from
+from flask_mail import Message
 from marshmallow import ValidationError
+from datetime import datetime, timedelta
 from database.db import db
 from database.models import User, Listing
 from utils.errors import ErrorRsp
 from schemas.user_schema import (
     UserRegistrationSchema,
+    UserVerifyEmailSchema,
     UserLoginSchema,
     UserUpdateSchema,
     AddInterestSchema,
@@ -13,7 +18,9 @@ from schemas.user_schema import (
     UserForgotPasswordSchema,
     GetListingsSchema)
 
-user_api_bp = Blueprint('user_api', __name__)
+from . import mail
+
+user_api_bp = Blueprint('user_api', __name__, template_folder='templates')
 swagger = Swagger()
 
 """
@@ -60,16 +67,80 @@ def register():
         return jsonify({"status": ErrorRsp.ERR_PARAM.value,
                         "data": validation_errors}), 400
 
+    # Get validation code
+    code = format(random.randint(0,999999), "06d")
+    expiration_time = datetime.now(pytz.timezone('America/Toronto')) + timedelta(minutes=10)
+
     user = User(
         full_name=data["full_name"],
         password=data['password'],
         email=data['email'],
-        phone=data['phone'],
+        phone=data['phone']
     )
+    user.set_validation_code(code, expiration_time)
+
     db.session.add(user)
     db.session.commit()
+
+    email_message = Message(
+        'Email Verification Code',
+        recipients=[data['email']]
+    )
+    email_content = render_template('email.html',
+                              user_name=data['full_name'],
+                              validation_code=code,
+                              current_year=datetime.now().year)
+
+    email_message.html = email_content
+
+    try:
+        mail.send(email_message)
+        return jsonify({"status": ErrorRsp.OK.value,
+                        "data": "User registered successfully, validation code sent."}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"status": ErrorRsp.ERR.value,
+                        "data": "Error"}), 500
+
+
+"""
+    Endpoint: Verifying user email
+    Route: 'api/user/<string:email>/verify_email'
+"""
+@user_api_bp.route('/<string:email>/verify_email', methods=['POST'])
+# Endpoint parameter specification
+@swag_from('../docs/user_docs.yml', endpoint='verify_email')
+# API implementation
+def verify_email(email):
+    data = request.get_json()
+    schema = UserVerifyEmailSchema()
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "data": "Missing parameters",
+                        "errors": err.messages}), 400
+
+    # Check if user exists
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
+                        "data": "User does not exist!"}), 404
+
+    if int(user.validation_code) != int(data['code']):
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "data": "Invalid validation code"}), 400
+
+    if user.validation_code_expiration < datetime.now():
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "data": "Validation code has expired"}), 400
+
+    # Mark user as verified
+    user.email_verified = True
+    db.session.commit()
+
     return jsonify({"status": ErrorRsp.OK.value,
-                    "data": "User registered successfully!"}), 201
+                    "data": "User email verified successfully!"}), 200
 
 
 """
@@ -225,7 +296,7 @@ def change_password(email):
     if not user.validate_password_format(data["new_password"]):
         validation_errors.append("New password must contain at minimum 8 characters, \
                                     1 lowercase and uppercase letter, 1 digit, 1 special character")
-        
+
     # Return validation errors if any
     if len(validation_errors):
         return jsonify({"status": ErrorRsp.ERR_PARAM_PWD.value,
@@ -239,7 +310,7 @@ def change_password(email):
 
 
 """
-    Endpoint: Change User's password with email for verification 
+    Endpoint: Change User's password with email for verification
     Route: 'api/user/<string:email>/forgot_password'
 """
 @user_api_bp.route('/<string:email>/forgot_password', methods=['POST'])
@@ -266,13 +337,13 @@ def forgot_password(email):
     if data["email"] != user.email:
         return jsonify({"status": ErrorRsp.ERR_PARAM_EMAIL.value,
                         "data": "Incorrect email provided"}), 400
-    
+
     # Check new password format
     if not user.validate_password_format(data["new_password"]):
         return jsonify({"status": ErrorRsp.ERR_PARAM_PWD.value,
                         "data": "New password must contain at minimum 8 characters, \
                                 1 lowercase and uppercase letter, 1 digit, 1 special character"}), 400
-    
+
     user.set_password(data["new_password"])
     db.session.commit()
 
@@ -324,7 +395,7 @@ def interested_listings(email):
 
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": "Listings added successfully!"}), 200
-    
+
 
 """
     Endpoint: Get user information
@@ -377,17 +448,17 @@ def get_listings(email):
         for listing in user.listings_not_sold.all():
             json = listing.get_json_min() if data["minimal"] else listing.get_json_full()
             rsp["unsold_listings"].append(json)
-    
+
     if data["get_sold"]:
         for listing in user.listings_sold.all():
             json = listing.get_json_min() if data["minimal"] else listing.get_json_full()
             rsp["sold_listings"].append(json)
-    
+
     if data["get_interested"]:
         for listing in user.listings_of_interest.all():
             json = listing.get_json_min() if data["minimal"] else listing.get_json_full()
             rsp["interested_listings"].append(json)
-    
+
     if data["get_bought"]:
         for listing in user.listings_bought.all():
             json = listing.get_json_min() if data["minimal"] else listing.get_json_full()
