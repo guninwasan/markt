@@ -18,7 +18,7 @@ const NotFoundPage = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar hideSearch/>
       <PageContainer>
         <NotFoundHeading>Page Not Found</NotFoundHeading>
         <Message>
