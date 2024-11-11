@@ -11,6 +11,8 @@ type InputFieldProps = {
   placeholder?: string;
   onChange?: any;
   errorMessage?: string;
+  pattern?: string;
+  inputMode?: string;
 };
 
 const InputField = ({
