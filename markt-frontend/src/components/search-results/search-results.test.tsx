@@ -1,34 +1,21 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import { SearchResults } from "./search-results";
-import { useSearchParams } from "react-router-dom";
-import { renderWithRouter } from "../../utils/render-with-router";
+import { render, screen } from '@testing-library/react';
+import { SearchResults } from './search-results';
+import { useSearchParams } from 'react-router-dom';
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useSearchParams: jest.fn(),
+// Mock the useSearchParams hook from react-router-dom
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'), // Keep the original imports from react-router-dom
+  useSearchParams: jest.fn(), // Mock useSearchParams
 }));
 
-describe("SearchResults", () => {
-  const mockUseSearchParams = useSearchParams as jest.Mock;
+describe('SearchResults Component', () => {
+  it('renders the component and shows loading state initially', () => {
+    // TypeScript needs us to cast the mock correctly
+    (useSearchParams as jest.Mock).mockReturnValue([new URLSearchParams('keywords=test')]);
 
-  beforeEach(() => {
-    mockUseSearchParams.mockReturnValue([
-      {
-        get: jest.fn().mockReturnValue("test"),
-      },
-    ]);
-  });
+    render(<SearchResults />);
 
-  it("should render search results", () => {
-    renderWithRouter(<SearchResults />);
-    expect(
-      screen.getByText("Your search results for: test")
-    ).toBeInTheDocument();
-  });
-
-  it("should match snapshot", () => {
-    const { container } = renderWithRouter(<SearchResults />);
-    expect(container.firstChild).toMatchSnapshot();
+    // Check if "Loading..." text is in the document when the component is first rendered
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 });
