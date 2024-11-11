@@ -3,7 +3,7 @@ import React from "react";
 
 const LoginPage = () => {
   return (
-    <div>
+    <div style={{ height: "100%" }}>
       <Navbar hideSearch />
       <Cover title="Welcome Back to UofT's Secure Marketplace!">
         <LoginForm />

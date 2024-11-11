@@ -1,10 +1,18 @@
 import styled from "styled-components";
 import { colors } from "../../utils";
 
-const CoverContainer = styled.div`
+const MainContainer = styled.div`
   display: flex;
-  width: 55vw;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  margin-bottom: 5rem;
+`;
+
+const CoverContainer = styled.div`
+  flex: 1;
+  display: flex;
+  min-height: 100vh;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -12,19 +20,25 @@ const CoverContainer = styled.div`
   background: ${colors.darkerPrimary};
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   overflow: hidden;
+  padding: 2rem;
 `;
 
 const RightContainer = styled.div`
+  flex: 1.1;
+  min-height: 100vh;
   display: flex;
-  width: 45vw;
-  height: 100vh;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
   padding: 0 3rem;
-  box-sizing: border-box;
   background: ${colors.white};
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  gap: 3rem;
+`;
+
+const Title = styled.h2`
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin-top: 5rem;
+  color: ${colors.darkGrey};
 `;
 
 const Subtitle = styled.h2`
@@ -32,11 +46,9 @@ const Subtitle = styled.h2`
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  margin-left: 0;
-  margin-right: 4.6rem;
   margin-top: 2rem;
   margin-bottom: auto;
   color: ${colors.darkGrey};
 `;
 
-export { CoverContainer, RightContainer, Subtitle };
+export { MainContainer, CoverContainer, RightContainer, Subtitle, Title };
