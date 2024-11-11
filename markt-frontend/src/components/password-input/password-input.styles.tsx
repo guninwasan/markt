@@ -42,6 +42,7 @@ const Input = styled.input<{ showPassword: boolean }>`
   background: ${colors.lightGrey};
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   padding: 0.5rem;
+  padding-right: 4rem;
   width: 100%;
   border: none;
   transition: background 0.3s ease;
