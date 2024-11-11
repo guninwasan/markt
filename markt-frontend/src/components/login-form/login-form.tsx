@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { LoginInputField } from "../input-field";
+import { InputField } from "../input-field";
 import { ErrorRsp } from "../../errorCodes";
 import { setIsLoggedIn } from "../../redux";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "../../redux/slices/user-auth-slice";
 import { API_BASE_URL } from "../api";
 import { LoginButton } from "./login-form.styles";
+import { PasswordInput } from "../password-input";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
@@ -23,28 +24,9 @@ const LoginForm: React.FC = () => {
   });
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 
-  // Validation function
   const validateEmail = (email: string) =>
     /^[^\s@]+@(mail\.)?utoronto\.ca$/.test(email);
 
-  // Handle input changes and clear specific field errors on change
-  const handleInputChange =
-    (setter: React.Dispatch<React.SetStateAction<string>>, fieldName: string) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setter(e.target.value);
-      setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: "" }));
-    };
-
-  // Mark a field as "touched" when it loses focus
-  const handleBlur = (fieldName: string) => {
-    setTouchedFields((prevState) => ({
-      ...prevState,
-      [fieldName]: true,
-    }));
-    validateField(fieldName); // Validate on blur
-  };
-
-  // Validate a single field
   const validateField = (name: string) => {
     const newErrors = { ...errors };
     if (name === "email") {
@@ -56,21 +38,17 @@ const LoginForm: React.FC = () => {
     setErrors(newErrors);
   };
 
-  // Enable/disable the submit button based on form completeness
   useEffect(() => {
     setIsButtonDisabled(!(email && password));
   }, [email, password]);
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Mark all fields as touched on submit
     setTouchedFields({ email: true, password: true });
     validateField("email");
     validateField("password");
 
-    // Only submit if there are no client-side validation errors
     if (!Object.values(errors).some((error) => error)) {
       try {
         const response = await fetch(`${API_BASE_URL}/api/user/login`, {
@@ -123,26 +101,22 @@ const LoginForm: React.FC = () => {
       onSubmit={handleSubmit}
       style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
     >
-      <LoginInputField
+      <InputField
         type="email"
-        placeholder="UofT Email Address"
-        value={email}
-        onChange={handleInputChange(setEmail, "email")}
-        onBlur={() => handleBlur("email")}
-        style={{ borderColor: errors.email ? "red" : undefined }}
+        placeholder="Enter Your UofT Email Address"
+        onChange={setEmail}
       />
       {touchedFields.email && errors.email && (
         <p style={{ color: "red" }}>{errors.email}</p>
       )}
 
-      <LoginInputField
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={handleInputChange(setPassword, "password")}
-        onBlur={() => handleBlur("password")}
-        style={{ borderColor: errors.password ? "red" : undefined }}
+      <PasswordInput
+        onPasswordChange={setPassword}
+        errorMessage={errors.password || ""}
+        dontShowRequirements
+        placeholder="Enter Your Password"
       />
+
       {touchedFields.password && errors.password && (
         <p style={{ color: "red" }}>{errors.password}</p>
       )}
@@ -158,7 +132,6 @@ const LoginForm: React.FC = () => {
         </Link>
       </div>
 
-      {/* General form error */}
       {errors.form && <p style={{ color: "red" }}>{errors.form}</p>}
     </form>
   );
