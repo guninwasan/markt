@@ -47,4 +47,29 @@ const LoadingText = styled.div`
   margin-left: 1.4rem;
 `;
 
-export { ModalBackground, LoadingIndicator, LoadingText };
+const TimerText = styled.div`
+  width: 100%;
+  font-weight: bold;
+  color: ${colors.white};
+  font-size: 14px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  margin-left: 1rem;
+`;
+
+const SupportLink = styled.a`
+  color: ${colors.primary};
+  text-decoration: underline;
+  font-weight: 1000;
+  font-size: 16px;
+`;
+
+export {
+  ModalBackground,
+  LoadingIndicator,
+  LoadingText,
+  TimerText,
+  SupportLink,
+};
