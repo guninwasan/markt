@@ -11,6 +11,8 @@ import {
   ProfileContainer,
   LogoutButton,
   StyledProfilePhoto,
+  SellButton,
+  SellItem,
 } from "./navbar.styles";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -71,7 +73,9 @@ const MenuItems = () => {
   const DesktopMenu = () => (
     <>
       <MenuItem>
-        <MenuLink to="/sell">Sell</MenuLink>
+        <SellItem as={NavLink} to="/sell">
+          <SellButton>Sell</SellButton>
+        </SellItem>
       </MenuItem>
       <MenuItem ref={dropdownRef}>
         <ProfileContainer>
