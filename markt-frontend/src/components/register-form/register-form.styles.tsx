@@ -19,4 +19,5 @@ const RegisterButton = styled.button`
     opacity: 0.6;
   }
 `;
+
 export { RegisterButton };

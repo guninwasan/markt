@@ -1,69 +1,30 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { RegisterInputField } from "../input-field";
 import { ErrorRsp } from "../../errorCodes";
 import { API_BASE_URL } from "../api";
 import { RegisterButton } from "./register-form.styles";
 import { PasswordInput } from "../password-input";
+import { InputField } from "../input-field/input-field";
 
 const REGISTER_URL = `${API_BASE_URL}/api/user/register`;
 
-const RegisterForm: React.FC = () => {
+const RegisterForm = () => {
   const [fullName, setFullName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({
     fullName: "",
     email: "",
     password: "",
+    confirmPassword: "",
     phone: "",
     form: "",
   });
 
-  const [touchedFields, setTouchedFields] = useState<{
-    [key: string]: boolean;
-  }>({
-    fullName: false,
-    email: false,
-    password: false,
-    phone: false,
-  });
-
-  console.log(touchedFields);
-
   const navigate = useNavigate();
 
-  // Handle input changes and clear specific field errors on input
-  const handleInputChange =
-    (setter: React.Dispatch<React.SetStateAction<string>>, fieldName: string) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setter(e.target.value);
-      setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: "" })); // Clear error on input change
-    };
-
-  // Handle onBlur for each input to show specific "required" error messages if empty
-  const handleBlur = (fieldName: string, value: string) => {
-    // Mark the field as touched
-    setTouchedFields((prevTouched) => ({ ...prevTouched, [fieldName]: true }));
-
-    // Show specific "required" error messages if the field is empty
-    if (!value) {
-      const fieldErrorMessages: { [key: string]: string } = {
-        fullName: "Full Name is required",
-        email: "A valid email is required",
-        password: "Password is required",
-        phone: "Phone number is required",
-      };
-
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [fieldName]: fieldErrorMessages[fieldName] || "This field is required",
-      }));
-    }
-  };
-
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -88,17 +49,18 @@ const RegisterForm: React.FC = () => {
           fullName: "",
           email: "",
           password: "",
+          confirmPassword: "",
           phone: "",
           form: "",
         });
       } else {
         console.error("Registration failed:", result);
 
-        // Clear all field-specific errors before handling new ones
         const fieldErrors: { [key: string]: string } = {
           fullName: "",
           email: "",
           password: "",
+          confirmPassword: "",
           phone: "",
           form: "",
         };
@@ -146,44 +108,32 @@ const RegisterForm: React.FC = () => {
       onSubmit={handleSubmit}
       style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
     >
-      <RegisterInputField
-        type="text"
-        placeholder="Full Name"
-        value={fullName}
-        onChange={handleInputChange(setFullName, "fullName")}
-        onBlur={() => handleBlur("fullName", fullName)}
-      />
+      <InputField type="text" placeholder="Full Name" onChange={setFullName} />
       {errors.fullName && <p style={{ color: "red" }}>{errors.fullName}</p>}
 
-      <RegisterInputField
+      <InputField
         type="email"
         placeholder="UofT Email Address"
-        value={email}
-        onChange={handleInputChange(setEmail, "email")}
-        onBlur={() => handleBlur("email", email)}
+        onChange={setEmail}
       />
       {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
 
-      <RegisterInputField
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={handleInputChange(setPassword, "password")}
-        onBlur={() => handleBlur("password", password)}
+      <PasswordInput
+        onPasswordChange={setPassword}
+        errorMessage={errors.password || ""}
       />
-      <PasswordInput onPasswordChange={setPassword} />
       {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
 
-      <RegisterInputField
-        type="tel"
-        placeholder="Phone No."
-        value={phone}
-        onChange={handleInputChange(setPhone, "phone")}
-        onBlur={() => handleBlur("phone", phone)}
+      <PasswordInput
+        onPasswordChange={setConfirmPassword}
+        errorMessage={errors.password || ""}
+        dontShowRequirements
+        placeholder="Confirm Password"
       />
+
+      <InputField type="tel" placeholder="Phone No." onChange={setPhone} />
       {errors.phone && <p style={{ color: "red" }}>{errors.phone}</p>}
 
-      {/* add disabled option here */}
       <RegisterButton type="submit">Create Account</RegisterButton>
 
       <div style={{ marginTop: "1rem" }}>
@@ -193,7 +143,6 @@ const RegisterForm: React.FC = () => {
         </Link>
       </div>
 
-      {/* General form error */}
       {errors.form && <p style={{ color: "red" }}>{errors.form}</p>}
     </form>
   );
