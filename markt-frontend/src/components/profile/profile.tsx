@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   GreetingText,
@@ -6,15 +5,12 @@ import {
   ProfileDetailsHeading,
   ButtonContainer,
   Button,
-  ModalOverlay,
-  ModalContent,
 } from "./profile.styles";
 import { useSelector } from "react-redux";
 import { RootState, selectors, setIsLoading, setIsLoggedIn } from "../../redux";
 import { useDispatch } from "react-redux";
 
 const Profile = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -36,9 +32,7 @@ const Profile = () => {
   };
 
   //CHANGE PASSWORD FUNCTIONALITY NEEDS TO BE ADDED
-  const handleChangePassword = () => {
-    console.log("Changing password");
-  };
+  const handleChangePassword = () => {};
 
   return (
     <div>
@@ -56,12 +50,6 @@ const Profile = () => {
           <Button onClick={handleLogout}>Logout</Button>
         </ButtonContainer>
       </div>
-
-      {isModalVisible && (
-        <ModalOverlay>
-          <ModalContent>You have been logged out.</ModalContent>
-        </ModalOverlay>
-      )}
     </div>
   );
 };

@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Profile should match the snapshot 1`] = `
+<div>
+  <div
+    style="padding: 20px; text-align: center;"
+  >
+    <h1
+      class="sc-blHHSb dZEASA"
+    >
+      Hello, 
+    </h1>
+    <h2
+      class="sc-egkSDF bUZWBq"
+    >
+      Profile Details:
+    </h2>
+    <p
+      class="sc-gtLWhw dyUeKS"
+    >
+      UofT Email Address: 
+    </p>
+    <p
+      class="sc-gtLWhw dyUeKS"
+    >
+      UofT Student ID: 
+    </p>
+    <div
+      class="sc-fAUdSK kWpjus"
+    >
+      <button
+        class="sc-dntaoT jPTEBr"
+      >
+        Change Password
+      </button>
+      <button
+        class="sc-dntaoT jxYeMt"
+      >
+        Logout
+      </button>
+    </div>
+  </div>
+</div>
+`;

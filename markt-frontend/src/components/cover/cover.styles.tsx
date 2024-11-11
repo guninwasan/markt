@@ -17,9 +17,10 @@ const CoverContainer = styled.div`
   justify-content: center;
   flex-shrink: 0;
   background: ${colors.darkerPrimary};
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   padding: 2rem;
+  margin-bottom: -4rem;
 `;
 
 const RightContainer = styled.div`

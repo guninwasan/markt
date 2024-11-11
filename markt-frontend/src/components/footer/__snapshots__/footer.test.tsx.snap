@@ -1,15 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`App should match the snapshot 1`] = `
+exports[`Footer should match the snapshot 1`] = `
 <div>
-  <div>
-    Markt Home Page
-  </div>
   <footer
-    class="sc-boxNXC ctCtme"
+    class="sc-blHHSb hoxMpV"
   >
     <p
-      class="sc-ebFFfp hLobXl"
+      class="sc-gtLWhw dDTpkr"
     >
       MARKT by 
       <i>
@@ -20,28 +17,28 @@ exports[`App should match the snapshot 1`] = `
       aria-label="Footer navigation"
     >
       <div
-        class="sc-fIymDE eJjCHM"
+        class="sc-egkSDF bdtBCy"
       >
         <a
-          class="sc-bdbhkv DoqVF"
+          class="sc-fAUdSK cGNQhO"
           href="/about"
         >
           About
         </a>
         <a
-          class="sc-bdbhkv DoqVF"
+          class="sc-fAUdSK cGNQhO"
           href="/privacy-policy"
         >
           Privacy Policy
         </a>
         <a
-          class="sc-bdbhkv DoqVF"
+          class="sc-fAUdSK cGNQhO"
           href="/terms-of-use"
         >
           Terms of Use
         </a>
         <a
-          class="sc-bdbhkv DoqVF"
+          class="sc-fAUdSK cGNQhO"
           href="/support"
         >
           Support / Report an issue
@@ -49,7 +46,7 @@ exports[`App should match the snapshot 1`] = `
       </div>
     </nav>
     <p
-      class="sc-cJTOIK GbdKN"
+      class="sc-dntaoT gAQEaZ"
     >
       © 2024 All rights reserved.
     </p>
