@@ -9,23 +9,28 @@ import {
   ModalOverlay,
   ModalContent,
 } from "./profile.styles";
+import { useSelector } from "react-redux";
+import { RootState, selectors, setIsLoading, setIsLoggedIn } from "../../redux";
+import { useDispatch } from "react-redux";
 
 const Profile = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const userName = "test user";
-  const userEmail = "testuser@example.com";
-  const userPhone = "9999999999";
-  const userID = "55555";
-
-  // HANDLE LOGOUT NEEDS TO BE MODIFIED TO REVOKE LOGGED IN USER RIGHTS
+  const { userName, userEmail, userPhone } = useSelector(
+    (state: RootState) => ({
+      userName: selectors.getName(state),
+      userEmail: selectors.getEmail(state),
+      userPhone: selectors.getPhone(state),
+    })
+  );
 
   const handleLogout = () => {
-    setIsModalVisible(true);
-
+    dispatch(setIsLoading(true));
+    dispatch(setIsLoggedIn(false));
     setTimeout(() => {
-      setIsModalVisible(false);
+      dispatch(setIsLoading(false));
       navigate("/");
     }, 2000);
   };
@@ -41,8 +46,8 @@ const Profile = () => {
         <GreetingText>Hello, {userName}</GreetingText>
         <ProfileDetailsHeading>Profile Details:</ProfileDetailsHeading>
         <UserInfo>UofT Email Address: {userEmail}</UserInfo>
-        <UserInfo>Phone No.: {userPhone}</UserInfo>
-        <UserInfo>UofT Student ID: {userID}</UserInfo>
+        {/* <UserInfo>Phone No.: {userPhone}</UserInfo> */}
+        <UserInfo>UofT Student ID: {userPhone}</UserInfo>
 
         <ButtonContainer>
           <Button onClick={handleChangePassword} primaryColor>

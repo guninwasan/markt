@@ -51,6 +51,7 @@ const PasswordInput = ({
           value={password}
           onChange={handlePasswordChange}
           showPassword={showPassword}
+          errorMessage={errorMessage}
         />
         <EyeButton onClick={toggleShowPassword}>
           {showPassword ? <FaEye /> : <FaEyeSlash />}

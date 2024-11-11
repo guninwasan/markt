@@ -57,12 +57,19 @@ describe("RegisterForm", () => {
   it("should display error messages for empty fields", () => {
     fireEvent.click(screen.getByText("Create Account"));
 
-    expect(screen.getByText("Full Name is required.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Full Name is a required field.")
+    ).toBeInTheDocument();
     expect(screen.getByText("Invalid UofT email.")).toBeInTheDocument();
     expect(
       screen.getByText("Password must meet the requirements.")
     ).toBeInTheDocument();
-    expect(screen.getByText("Phone number is required.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Confirm Password is a required field.")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Phone number is a required field.")
+    ).toBeInTheDocument();
   });
 
   it("should display error message for invalid email", () => {

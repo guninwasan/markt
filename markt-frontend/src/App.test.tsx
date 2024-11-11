@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import App from "./App";
+import { store } from "./redux";
+import { Provider } from "react-redux";
 
 const marktHomePageText = "Markt Home Page";
 jest.mock("./pages/home-page", () => ({
@@ -8,13 +10,21 @@ jest.mock("./pages/home-page", () => ({
 
 describe("App", () => {
   it("should render the app properly and then home page", () => {
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
     const homePage = screen.getByText(marktHomePageText);
     expect(homePage).toBeInTheDocument();
   });
 
   it("should match the snapshot", () => {
-    const { container } = render(<App />);
+    const { container } = render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
     expect(container).toMatchSnapshot();
   });
 });

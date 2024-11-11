@@ -59,16 +59,17 @@ const RegisterForm = () => {
 
   const validateFields = () => {
     const newErrors: FormErrors = {
-      fullName: formFields.fullName ? "" : "Full Name is required.",
+      fullName: formFields.fullName ? "" : "Full Name is a required field.",
       email: validateEmail(formFields.email) ? "" : "Invalid UofT email.",
       password: passwordCheck(formFields.password)
         ? ""
         : "Password must meet the requirements.",
-      confirmPassword:
-        formFields.password === formFields.confirmPassword
-          ? ""
-          : "Passwords do not match.",
-      phone: formFields.phone ? "" : "Phone number is required.",
+      confirmPassword: !formFields.confirmPassword
+        ? "Confirm Password is a required field."
+        : formFields.password === formFields.confirmPassword
+        ? ""
+        : "Passwords do not match.",
+      phone: formFields.phone ? "" : "Phone number is a required field.",
       form: "",
     };
     setErrors(newErrors);
