@@ -12,20 +12,20 @@ exports[`Navbar should match the snapshot on desktop 1`] = `
     Markt
   </a>
   <div
-    class="sc-fFoeYl hDYBDy"
+    class="sc-iuUfFv RShjO"
     style="position: relative;"
   >
     <div
-      class="sc-gQaihK cSTRIi"
+      class="sc-dprtRQ hskaRW"
     >
       <input
-        class="sc-iuUfFv dXOudh"
+        class="sc-eUlrpB iPeTgy"
         placeholder="Search..."
         type="text"
         value=""
       />
       <button
-        class="sc-dprtRQ ficVTY"
+        class="sc-geXuza dvAVud"
       >
         <svg
           fill="currentColor"
@@ -58,10 +58,10 @@ exports[`Navbar should match the snapshot on mobile 1`] = `
     Markt
   </a>
   <div
-    class="sc-jtQUzJ gsuUbx"
+    class="sc-ovuCP iVIHXA"
   >
     <svg
-      class="sc-cEzcPc iphOze"
+      class="sc-eOzmre bQYqsw"
       fill="currentColor"
       height="1em"
       stroke="currentColor"
