@@ -12,7 +12,8 @@ exports[`RegisterForm should match snapshot 1`] = `
         class="sc-jwIPbr htZZou"
       >
         <input
-          class="sc-cHqXqK fAwlqS"
+          class="sc-cHqXqK boHNTT"
+          errormessage=""
           placeholder="Enter Your Full Name"
           type="text"
           value=""
@@ -26,7 +27,8 @@ exports[`RegisterForm should match snapshot 1`] = `
         class="sc-jwIPbr htZZou"
       >
         <input
-          class="sc-cHqXqK fAwlqS"
+          class="sc-cHqXqK boHNTT"
+          errormessage=""
           placeholder="Enter Your UofT Email Address"
           type="email"
           value=""
@@ -40,7 +42,8 @@ exports[`RegisterForm should match snapshot 1`] = `
         class="sc-ghWlax kHWHhP"
       >
         <input
-          class="sc-kLhKbu khoPEX"
+          class="sc-kLhKbu eLaqBK"
+          errormessage=""
           placeholder="Enter Your Password"
           type="password"
           value=""
@@ -71,7 +74,8 @@ exports[`RegisterForm should match snapshot 1`] = `
         class="sc-ghWlax kHWHhP"
       >
         <input
-          class="sc-kLhKbu khoPEX"
+          class="sc-kLhKbu eLaqBK"
+          errormessage=""
           placeholder="Confirm Your Password"
           type="password"
           value=""
@@ -102,7 +106,8 @@ exports[`RegisterForm should match snapshot 1`] = `
         class="sc-jwIPbr htZZou"
       >
         <input
-          class="sc-cHqXqK fAwlqS"
+          class="sc-cHqXqK boHNTT"
+          errormessage=""
           placeholder="Enter Your Phone No."
           type="tel"
           value=""
@@ -145,7 +150,8 @@ exports[`RegisterForm should match snapshot 2`] = `
         class="sc-jwIPbr htZZou"
       >
         <input
-          class="sc-cHqXqK fAwlqS"
+          class="sc-cHqXqK boHNTT"
+          errormessage=""
           placeholder="Enter Your Full Name"
           type="text"
           value=""
@@ -159,7 +165,8 @@ exports[`RegisterForm should match snapshot 2`] = `
         class="sc-jwIPbr htZZou"
       >
         <input
-          class="sc-cHqXqK fAwlqS"
+          class="sc-cHqXqK boHNTT"
+          errormessage=""
           placeholder="Enter Your UofT Email Address"
           type="email"
           value=""
@@ -173,7 +180,8 @@ exports[`RegisterForm should match snapshot 2`] = `
         class="sc-ghWlax kHWHhP"
       >
         <input
-          class="sc-kLhKbu khoPEX"
+          class="sc-kLhKbu eLaqBK"
+          errormessage=""
           placeholder="Enter Your Password"
           type="password"
           value=""
@@ -204,7 +212,8 @@ exports[`RegisterForm should match snapshot 2`] = `
         class="sc-ghWlax kHWHhP"
       >
         <input
-          class="sc-kLhKbu khoPEX"
+          class="sc-kLhKbu eLaqBK"
+          errormessage=""
           placeholder="Confirm Your Password"
           type="password"
           value=""
@@ -235,7 +244,8 @@ exports[`RegisterForm should match snapshot 2`] = `
         class="sc-jwIPbr htZZou"
       >
         <input
-          class="sc-cHqXqK fAwlqS"
+          class="sc-cHqXqK boHNTT"
+          errormessage=""
           placeholder="Enter Your Phone No."
           type="tel"
           value=""

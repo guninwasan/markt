@@ -37,6 +37,7 @@ const InputField = ({
           placeholder={placeholder || "Enter text"}
           value={value}
           onChange={handleInputChange}
+          errorMessage={errorMessage}
         />
       </InputWrapper>
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
