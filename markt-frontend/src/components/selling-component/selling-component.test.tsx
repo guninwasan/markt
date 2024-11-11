@@ -10,6 +10,11 @@ jest.mock("./sections", () => ({
   AdditionalDetails: () => <div>AdditionalDetails Component</div>,
 }));
 
+jest.mock("axios", () => ({
+  get: jest.fn(),
+  post: jest.fn(),
+}));
+
 describe("SellingComponent", () => {
   it("should render all sections", () => {
     const { getByText } = render(<SellingComponent />);

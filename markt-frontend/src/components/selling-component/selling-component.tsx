@@ -7,6 +7,7 @@ import {
   Specifications,
   AdditionalDetails,
 } from "./sections";
+import { uploadImage, validateFormData } from "./utils";
 
 const initialFormData = {
   title: "",
@@ -85,18 +86,27 @@ const SellingComponent = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.title || !formData.price || !formData.description) {
-      alert("Please fill in all required fields.");
+
+    const errors = validateFormData(formData, displayImage);
+    if (errors.length > 0) {
+      alert(errors.join("\n"));
       return;
     }
-    if (priceError) {
-      alert("Please correct the errors in the form.");
-      return;
+
+    try {
+      const displayMediaUrl = await uploadImage(displayImage as File);
+      const getMediaURLs = await Promise.all(
+        mediaFiles.map(async (file: File) => {
+          return await uploadImage(file);
+        })
+      );
+      console.log("Display Media URL:", displayMediaUrl);
+      console.log("Media URLs:", getMediaURLs);
+    } catch (error) {
+      console.error("Error uploading images:", error);
     }
-    alert("Form Data Submitted");
-    // connect with backend
   };
 
   return (

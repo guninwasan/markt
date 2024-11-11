@@ -81,7 +81,7 @@ const MediaSection = ({
           type="button"
           onClick={() => displayImageInputRef.current?.click()}
         >
-          Add Display Image
+          Add Display Image (Max 1 MB)
         </AddMediaButton>
         <input
           id="displayImageInput"
@@ -103,13 +103,13 @@ const MediaSection = ({
         )}
         <br />
         <Label htmlFor="mediaInput">
-          Additional Images and Videos (Max: {maxMediaFiles}) *
+          Additional Images and Videos (Max {maxMediaFiles} )
         </Label>
         <AddMediaButton
           type="button"
           onClick={() => mediaInputRef.current?.click()}
         >
-          + Add Images or Videos
+          + Add Images or Videos (Max 1 MB)
         </AddMediaButton>
         <input
           id="mediaInput"
