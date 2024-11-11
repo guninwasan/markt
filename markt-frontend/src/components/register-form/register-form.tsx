@@ -174,14 +174,14 @@ const RegisterForm = () => {
     <FormContainer onSubmit={handleSubmit}>
       <InputField
         type="text"
-        placeholder="Full Name"
+        placeholder="Enter Your Full Name"
         onChange={handleInputChange("fullName")}
         errorMessage={showErrors ? errors.fullName : ""}
       />
 
       <InputField
         type="email"
-        placeholder="UofT Email Address"
+        placeholder="Enter Your UofT Email Address"
         onChange={handleInputChange("email")}
         errorMessage={showErrors ? errors.email : ""}
       />
@@ -189,18 +189,19 @@ const RegisterForm = () => {
       <PasswordInput
         onPasswordChange={handleInputChange("password")}
         errorMessage={showErrors ? errors.password : ""}
+        placeholder="Enter Your Password"
       />
 
       <PasswordInput
         onPasswordChange={handleInputChange("confirmPassword")}
         errorMessage={showErrors ? errors.confirmPassword : ""}
         dontShowRequirements
-        placeholder="Confirm Password"
+        placeholder="Confirm Your Password"
       />
 
       <InputField
         type="tel"
-        placeholder="Phone No."
+        placeholder="Enter Your Phone No."
         onChange={handleInputChange("phone")}
         errorMessage={showErrors ? errors.phone : ""}
       />
