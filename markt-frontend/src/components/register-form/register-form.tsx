@@ -64,7 +64,7 @@ const RegisterForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://project-1-web-application-design-group15.onrender.com/api/user/register", {
+      const response = await fetch("http://localhost:5000/api/user/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

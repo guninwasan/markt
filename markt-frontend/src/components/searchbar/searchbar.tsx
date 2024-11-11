@@ -23,7 +23,7 @@ const SearchBar = () => {
     if (newSearchTerm.trim()) {
       try {
         const response = await fetch(
-          `"https://project-1-web-application-design-group15.onrender.com/api/listing/search?query=${newSearchTerm}&filter=price_low&page=1&page_size=5&deepSearch=false`
+          `http://localhost:5000/api/listing/search?query=${newSearchTerm}&filter=price_low&page=1&page_size=5&deepSearch=false`
         );
         const data = await response.json();
 

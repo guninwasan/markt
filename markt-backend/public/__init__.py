@@ -6,7 +6,8 @@ from flask_cors import CORS
 
 def create_app_api(testing):
     app = create_app_db(testing)
-    CORS(app, resources={r"/api/*": {"origins": "https://deploy-preview-168--mizzica.netlify.app"}})
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 
     app.register_blueprint(user_api_bp, url_prefix='/api/user')
     app.register_blueprint(listing_api_bp, url_prefix='/api/listing')
