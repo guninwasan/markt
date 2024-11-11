@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_BASE_URL } from "../api"
 import {
   SearchBarContainer,
   SearchInput,
@@ -23,7 +24,7 @@ const SearchBar = () => {
     if (newSearchTerm.trim()) {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/listing/search?query=${newSearchTerm}&filter=price_low&page=1&page_size=5&deepSearch=false`
+          `${API_BASE_URL}/api/listing/search?query=${newSearchTerm}&filter=price_low&page=1&page_size=5&deepSearch=false`
         );
         const data = await response.json();
 
@@ -41,17 +42,24 @@ const SearchBar = () => {
     }
   };
 
+  // Updated search submit handler to trigger the search, clear input and close dropdown
   const handleSearchSubmit = () => {
     if (searchTerm.trim()) {
-      console.log("Search submitted: ", searchTerm);
+      console.log("Search submitted:", searchTerm);
+      // Navigate to search results page
+      navigate(`/search?keywords=${searchTerm}`);
+      
+      // Clear the input field and close the dropdown
+      setSearchTerm("");
+      setSuggestions([]);
     }
   };
 
-  // Function to highlight only the first match in the suggestion
+  // Function to highlight the matched term
   const highlightMatch = (suggestion: string) => {
     if (!searchTerm) return suggestion;
-    
-    const regex = new RegExp(`(${searchTerm})`, "i"); // Case-insensitive matching for the first occurrence
+
+    const regex = new RegExp(`(${searchTerm})`, "i");
     const parts = suggestion.split(regex);
 
     let isFirstMatch = true;
@@ -72,6 +80,10 @@ const SearchBar = () => {
   const handleDropdownClick = (listingId: number) => {
     // Navigate to the listing page
     navigate(`/listing?id=${listingId}`);
+    
+    // Clear the input field and close the dropdown
+    setSearchTerm("");
+    setSuggestions([]);
   };
 
   return (
@@ -88,7 +100,7 @@ const SearchBar = () => {
         </SearchButton>
       </InnerSearchBarContainer>
 
-      {/* Styled dropdown for suggestions */}
+      {/* Dropdown for suggestions */}
       {suggestions.length > 0 && (
         <Dropdown>
           {suggestions.map((suggestion, index) => (
@@ -96,7 +108,7 @@ const SearchBar = () => {
               key={index}
               onClick={() => handleDropdownClick(suggestion.id)} // Use listing id to navigate
             >
-              {highlightMatch(suggestion.title)} {}
+              {highlightMatch(suggestion.title)}
             </DropdownItem>
           ))}
         </Dropdown>
