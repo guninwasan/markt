@@ -7,8 +7,8 @@ import {
 
 const LoadingModal = () => {
   return (
-    <ModalBackground>
-      <LoadingIndicator />
+    <ModalBackground data-testid="modal-background">
+      <LoadingIndicator data-testid="loading-indicator" />
       <LoadingText>Loading....</LoadingText>
     </ModalBackground>
   );
