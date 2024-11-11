@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoadingModal should match the snapshot 1`] = `
+<div>
+  <div
+    class="sc-blHHSb dWsZIh"
+    data-testid="modal-background"
+  >
+    <div
+      class="sc-gtLWhw cgXRjV"
+      data-testid="loading-indicator"
+    />
+    <div
+      class="sc-egkSDF beDEqd"
+    >
+      Loading....
+    </div>
+  </div>
+</div>
+`;
