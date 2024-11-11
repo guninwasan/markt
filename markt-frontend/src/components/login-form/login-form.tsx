@@ -103,9 +103,8 @@ const LoginForm = () => {
               jwt: result.token,
             })
           );
-
           dispatch(setIsLoggedIn(true));
-          navigate("/"); // Redirect to home
+          navigate("/");
         } else {
           const newErrors = { ...errors };
           switch (result.status) {
