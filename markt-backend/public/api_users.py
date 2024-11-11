@@ -189,13 +189,10 @@ def verify_email(email):
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
 
-    if data['for_forget_pwd'] and user.forget_pwd != User.ForgetPasswordState.CodeSent:
+    if (user.validation_code is None or
+        (data['for_forget_pwd'] and user.forget_pwd != User.ForgetPasswordState.CodeSent)):
             return jsonify({"status": ErrorRsp.ERR.value,
                             "data": "Email verification code has not been sent"}), 400
-
-    if user.validation_code is None:
-        return jsonify({"status": ErrorRsp.ERR.value,
-                        "data": "No validation code has been sent"}), 400
 
     if int(user.validation_code) != int(data['code']):
         return jsonify({"status": ErrorRsp.ERR_PARAM.value,
