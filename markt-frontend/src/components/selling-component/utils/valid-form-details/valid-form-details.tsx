@@ -34,7 +34,7 @@ const validateFormData = (
     errors.push("Please enter a valid positive number for price.");
   }
 
-  if (!displayImage) errors.push("Display Image is required.");
+  // if (!displayImage) errors.push("Display Image is required.");
 
   return errors;
 };
