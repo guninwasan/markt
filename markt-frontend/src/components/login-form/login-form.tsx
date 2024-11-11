@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginInputField } from "../input-field";
-import { loginButtonStyles } from "../input-field/input-field.styles";
 import { ErrorRsp } from "../../errorCodes";
 import { setIsLoggedIn } from "../../redux";
 import { useDispatch } from "react-redux";
-// import { useIsMobile } from "../../hooks";
 import { setUserDetails } from "../../redux/slices/user-auth-slice";
+import { API_BASE_URL } from "../api";
+import { LoginButton } from "./login-form.styles";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
-  // const { isMobile } = useIsMobile();
   const dispatch = useDispatch();
-  // const { isLoggedIn, name } = useSelector((state: RootState) => ({
-  //   isLoggedIn: selectors.getIsLoggedIn(state),
-  //   name: selectors.getName(state),
-  // }));
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -78,7 +73,7 @@ const LoginForm: React.FC = () => {
     // Only submit if there are no client-side validation errors
     if (!Object.values(errors).some((error) => error)) {
       try {
-        const response = await fetch("https://project-1-web-application-design-group15.onrender.com/api/user/login", {
+        const response = await fetch(`${API_BASE_URL}/api/user/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
@@ -152,13 +147,9 @@ const LoginForm: React.FC = () => {
         <p style={{ color: "red" }}>{errors.password}</p>
       )}
 
-      <button
-        type="submit"
-        style={loginButtonStyles}
-        disabled={isButtonDisabled}
-      >
+      <LoginButton type="submit" disabled={isButtonDisabled}>
         Login
-      </button>
+      </LoginButton>
 
       <div style={{ marginTop: "1rem" }}>
         Don't have an account?{" "}
