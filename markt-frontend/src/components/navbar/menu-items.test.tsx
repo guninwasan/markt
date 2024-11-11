@@ -28,7 +28,7 @@ describe("MenuItems Component", () => {
     renderWithRedux(<MenuItems />);
 
     expect(screen.getByText("Sell")).toBeInTheDocument();
-    expect(screen.getByText("My Account")).toBeInTheDocument();
+    expect(screen.getByText("My Profile")).toBeInTheDocument();
     expect(screen.getByText("Wishlist")).toBeInTheDocument();
     expect(screen.getByText("Logout")).toBeInTheDocument();
   });
@@ -51,10 +51,10 @@ describe("MenuItems Component", () => {
     renderWithRedux(<MenuItems />);
     const profileButton = screen.getByTestId("profile");
 
-    expect(screen.queryByText("My Account")).not.toBeInTheDocument();
+    expect(screen.queryByText("My Profile")).not.toBeInTheDocument();
 
     fireEvent.click(profileButton);
-    expect(screen.getByText("My Account")).toBeInTheDocument();
+    expect(screen.getByText("My Profile")).toBeInTheDocument();
     expect(screen.getByText("Wishlist")).toBeInTheDocument();
     expect(screen.getByText("Logout")).toBeInTheDocument();
   });
@@ -67,9 +67,9 @@ describe("MenuItems Component", () => {
     const profileButton = screen.getByTestId("profile");
 
     fireEvent.click(profileButton);
-    expect(screen.getByText("My Account")).toBeInTheDocument();
+    expect(screen.getByText("My Profile")).toBeInTheDocument();
 
     fireEvent.mouseDown(document);
-    expect(screen.queryByText("My Account")).not.toBeInTheDocument();
+    expect(screen.queryByText("My Profile")).not.toBeInTheDocument();
   });
 });
