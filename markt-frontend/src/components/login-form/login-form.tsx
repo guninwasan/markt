@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { InputField } from "../input-field";
 import { ErrorRsp } from "../../errorCodes";
-import { setIsLoggedIn } from "../../redux";
+import { setIsLoading, setIsLoggedIn, setUserDetails } from "../../redux";
 import { useDispatch } from "react-redux";
-import { setUserDetails } from "../../redux/slices/user-auth-slice";
 import { API_BASE_URL } from "../api";
 import {
   LoginButton,
@@ -58,7 +57,12 @@ const LoginForm = () => {
       (!passwordCheck(password) && email) ||
       (!validateEmail(email) && password && email)
     ) {
-      // we can also load here for a couple of seconds
+      dispatch(setIsLoading(true));
+
+      setTimeout(() => {
+        dispatch(setIsLoading(false));
+      }, 1000);
+
       newErrors.form = standardErrorMessage;
     }
 
@@ -78,6 +82,7 @@ const LoginForm = () => {
 
     if (!checkErrors) {
       try {
+        dispatch(setIsLoading(true));
         const response = await fetch(`${API_BASE_URL}/api/user/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -87,6 +92,7 @@ const LoginForm = () => {
         const result = await response.json();
 
         if (response.ok) {
+          dispatch(setIsLoading(false));
           alert("Login successful! Redirecting to Home...");
           dispatch(
             setUserDetails({
@@ -114,8 +120,10 @@ const LoginForm = () => {
               break;
           }
           setErrors({ ...errors, ...newErrors });
+          dispatch(setIsLoading(false));
         }
       } catch (error) {
+        dispatch(setIsLoading(false));
         console.error("Login failed:", error);
         setErrors({
           ...errors,
