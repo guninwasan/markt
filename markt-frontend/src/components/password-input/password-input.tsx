@@ -26,7 +26,9 @@ const PasswordInput = ({
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const toggleShowPassword = () => {
+  const toggleShowPassword = (event: any) => {
+    event.preventDefault();
+
     setShowPassword((prev) => !prev);
   };
 
