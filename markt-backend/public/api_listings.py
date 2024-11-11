@@ -5,7 +5,7 @@ from marshmallow import ValidationError
 from database.db import db
 from database.models import Listing, User
 from utils.errors import ErrorRsp
-from schemas.listing_schema import ListingInformationSchema, ListingUpdate, ListingGetSchema
+from schemas.listing_schema import ListingInformationSchema, ListingUpdate, ListingGetSchema, ListingDeleteSchema
 
 listing_api_bp = Blueprint('listing_api', __name__)
 swagger = Swagger()
@@ -271,11 +271,15 @@ def update(id):
 def delete(id):
 
     data = request.get_json()
-    # Check if request includes the user's email
-    if 'user_email' not in data:
+    schema = ListingDeleteSchema()
+
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
         return jsonify({
             "status": ErrorRsp.ERR_PARAM.value,
-            "data": "User email is required to delete a listing."
+            "data": "Invalid parameters",
+            "errors": err.messages
         }), 400
     
     # Check if listing exists
