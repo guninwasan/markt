@@ -6,50 +6,77 @@ import { setIsLoggedIn } from "../../redux";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "../../redux/slices/user-auth-slice";
 import { API_BASE_URL } from "../api";
-import { LoginButton } from "./login-form.styles";
+import {
+  LoginButton,
+  FormContainer,
+  ErrorText,
+  LinkText,
+  LinkStyled,
+} from "./login-form.styles";
 import { PasswordInput } from "../password-input";
+import { passwordCheck } from "../../utils/password-check";
 
-const LoginForm: React.FC = () => {
+const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [touchedFields, setTouchedFields] = useState<{
-    [key: string]: boolean;
-  }>({
-    email: false,
-    password: false,
-  });
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
+
+  const standardErrorMessage =
+    "This email and password combination doesn't exist in our records. Please try again.";
 
   const validateEmail = (email: string) =>
     /^[^\s@]+@(mail\.)?utoronto\.ca$/.test(email);
 
-  const validateField = (name: string) => {
-    const newErrors = { ...errors };
-    if (name === "email") {
-      newErrors.email =
-        email && validateEmail(email) ? "" : "A valid UofT email is required";
-    } else if (name === "password") {
-      newErrors.password = password ? "" : "Password is required";
-    }
-    setErrors(newErrors);
+  useEffect(() => {
+    setIsButtonDisabled(!email || !password);
+  }, [email, password, errors]);
+
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
   };
 
-  useEffect(() => {
-    setIsButtonDisabled(!(email && password));
-  }, [email, password]);
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+  };
+
+  const validationCheck = (email: string, password: string) => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!password) {
+      newErrors.password = "Please enter a password.";
+    }
+
+    if (!email) {
+      newErrors.email = "Please enter a valid UofT email.";
+    }
+
+    if (
+      (!passwordCheck(password) && email) ||
+      (!validateEmail(email) && password && email)
+    ) {
+      // we can also load here for a couple of seconds
+      newErrors.form = standardErrorMessage;
+    }
+
+    setErrors(newErrors);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setTouchedFields({ email: true, password: true });
-    validateField("email");
-    validateField("password");
+    validationCheck(email, password);
 
-    if (!Object.values(errors).some((error) => error)) {
+    const checkErrors = Object.values(errors).some((error) => error);
+
+    if (checkErrors || !email || !password) {
+      return;
+    }
+
+    if (!checkErrors) {
       try {
         const response = await fetch(`${API_BASE_URL}/api/user/login`, {
           method: "POST",
@@ -74,22 +101,24 @@ const LoginForm: React.FC = () => {
           dispatch(setIsLoggedIn(true));
           navigate("/"); // Redirect to home
         } else {
-          // Handle specific backend errors
+          const newErrors = { ...errors };
           switch (result.status) {
             case ErrorRsp.ERR_NOT_FOUND:
-              setErrors({ email: "User does not exist" });
+              newErrors.email = standardErrorMessage;
               break;
             case ErrorRsp.ERR_PARAM:
-              setErrors({ password: "Incorrect password" });
+              newErrors.password = standardErrorMessage;
               break;
             default:
-              setErrors({ form: "An error occurred. Please try again later." });
+              newErrors.form = standardErrorMessage;
               break;
           }
+          setErrors({ ...errors, ...newErrors });
         }
       } catch (error) {
         console.error("Login failed:", error);
         setErrors({
+          ...errors,
           form: "An unexpected error occurred. Please try again later.",
         });
       }
@@ -97,43 +126,34 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-    >
+    <FormContainer onSubmit={handleSubmit}>
       <InputField
         type="email"
         placeholder="Enter Your UofT Email Address"
-        onChange={setEmail}
+        onChange={handleEmailChange}
+        errorMessage={errors.email || ""}
       />
-      {touchedFields.email && errors.email && (
-        <p style={{ color: "red" }}>{errors.email}</p>
-      )}
 
       <PasswordInput
-        onPasswordChange={setPassword}
+        onPasswordChange={handlePasswordChange}
         errorMessage={errors.password || ""}
         dontShowRequirements
         placeholder="Enter Your Password"
       />
 
-      {touchedFields.password && errors.password && (
-        <p style={{ color: "red" }}>{errors.password}</p>
-      )}
-
-      <LoginButton type="submit" disabled={isButtonDisabled}>
+      <LoginButton type="submit" isDisabled={isButtonDisabled}>
         Login
       </LoginButton>
 
-      <div style={{ marginTop: "1rem" }}>
+      <LinkText>
         Don't have an account?{" "}
-        <Link to="/register" style={{ color: "#000000" }}>
+        <LinkStyled to="/register">
           <b>Register</b>
-        </Link>
-      </div>
+        </LinkStyled>
+      </LinkText>
 
-      {errors.form && <p style={{ color: "red" }}>{errors.form}</p>}
-    </form>
+      {errors.form && <ErrorText>{errors.form}</ErrorText>}
+    </FormContainer>
   );
 };
 
