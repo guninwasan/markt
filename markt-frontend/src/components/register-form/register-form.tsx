@@ -4,6 +4,7 @@ import { RegisterInputField } from "../input-field";
 import { ErrorRsp } from "../../errorCodes";
 import { API_BASE_URL } from "../api";
 import { RegisterButton } from "./register-form.styles";
+import { PasswordInput } from "../password-input";
 
 const REGISTER_URL = `${API_BASE_URL}/api/user/register`;
 
@@ -170,6 +171,7 @@ const RegisterForm: React.FC = () => {
         onChange={handleInputChange(setPassword, "password")}
         onBlur={() => handleBlur("password", password)}
       />
+      <PasswordInput onPasswordChange={setPassword} />
       {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
 
       <RegisterInputField
