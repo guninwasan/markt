@@ -11,7 +11,7 @@ import {
   ProductListingPage,
 } from "./pages";
 import { useIsMobile } from "./hooks";
-import { ProtectedRoute } from "./components";
+import { ProtectedRoute, RedirectToHomeRoute } from "./components";
 
 function App() {
   useIsMobile();
@@ -19,8 +19,14 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route
+          path="/login"
+          element={<RedirectToHomeRoute element={<LoginPage />} />}
+        />
+        <Route
+          path="/register"
+          element={<RedirectToHomeRoute element={<RegisterPage />} />}
+        />
         <Route path="/listing" element={<ProductListingPage />} />
         <Route
           path="/sell"
