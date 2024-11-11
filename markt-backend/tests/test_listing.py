@@ -1,9 +1,14 @@
+import os
+from dotenv import load_dotenv
 import pytest
 
 from utils.errors import ErrorRsp
 from public import create_app_api
 from database.db import db
 from database.models import Listing, User
+
+load_dotenv(dotenv_path='.env', verbose=True)
+SECURITY_KEY = os.getenv('SECRET_KEY')
 
 @pytest.fixture
 def client():
@@ -28,7 +33,7 @@ def test_create_listing(client):
         "used": True,
         "owner_email": test_user.email
     }
-    rsp = client.post('/api/listing/create', json=incomplete_data)
+    rsp = client.post('/api/listing/create', json=incomplete_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_PARAM.value
@@ -45,7 +50,7 @@ def test_create_listing(client):
         "used": True,
         "owner_email": "invalid@gmail.com"
     }
-    rsp = client.post('/api/listing/create', json=invalid_user)
+    rsp = client.post('/api/listing/create', json=invalid_user, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 404
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_NOT_FOUND.value
@@ -62,7 +67,7 @@ def test_create_listing(client):
         "used": True,
         "owner_email": test_user.email
     }
-    rsp = client.post('/api/listing/create', json=invalid_user)
+    rsp = client.post('/api/listing/create', json=invalid_user, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_PARAM.value
@@ -78,7 +83,7 @@ def test_create_listing(client):
         "used": True,
         "owner_email": test_user.email
     }
-    rsp = client.post('/api/listing/create', json=data)
+    rsp = client.post('/api/listing/create', json=data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 201
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
@@ -115,14 +120,14 @@ def test_get_listing(client):
     db.session.commit()
 
     # Invalid listing ID
-    rsp = client.get(f'/api/listing/get/{999}/', json={})
+    rsp = client.get(f'/api/listing/get/{999}/', json={}, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 404
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_NOT_FOUND.value
     assert rsp['data'] == "Listing does not exist!"
 
     # Valid request
-    rsp = client.get(f'/api/listing/get/{listing.id}/', json={'minimal': False})
+    rsp = client.get(f'/api/listing/get/{listing.id}/', json={'minimal': False}, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
@@ -132,7 +137,7 @@ def test_get_listing(client):
 
 def test_get_all_listings(client):
     # empty database
-    rsp = client.get('/api/listing/all', json={})
+    rsp = client.get('/api/listing/all', json={}, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
@@ -158,7 +163,7 @@ def test_get_all_listings(client):
     db.session.commit()
 
     # Get listings
-    rsp = client.get('/api/listing/all', json={'minimal': False})
+    rsp = client.get('/api/listing/all', json={'minimal': False}, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
@@ -195,14 +200,14 @@ def test_update_listing(client):
     }
 
     # Wrong listing id
-    rsp = client.put(f'/api/listing/update/{9999}/', json=update_data)
+    rsp = client.put(f'/api/listing/update/{9999}/', json=update_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 404
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_NOT_FOUND.value
     assert rsp['data'] == "Listing does not exist!"
 
     # Correct listing id
-    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data)
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
@@ -234,7 +239,7 @@ def test_sell_listing(client):
     update_data_only_sold = {
         "sold": True,
     }
-    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_only_sold)
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_only_sold, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_PARAM_EMAIL.value
@@ -246,7 +251,7 @@ def test_sell_listing(client):
         "buyer_email": test_buyer.email,
         "sold": False
     }
-    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_only_email)
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_only_email, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_PARAM.value
@@ -258,7 +263,7 @@ def test_sell_listing(client):
         "sold": True,
         "buyer_email": "invalid@utoronto.ca",
     }
-    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_invalid_email)
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_invalid_email, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 404
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_NOT_FOUND.value
@@ -270,7 +275,7 @@ def test_sell_listing(client):
         "sold": True,
         "buyer_email": test_user.email,
     }
-    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_owner_email)
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_owner_email, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_PARAM_EMAIL.value
@@ -282,7 +287,7 @@ def test_sell_listing(client):
         "sold": True,
         "buyer_email": test_buyer.email,
     }
-    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_valid)
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_valid, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
@@ -302,7 +307,7 @@ def test_sell_listing(client):
         "sold": False,
         "buyer_email": test_buyer.email,
     }
-    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_unsold)
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_unsold, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_PARAM.value
@@ -329,21 +334,21 @@ def test_delete_listing(client):
     db.session.commit()
 
     # Wrong listing id
-    rsp = client.delete(f'/api/listing/delete/{9999}/', json={"user_email": "test@utoronto.ca"})
+    rsp = client.delete(f'/api/listing/delete/{9999}/', json={"user_email": "test@utoronto.ca"}, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
 
     assert rsp.status_code == 404
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_NOT_FOUND.value
     assert rsp['data'] == "Listing does not exist!"
 
-    rsp = client.delete(f'/api/listing/delete/{listing.id}/', json={"user_email": "not_test@utoronto.ca"})
+    rsp = client.delete(f'/api/listing/delete/{listing.id}/', json={"user_email": "not_test@utoronto.ca"}, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 403  # Assuming 403 Forbidden for unauthorized action
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_NOT_ALLOWED.value
     assert rsp['data'] == "You are not authorized to delete this listing."
 
     # Correct listing id
-    rsp = client.delete(f'/api/listing/delete/{listing.id}/', json={"user_email": "test@utoronto.ca"})
+    rsp = client.delete(f'/api/listing/delete/{listing.id}/', json={"user_email": "test@utoronto.ca"}, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.OK.value
@@ -371,7 +376,7 @@ def test_search_by_query(client):
     db.session.commit()
 
     # Search for 'chair'
-    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=1&page_size=3')
+    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=1&page_size=3', headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp_json = rsp.get_json()
     assert rsp_json['status'] == ErrorRsp.OK.value
@@ -392,7 +397,7 @@ def test_search_by_invalid_query(client):
     db.session.commit()
 
     # Search for 'laptop' (should return no results)
-    rsp = client.get('/api/listing/search?query=laptop&filter=price_low&page=1&page_size=2')
+    rsp = client.get('/api/listing/search?query=laptop&filter=price_low&page=1&page_size=2', headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp_json = rsp.get_json()
     assert rsp_json['status'] == ErrorRsp.OK.value
@@ -415,7 +420,7 @@ def test_search_by_price_low(client):
     db.session.commit()
 
     # Search and sort by 'price_low'
-    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=1&page_size=3')
+    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=1&page_size=3', headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp_json = rsp.get_json()
     assert rsp_json['status'] == ErrorRsp.OK.value
@@ -438,7 +443,7 @@ def test_search_by_price_high(client):
     db.session.commit()
 
     # Search and sort by 'price_high'
-    rsp = client.get('/api/listing/search?query=chair&filter=price_high&page=1&page_size=3')
+    rsp = client.get('/api/listing/search?query=chair&filter=price_high&page=1&page_size=3', headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp_json = rsp.get_json()
     assert rsp_json['status'] == ErrorRsp.OK.value
@@ -460,13 +465,13 @@ def test_search_pagination(client):
     db.session.commit()
 
     # Search and paginate results
-    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=1&page_size=2')
+    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=1&page_size=2', headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp_json = rsp.get_json()
     assert rsp_json['status'] == ErrorRsp.OK.value
     assert len(rsp_json['data']) == 2  # Only two items should be returned on page 1
 
-    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=2&page_size=2')
+    rsp = client.get('/api/listing/search?query=chair&filter=price_low&page=2&page_size=2', headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp_json = rsp.get_json()
     assert rsp_json['status'] == ErrorRsp.OK.value
@@ -493,7 +498,7 @@ def test_search_top_rated(client):
     db.session.commit()
 
     # Search for 'chair' and sort by 'top_rated' filter
-    rsp = client.get('/api/listing/search?query=chair&filter=top_rated&page=1&page_size=3')
+    rsp = client.get('/api/listing/search?query=chair&filter=top_rated&page=1&page_size=3', headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     
     assert rsp.status_code == 200
     rsp_json = rsp.get_json()

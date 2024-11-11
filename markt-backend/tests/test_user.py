@@ -1,9 +1,14 @@
+import os
+from dotenv import load_dotenv
 import pytest
 
 from utils.errors import ErrorRsp
 from public import create_app_api
 from database.db import db
 from database.models import User, Listing
+
+load_dotenv(dotenv_path='.env', verbose=True)
+SECURITY_KEY = os.getenv('SECRET_KEY')
 
 @pytest.fixture
 def client():
@@ -18,7 +23,7 @@ def client():
 def test_register(client):
     # Not enough parameters
     wrong_data = {"email": "hello"}
-    rsp = client.post('/api/user/register', json=wrong_data)
+    rsp = client.post('/api/user/register', json=wrong_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
@@ -26,7 +31,7 @@ def test_register(client):
     # Invalid email, phone number, and password
     non_UofT_user = {"full_name": "Test User", "password": "abc123",
                      "email": "user@gmail.com", "phone": "6478290835"}
-    rsp = client.post('/api/user/register', json=non_UofT_user)
+    rsp = client.post('/api/user/register', json=non_UofT_user, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
@@ -35,14 +40,14 @@ def test_register(client):
     # Valid data
     UofT_valid_buyer = {"full_name": "Test User", "password": "abc123C$",
                         "email": "user@utoronto.ca", "phone": "6478290835"}
-    rsp = client.post('/api/user/register', json=UofT_valid_buyer)
+    rsp = client.post('/api/user/register', json=UofT_valid_buyer, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 201
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
     assert 'User registered successfully!' in rsp["data"]
 
     # Try to register same user twice
-    rsp = client.post('/api/user/register', json=UofT_valid_buyer)
+    rsp = client.post('/api/user/register', json=UofT_valid_buyer, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM_DUP.value == rsp["status"]
@@ -51,7 +56,7 @@ def test_register(client):
 def test_login(client):
     # Not enough parameters
     wrong_data = {"email": "hello"}
-    rsp = client.post('/api/user/login', json=wrong_data)
+    rsp = client.post('/api/user/login', json=wrong_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
@@ -64,7 +69,7 @@ def test_login(client):
 
     # Try to login with a non existant user's email
     non_existant_user = {"email": "wrong_email@mail.utoronto.ca", "password": "abc123C$"}
-    rsp = client.post('/api/user/login', json=non_existant_user)
+    rsp = client.post('/api/user/login', json=non_existant_user, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
@@ -72,7 +77,7 @@ def test_login(client):
 
     # Try to login with wrong password
     invalid_password = {"email": "user@mail.utoronto.ca", "password": "IamWrong$5"}
-    rsp = client.post('/api/user/login', json=invalid_password)
+    rsp = client.post('/api/user/login', json=invalid_password, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code != 200
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
@@ -80,7 +85,7 @@ def test_login(client):
 
     # Login with correct credentials
     valid_user = {"email": "user@mail.utoronto.ca", "password": "myPass%wor3"}
-    rsp = client.post('/api/user/login', json=valid_user)
+    rsp = client.post('/api/user/login', json=valid_user, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -98,7 +103,7 @@ def test_update(client):
     non_existent_user = {
         "phone": "8394039291"
     }
-    rsp = client.post(f'/api/user/{invalid_email}/update', json=non_existent_user)
+    rsp = client.post(f'/api/user/{invalid_email}/update', json=non_existent_user, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 404
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
@@ -111,7 +116,7 @@ def test_update(client):
         "phone": "1234567890",
         "password": "mY8iwp@ssword"
     }
-    rsp = client.post(f'/api/user/{user.email}/update', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/update', json=update_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -137,7 +142,7 @@ def test_change_password(client):
     update_data = {
         "current_password": "mY8iwp@ssword"
     }
-    rsp = client.post(f'/api/user/{user.email}/change_password', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/change_password', json=update_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
@@ -147,7 +152,7 @@ def test_change_password(client):
         "current_password": "wrong_password!",
         "new_password": "hello_new_password"
     }
-    rsp = client.post(f'/api/user/{user.email}/change_password', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/change_password', json=update_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM_PWD.value == rsp["status"]
@@ -159,7 +164,7 @@ def test_change_password(client):
         "current_password": "mY8iw$02j",
         "new_password": "HeLl0_n#w_password"
     }
-    rsp = client.post(f'/api/user/{user.email}/change_password', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/change_password', json=update_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -179,7 +184,7 @@ def test_forgot_password(client):
     update_data = {
         "new_password": "mY8iwp@ssword"
     }
-    rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
@@ -189,7 +194,7 @@ def test_forgot_password(client):
         "email": "invalid@utoronto.ca",
         "new_password": "hello_new_password"
     }
-    rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM_EMAIL.value == rsp["status"]
@@ -200,7 +205,7 @@ def test_forgot_password(client):
         "email": user.email,
         "new_password": "hello_new_password"
     }
-    rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM_PWD.value == rsp["status"]
@@ -210,7 +215,7 @@ def test_forgot_password(client):
         "email": user.email,
         "new_password": "HeLl0_n#w_password"
     }
-    rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/forgot_password', json=update_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -230,7 +235,7 @@ def test_rating(client):
     update_data = {
         "rating": -10
     }
-    rsp = client.post(f'/api/user/{user.email}/update', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/update', json=update_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
@@ -239,7 +244,7 @@ def test_rating(client):
     update_data = {
         "rating": 5
     }
-    rsp = client.post(f'/api/user/{user.email}/update', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/update', json=update_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -249,7 +254,7 @@ def test_rating(client):
     update_data = {
         "rating": 3.5
     }
-    rsp = client.post(f'/api/user/{user.email}/update', json=update_data)
+    rsp = client.post(f'/api/user/{user.email}/update', json=update_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -291,7 +296,7 @@ def test_add_interest(client):
 
     # Send empty request
     listings = { 'listing_ids': [] }
-    rsp = client.post(f'/api/user/{test_buyer.email}/add_interest/', json=listings)
+    rsp = client.post(f'/api/user/{test_buyer.email}/add_interest/', json=listings, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -300,7 +305,7 @@ def test_add_interest(client):
     # Invalid email
     listings = { 'listing_ids': [listing_2.id] }
     invalid_email = "invalid@utoronto.ca"
-    rsp = client.post(f'/api/user/{invalid_email}/add_interest/', json=listings)
+    rsp = client.post(f'/api/user/{invalid_email}/add_interest/', json=listings, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 404
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
@@ -308,7 +313,7 @@ def test_add_interest(client):
 
     # Owner marks as interested
     listings = { 'listing_ids': [listing_1.id] }
-    rsp = client.post(f'/api/user/{test_user.email}/add_interest/', json=listings)
+    rsp = client.post(f'/api/user/{test_user.email}/add_interest/', json=listings, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_PARAM.value == rsp["status"]
@@ -316,7 +321,7 @@ def test_add_interest(client):
 
     # Both users interested in both listings
     listings = { 'listing_ids': [listing_1.id, listing_2.id] }
-    rsp = client.post(f'/api/user/{test_buyer.email}/add_interest/', json=listings)
+    rsp = client.post(f'/api/user/{test_buyer.email}/add_interest/', json=listings, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -324,7 +329,7 @@ def test_add_interest(client):
     assert (listing_1 in test_buyer.listings_of_interest.all() and
             listing_2 in test_buyer.listings_of_interest.all())
 
-    rsp = client.post(f'/api/user/{interested_user.email}/add_interest/', json=listings)
+    rsp = client.post(f'/api/user/{interested_user.email}/add_interest/', json=listings, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -337,7 +342,7 @@ def test_add_interest(client):
         "sold": True,
         "buyer_email": test_buyer.email
     }
-    rsp = client.put(f'/api/listing/update/{listing_1.id}/', json=selling_data)
+    rsp = client.put(f'/api/listing/update/{listing_1.id}/', json=selling_data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -360,11 +365,11 @@ def test_get_info(client):
     db.session.commit()
 
     # Invalid email
-    rsp = client.get('/api/user/invalid@utoronto.ca/get_info')
+    rsp = client.get('/api/user/invalid@utoronto.ca/get_info', headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 404
 
     # Verify data
-    rsp = client.get(f'/api/user/{user.email}/get_info')
+    rsp = client.get(f'/api/user/{user.email}/get_info', headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -406,7 +411,8 @@ def test_get_listings(client):
     # Invalid email
     data = {"get_unsold": True}
     invalid_email = "invalid@utoronto.ca"
-    rsp = client.get(f'/api/user/{invalid_email}/get_listings', json=data)
+    print(SECURITY_KEY)
+    rsp = client.get(f'/api/user/{invalid_email}/get_listings', json=data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 404
     rsp = rsp.get_json()
     assert ErrorRsp.ERR_NOT_FOUND.value == rsp["status"]
@@ -414,7 +420,7 @@ def test_get_listings(client):
 
     # Check not sold list
     data = {"get_unsold": True, "minimal": False}
-    rsp = client.get(f'/api/user/{user.email}/get_listings', json=data)
+    rsp = client.get(f'/api/user/{user.email}/get_listings', json=data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -428,7 +434,7 @@ def test_get_listings(client):
 
     # Check user2 listings
     data = {"get_interested": True, 'minimal': False}
-    rsp = client.get(f'/api/user/{user2.email}/get_listings', json=data)
+    rsp = client.get(f'/api/user/{user2.email}/get_listings', json=data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -441,7 +447,7 @@ def test_get_listings(client):
 
     # Check owner listings
     data = {"get_sold": True, "get_unsold": True, 'minimal': False}
-    rsp = client.get(f'/api/user/{user.email}/get_listings', json=data)
+    rsp = client.get(f'/api/user/{user.email}/get_listings', json=data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -452,7 +458,7 @@ def test_get_listings(client):
 
     # Check buyer listings
     data = {"get_bought": True, 'minimal': False}
-    rsp = client.get(f'/api/user/{user2.email}/get_listings', json=data)
+    rsp = client.get(f'/api/user/{user2.email}/get_listings', json=data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
@@ -460,7 +466,7 @@ def test_get_listings(client):
 
     # Check full
     data = {"get_bought": True, "minimal": False}
-    rsp = client.get(f'/api/user/{user2.email}/get_listings', json=data)
+    rsp = client.get(f'/api/user/{user2.email}/get_listings', json=data, headers={"Authorization": f"Bearer {SECURITY_KEY}"})
     assert rsp.status_code == 200
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]

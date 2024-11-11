@@ -1,4 +1,14 @@
+components:
+  securitySchemes:
+      SecurityKeyAuth:
+        type: securityKey
+        in: header
+        name: Authorization
+        description: "Security key for authentication. Format: 'Bearer SECRET_KEY'"
+
 register:
+  security:
+    - SecurityKeyAuth: []
   responses:
     201:
       description: "User registered successfully!"
@@ -28,6 +38,8 @@ register:
             required: true
 
 login:
+  security:
+    - SecurityKeyAuth: []
   responses:
     200:
       description: "User logged in successfully!"
@@ -52,6 +64,8 @@ login:
             required: true
 
 update:
+  security:
+    - SecurityKeyAuth: []
   responses:
     200:
       description: JSON response
@@ -96,6 +110,8 @@ update:
             type: "float"
 
 change_password:
+  security:
+    - SecurityKeyAuth: []
   responses:
     200:
       description: "Password changed successfully!"
@@ -126,6 +142,8 @@ change_password:
             required: True
 
 forgot_password:
+  security:
+    - SecurityKeyAuth: []
   responses:
     200:
       description: "Password reset successfully!"
@@ -156,6 +174,8 @@ forgot_password:
             required: True
 
 add_interest:
+  security:
+    - SecurityKeyAuth: []
   responses:
     200:
       description: "Listings added successfully!",
@@ -182,6 +202,8 @@ add_interest:
               type: integer
 
 get_info:
+  security:
+    - SecurityKeyAuth: []
   responses:
     200:
       description: JSON response
@@ -209,6 +231,8 @@ get_info:
           email: "string"
 
 get_listings:
+  security:
+    - SecurityKeyAuth: []
   responses:
     200:
       description: JSON response

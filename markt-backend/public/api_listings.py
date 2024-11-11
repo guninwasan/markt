@@ -1,3 +1,4 @@
+import os
 from flask import Blueprint, jsonify, request
 from flasgger import Swagger, swag_from
 from marshmallow import ValidationError
@@ -10,6 +11,18 @@ from schemas.listing_schema import ListingInformationSchema, ListingUpdate, List
 listing_api_bp = Blueprint('listing_api', __name__)
 swagger = Swagger()
 
+# Authorization decorator for all APIs
+SECRET_KEY = os.getenv('SECRET_KEY')
+def validate_secret_key(f):
+    def wrapper(*args, **kwargs):
+        header = request.headers.get('Authorization')
+        if not header or header.split(" ")[1] != SECRET_KEY:
+            return jsonify({"status": ErrorRsp.ERR_UNAUTHORIZED.value,
+                        "data": "Unauthorized API access!"}), 401
+        return f(*args, **kwargs)
+    wrapper.__name__ = f.__name__
+    return wrapper
+
 """
     Endpoint: Creating listings
     Route: 'api/listing/create'
@@ -17,6 +30,8 @@ swagger = Swagger()
 @listing_api_bp.route('/create', methods=['POST'])
 # Endpoint parameter specification
 @swag_from('../docs/listing_docs.yml', endpoint='create')
+# Secret key required for authorization
+@validate_secret_key
 # API implementation
 def create():
     data = request.get_json()
@@ -82,6 +97,8 @@ def create():
 @listing_api_bp.route('/get/<int:id>/', methods=['GET'])
 # Endpoint parameter specification
 @swag_from('../docs/listing_docs.yml', endpoint='get')
+# Secret key required for authorization
+@validate_secret_key
 # API implementation
 def get(id):
     data = request.get_json()
@@ -110,6 +127,8 @@ def get(id):
 @listing_api_bp.route('/all', methods=['GET'])
 # Endpoint parameter specification
 @swag_from('../docs/listing_docs.yml', endpoint='get_all')
+# Secret key required for authorization
+@validate_secret_key
 # API implementation
 def get_all():
     data = request.get_json()
@@ -139,6 +158,8 @@ def get_all():
 @listing_api_bp.route('/update/<int:id>/', methods=['PUT'])
 # Endpoint parameter specification
 @swag_from('../docs/listing_docs.yml', endpoint='update')
+# Secret key required for authorization
+@validate_secret_key
 # API implementation
 def update(id):
     data = request.get_json()
@@ -267,6 +288,8 @@ def update(id):
 @listing_api_bp.route('/delete/<int:id>/', methods=['DELETE'])
 # Endpoint parameter specification
 @swag_from('../docs/listing_docs.yml', endpoint='delete')
+# Secret key required for authorization
+@validate_secret_key
 # API implementation
 def delete(id):
 
@@ -305,9 +328,10 @@ def delete(id):
     Endpoint: Search listings
     Route: '/api/listing/search'
 """
-
 @listing_api_bp.route('/search', methods=['GET'])
 @swag_from('../docs/listing_docs.yml', endpoint='search')
+# Secret key required for authorization
+@validate_secret_key
 def search():
     query = request.args.get('query', '').strip()
     filter_type = request.args.get('filter', 'price_low')

@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from flask import Blueprint, jsonify, request
 from flasgger import Swagger, swag_from
 from marshmallow import ValidationError
@@ -16,6 +18,21 @@ from schemas.user_schema import (
 user_api_bp = Blueprint('user_api', __name__)
 swagger = Swagger()
 
+# Authorization decorator for all APIs
+load_dotenv(dotenv_path='.env', verbose=True)
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+def validate_secret_key(f):
+    def wrapper(*args, **kwargs):
+        header = request.headers.get('Authorization')
+        if not header or header.split(" ")[1] != SECRET_KEY:
+            return jsonify({"status": ErrorRsp.ERR_UNAUTHORIZED.value,
+                        "data": "Unauthorized API access!"}), 401
+        return f(*args, **kwargs)
+    wrapper.__name__ = f.__name__
+    return wrapper
+
+
 """
     Endpoint: Registering users
     Route: 'api/user/register'
@@ -23,6 +40,8 @@ swagger = Swagger()
 @user_api_bp.route('/register', methods=['POST'])
 # Endpoint parameter specification
 @swag_from('../docs/user_docs.yml', endpoint='register')
+# Secret key required for authorization
+@validate_secret_key
 # API implementation
 def register():
     data = request.get_json()
@@ -79,6 +98,8 @@ def register():
 @user_api_bp.route('/login', methods=['POST'])
 # Endpoint parameter specification
 @swag_from('../docs/user_docs.yml', endpoint='login')
+# Secret key required for authorization
+@validate_secret_key
 # API implementation
 def login():
     data = request.get_json()
@@ -110,6 +131,8 @@ def login():
     Route: 'api/user/<string:email>/update'
 """
 @user_api_bp.route('/<string:email>/update', methods=['POST'])
+# Secret key required for authorization
+@validate_secret_key
 # Endpoint parameter specification
 @swag_from('../docs/user_docs.yml', endpoint='update')
 # API implementation
@@ -195,6 +218,8 @@ def update(email):
     Route: 'api/user/<string:email>/change_password'
 """
 @user_api_bp.route('/<string:email>/change_password', methods=['POST'])
+# Secret key required for authorization
+@validate_secret_key
 # Endpoint parameter specification
 @swag_from('../docs/user_docs.yml', endpoint='change_password')
 # API implementation
@@ -243,6 +268,8 @@ def change_password(email):
     Route: 'api/user/<string:email>/forgot_password'
 """
 @user_api_bp.route('/<string:email>/forgot_password', methods=['POST'])
+# Secret key required for authorization
+@validate_secret_key
 # Endpoint parameter specification
 @swag_from('../docs/user_docs.yml', endpoint='forgot_password')
 # API implementation
@@ -285,6 +312,8 @@ def forgot_password(email):
     Route: 'api/user/<string:email>/add_interest/'
 """
 @user_api_bp.route('/<string:email>/add_interest/', methods=['POST'])
+# Secret key required for authorization
+@validate_secret_key
 # Endpoint parameter specification
 @swag_from('../docs/user_docs.yml', endpoint='add_interest')
 # API implementation
@@ -333,6 +362,8 @@ def interested_listings(email):
 @user_api_bp.route('/<string:email>/get_info', methods=['GET'])
 # Endpoint parameter specification
 @swag_from('../docs/user_docs.yml', endpoint='get_info')
+# Secret key required for authorization
+@validate_secret_key
 # API implementation
 def get_info(email):
     # Validate email
@@ -352,6 +383,8 @@ def get_info(email):
 @user_api_bp.route('/<string:email>/get_listings', methods=['GET'])
 # Endpoint parameter specification
 @swag_from('../docs/user_docs.yml', endpoint='get_listings')
+# Secret key required for authorization
+@validate_secret_key
 # API implementation
 def get_listings(email):
     data = request.get_json()

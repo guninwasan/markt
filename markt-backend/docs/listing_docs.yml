@@ -1,4 +1,14 @@
+components:
+  securitySchemes:
+      SecurityKeyAuth:
+        type: securityKey
+        in: header
+        name: Authorization
+        description: "Security key for authentication. Format: 'Bearer SECRET_KEY'"
+
 create:
+  security:
+    - SecurityKeyAuth: []
   responses:
     201:
       description: JSON response
@@ -100,6 +110,8 @@ create:
             required: False
 
 get:
+  security:
+    - SecurityKeyAuth: []
   responses:
     200:
       description: JSON response
@@ -125,6 +137,8 @@ get:
             default: True
 
 get_all:
+  security:
+    - SecurityKeyAuth: []
   responses:
     200:
       description: JSON response
@@ -141,6 +155,8 @@ get_all:
             default: True
 
 update:
+  security:
+    - SecurityKeyAuth: []
   responses:
     200:
       description: JSON response
@@ -245,6 +261,8 @@ update:
             required: False
 
 delete:
+  security:
+    - SecurityKeyAuth: []
   responses:
     200:
       description: "Listing deleted successfully"
