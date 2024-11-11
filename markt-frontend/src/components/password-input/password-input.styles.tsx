@@ -100,7 +100,7 @@ const RequirementItem = styled.li<{ fulfilled: boolean }>`
 `;
 
 const ErrorMessage = styled.div`
-  color: red;
+  color: ${colors.red};
   font-size: 14px;
   margin-top: 8px;
 `;

@@ -35,7 +35,7 @@ const Input = styled.input`
 `;
 
 const ErrorMessage = styled.div`
-  color: red;
+  color: ${colors.red};
   font-size: 14px;
   margin-top: 8px;
 `;

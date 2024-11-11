@@ -30,7 +30,7 @@ const FormContainer = styled.form`
 `;
 
 const ErrorText = styled.p`
-  color: red;
+  color: ${colors.red};
 `;
 
 const LinkText = styled.div`

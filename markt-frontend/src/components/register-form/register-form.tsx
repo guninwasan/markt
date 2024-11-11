@@ -106,8 +106,6 @@ const RegisterForm = () => {
         const result = await response.json();
 
         if (response.ok) {
-          alert("Registration successful - redirecting to Login!");
-          navigate("/login");
           setErrors({
             fullName: "",
             email: "",
@@ -116,6 +114,7 @@ const RegisterForm = () => {
             phone: "",
             form: "",
           });
+          navigate("/login");
         } else {
           handleErrors(result);
         }
