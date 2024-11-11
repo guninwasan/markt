@@ -16,7 +16,8 @@ from schemas.user_schema import (
     AddInterestSchema,
     UserChangePasswordSchema,
     UserForgotPasswordSchema,
-    GetListingsSchema)
+    GetListingsSchema,
+    UserSendCodeSchema)
 
 from . import mail
 
@@ -67,27 +68,59 @@ def register():
         return jsonify({"status": ErrorRsp.ERR_PARAM.value,
                         "data": validation_errors}), 400
 
-    # Get validation code
-    code = format(random.randint(0,999999), "06d")
-    expiration_time = datetime.now(pytz.timezone('America/Toronto')) + timedelta(minutes=10)
-
     user = User(
         full_name=data["full_name"],
         password=data['password'],
         email=data['email'],
         phone=data['phone']
     )
-    user.set_validation_code(code, expiration_time)
-
     db.session.add(user)
+    db.session.commit()
+
+    send_code(user.email)
+
+
+"""
+    Endpoint: Send verification code to email
+    Route: 'api/user/<string:email>/send_code'
+"""
+@user_api_bp.route('/<string:email>/send_code', methods=['POST'])
+# Endpoint parameter specification
+@swag_from('../docs/user_docs.yml', endpoint='send_code')
+# API implementation
+def send_code(email):
+    data = request.get_json()
+    schema = UserSendCodeSchema()
+    try:
+        data = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
+                        "data": "Missing parameters",
+                        "errors": err.messages}), 400
+
+    # Check if user exists
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
+                        "data": "User does not exist!"}), 404
+
+    # Check if user already verified
+    if user.email_verified and not data['for_forget_pwd']:
+        return jsonify({"status": ErrorRsp.OK.value,
+                        "data": "User email is already verified!"}), 200
+    
+    # Get validation code
+    code = format(random.randint(0,999999), "06d")
+    expiration_time = datetime.now(pytz.timezone('America/Toronto')) + timedelta(minutes=10)
+    user.set_validation_code(code, expiration_time)
     db.session.commit()
 
     email_message = Message(
         'Email Verification Code',
-        recipients=[data['email']]
+        recipients=[email]
     )
     email_content = render_template('email.html',
-                              user_name=data['full_name'],
+                              user_name=user.full_name,
                               validation_code=code,
                               current_year=datetime.now().year)
 
@@ -95,13 +128,17 @@ def register():
 
     try:
         mail.send(email_message)
+
+        if data['for_forget_pwd']:
+            user.forget_pwd = User.ForgetPasswordState.CodeSent
+            db.session.commit()
+
         return jsonify({"status": ErrorRsp.OK.value,
-                        "data": "User registered successfully, validation code sent."}), 200
+                        "data": "Verification code sent to user's email"}), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({"status": ErrorRsp.ERR.value,
                         "data": "Error"}), 500
-
 
 """
     Endpoint: Verifying user email
@@ -127,6 +164,10 @@ def verify_email(email):
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
 
+    if user.validation_code is None:
+        return jsonify({"status": ErrorRsp.ERR.value,
+                        "data": "No validation code has been sent"}), 400
+
     if int(user.validation_code) != int(data['code']):
         return jsonify({"status": ErrorRsp.ERR_PARAM.value,
                         "data": "Invalid validation code"}), 400
@@ -135,8 +176,16 @@ def verify_email(email):
         return jsonify({"status": ErrorRsp.ERR_PARAM.value,
                         "data": "Validation code has expired"}), 400
 
+    if data['for_forget_pwd'] and user.forget_pwd != User.ForgetPasswordState.CodeSent:
+        return jsonify({"status": ErrorRsp.ERR.value,
+                        "data": "Email verification code has not been sent"}), 400
+
     # Mark user as verified
     user.email_verified = True
+    if data['for_forget_pwd']:
+        user.forget_pwd = User.ForgetPasswordState.CodeVerified
+    user.validation_code = None
+    user.validation_code_expiration = None
     db.session.commit()
 
     return jsonify({"status": ErrorRsp.OK.value,
@@ -203,9 +252,6 @@ def update(email):
     # Store all validation errors
     validation_errors = []
 
-    # If password is changed, set the API rsp
-    rsp_password = "Not updated"
-
     if 'full_name'in data:
         user.full_name = data['full_name']
 
@@ -224,15 +270,6 @@ def update(email):
         else:
             user.phone = data['phone']
 
-    if 'password' in data:
-        # Validate password
-        if not user.validate_password_format(data["password"]):
-            validation_errors.append("Password must contain at minimum 8 characters, \
-                                     1 lowercase and uppercase letter, 1 digit, 1 special character")
-        else:
-            user.set_password(data['password'])
-            rsp_password = "Updated"
-
     if "rating" in data:
         # Validate rating
         if not user.validate_rating_range(data["rating"]):
@@ -245,20 +282,11 @@ def update(email):
         return jsonify({"status": ErrorRsp.ERR_PARAM.value,
                         "data": validation_errors}), 400
 
-    # Sanity check for password since it is not secure to send the updated password
-    # in the API rsp
-    if 'password' in data and not user.check_password(data['password']):
-        return jsonify({"status": ErrorRsp.ERR.value,
-                        "data": "User data not updated"}), 400
-
     # If no errors, commit changes
     db.session.commit()
 
-    rsp = user.get_json()
-    rsp["password"] = rsp_password
-
     return jsonify({"status": ErrorRsp.OK.value,
-                    "data": rsp}), 200
+                    "data": user.get_json()}), 200
 
 
 """
@@ -333,10 +361,9 @@ def forgot_password(email):
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
 
-    # Verify email
-    if data["email"] != user.email:
-        return jsonify({"status": ErrorRsp.ERR_PARAM_EMAIL.value,
-                        "data": "Incorrect email provided"}), 400
+    if user.forget_pwd != User.ForgetPasswordState.CodeVerified:
+        return jsonify({"status": ErrorRsp.ERR.value,
+                        "data": "User email must be verified before resetting password"}), 400
 
     # Check new password format
     if not user.validate_password_format(data["new_password"]):
@@ -345,6 +372,7 @@ def forgot_password(email):
                                 1 lowercase and uppercase letter, 1 digit, 1 special character"}), 400
 
     user.set_password(data["new_password"])
+    user.forget_pwd = User.ForgetPasswordState.Unset
     db.session.commit()
 
     return jsonify({"status": ErrorRsp.OK.value,
@@ -378,6 +406,11 @@ def interested_listings(email):
     if not user:
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
+
+    # Check if user email is verified
+    if not user.email_verified:
+        return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
+                        "data": "User email not verified yet"}), 400
 
     # Get all listings associated with the IDs in the request
     listings = Listing.query.filter(Listing.id.in_(data['listing_ids'])).all()

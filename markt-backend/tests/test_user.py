@@ -1,5 +1,6 @@
 import pytest
 
+from unittest.mock import patch
 from utils.errors import ErrorRsp
 from public import create_app_api
 from database.db import db

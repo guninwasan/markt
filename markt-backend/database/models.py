@@ -2,6 +2,7 @@ import bcrypt
 import pytz
 import re
 from .db import db
+from enum import Enum
 from sqlalchemy.dialects.postgresql import JSON
 from datetime import datetime
 
@@ -25,6 +26,12 @@ class User(db.Model):
     validation_code = db.Column(db.Integer, nullable=True)
     validation_code_expiration = db.Column(db.DateTime, nullable=True)
     email_verified = db.Column(db.Boolean, nullable=False, default=False)
+
+    class ForgetPasswordState(Enum):
+        Unset = 0,
+        CodeSent = 1,
+        CodeVerified = 2
+    forget_pwd = db.Column(ForgetPasswordState, nullable=False, default=ForgetPasswordState.Unset)
 
     total_ratings = db.Column(db.Float, default=0.0)
     number_of_ratings = db.Column(db.Integer, default=0)
