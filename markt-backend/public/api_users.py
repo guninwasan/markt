@@ -395,3 +395,26 @@ def get_listings(email):
 
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": rsp}), 200
+
+
+"""
+    Endpoint: Delete a user
+    Route: 'api/user/<string:email>/delete'
+"""
+@user_api_bp.route('/<string:email>/delete', methods=['DELETE'])
+# Endpoint parameter specification
+@swag_from('../docs/user_docs.yml', endpoint='delete')
+# API implementation
+def delete_user(email):
+    # Validate email
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
+                        "data": "User does not exist!"}), 404
+    
+    # Delete from the database
+    db.session.delete(user)
+    db.session.commit()
+
+    return jsonify({"status": ErrorRsp.OK.value,
+                    "data": "Deleted user successfully!"}), 200

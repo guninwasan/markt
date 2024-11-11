@@ -248,3 +248,18 @@ get_listings:
             type: boolean
             default: False
             required: False
+
+delete:
+  responses:
+    200:
+      description: "Deleted user successfully!"
+    404:
+      description: "User does not exist!"
+  parameters:
+    - name: "user_email"
+      in: "query"
+      required: True
+      schema:
+        type: "object"
+        properties:
+          email: "string"

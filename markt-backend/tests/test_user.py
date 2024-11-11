@@ -465,3 +465,25 @@ def test_get_listings(client):
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
     assert listing_1.owner.email == rsp["data"]["bought_listings"][0]["database"]["owner"]["email"]
+
+def test_delete(client):
+    # Create a user
+    user = User(full_name="Test User", password="mY8iw$02j",
+                email="user@mail.utoronto.ca", phone="6478290835")
+    db.session.add(user)
+    db.session.commit()
+
+    # Invalid email
+    rsp = client.delete('/api/user/invalid@utoronto.ca/delete')
+    assert rsp.status_code == 404
+
+    # Delete user
+    rsp = client.delete(f'/api/user/{user.email}/delete')
+    assert rsp.status_code == 200
+    rsp = rsp.get_json()
+    assert ErrorRsp.OK.value == rsp["status"]
+    assert rsp["data"] == "Deleted user successfully!"
+
+    # Check user in database
+    user_in_db = User.query.filter_by(email=user.email).first()
+    assert user_in_db is None
