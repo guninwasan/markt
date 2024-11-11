@@ -2,7 +2,7 @@ import React from "react";
 import {
   FooterContainer,
   LinksContainer,
-  Link,
+  FooterLink,
   RightsReserved,
   MarktText,
 } from "./footer.styles";
@@ -13,12 +13,14 @@ const Footer = () => {
       <MarktText>
         MARKT by <i>Mizzica</i>
       </MarktText>
-      <LinksContainer>
-        <Link href="#">About</Link>
-        <Link href="#">Privacy Policy</Link>
-        <Link href="#">Terms of Use</Link>
-        <Link href="#">Support / Report an issue</Link>
-      </LinksContainer>
+      <nav aria-label="Footer navigation">
+        <LinksContainer>
+          <FooterLink href="/about">About</FooterLink>
+          <FooterLink href="/privacy-policy">Privacy Policy</FooterLink>
+          <FooterLink href="/terms-of-use">Terms of Use</FooterLink>
+          <FooterLink href="/support">Support / Report an issue</FooterLink>
+        </LinksContainer>
+      </nav>
       <RightsReserved>
         © {new Date().getFullYear()} All rights reserved.
       </RightsReserved>
