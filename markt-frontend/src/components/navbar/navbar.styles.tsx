@@ -132,6 +132,7 @@ const SellButton = styled.button`
   border: none;
   cursor: pointer;
   padding: 1rem 2rem;
+  max-width: 100px;
   position: relative;
   height: 40px;
   display: flex;
