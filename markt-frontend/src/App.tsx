@@ -10,7 +10,6 @@ import {
   SearchPage,
   ProductListingPage,
 } from "./pages";
-import { useIsMobile } from "./hooks";
 import {
   LoadingModal,
   ProtectedRoute,
