@@ -20,6 +20,7 @@ class User(db.Model):
     password_encryp = db.Column(db.String(1000), nullable=False)
     phone = db.Column(db.String(15), nullable=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
+    email_verified = db.Column(db.Boolean, default=False)
 
     total_ratings = db.Column(db.Float, default=0.0)
     number_of_ratings = db.Column(db.Integer, default=0)
@@ -39,7 +40,7 @@ class User(db.Model):
     listings_of_interest = db.relationship('Listing', secondary=user_listing_interest_table,
                                            back_populates='interested_buyers', lazy='dynamic')
 
-    def __init__(self, full_name, password, email, phone):
+    def __init__(self, full_name, password, email, phone, email_verified=False):
         # Data Validation
         if not self.validate_email_format(email):
             raise ValueError("Email must be a valid UofT email")
@@ -53,6 +54,7 @@ class User(db.Model):
         self.email = email
         self.phone = phone
         self.set_password(password)
+        self.email_verified = email_verified
 
     """
     Password Helpers

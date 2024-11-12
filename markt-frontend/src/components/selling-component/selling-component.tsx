@@ -8,6 +8,7 @@ import {
   AdditionalDetails,
 } from "./sections";
 import { uploadImage, validateFormData } from "./utils";
+import { useSelector } from "react-redux";
 
 const initialFormData = {
   title: "",
@@ -38,6 +39,9 @@ const SellingComponent = () => {
   );
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
   const [priceError, setPriceError] = useState<string>("");
+
+  // Access email from Redux store
+  const userEmail = useSelector((state: any) => state.user.email);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -98,14 +102,17 @@ const SellingComponent = () => {
 
     try {
       // Mock display and media URLs
-      const displayMediaUrl = "https://res.cloudinary.com/dywbiovuo/image/upload/v1731303570/rkyfsoggeclvefxzebrm.jpg";
-      const mediaUrls = [
-        "https://res.cloudinary.com/dywbiovuo/image/upload/v1731303570/qmbxpqfndolr6bqmlei8.jpg",
-        "https://res.cloudinary.com/dywbiovuo/image/upload/v1731303570/dhvkdsjk1hl0qzrjg9zt.jpg"
-      ];
+      const displayMediaUrl = await uploadImage(displayImage as File);
+      const getMediaURLs = await Promise.all(
+        mediaFiles.map(async (file: File) => {
+          return await uploadImage(file);
+        })
+      );
+      console.log("Display Media URL:", displayMediaUrl);
+      console.log("Media URLs:", getMediaURLs);
       // Prepare the data to send to the backend, ensuring keys align with backend schema
       const requestData = {
-        owner_email: "shikhxr@utoronto.ca", // replace with dynamic email as needed
+        owner_email: userEmail, // replace with dynamic email as needed
         title: formData.title,
         price: parseFloat(formData.price), // ensure price is a number
         description: formData.description,

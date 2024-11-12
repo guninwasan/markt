@@ -28,13 +28,16 @@ def create():
                         "data": "Missing parameters",
                         "errors": err.messages}), 400
 
-    # Check if user exists
+    # Check if user exists and email is verified
     user = User.query.filter_by(email=data['owner_email']).first()
     if user is None:
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
+    if not user.email_verified:
+        return jsonify({"status": ErrorRsp.ERR.value,
+                        "data": "User email has not been verified"}), 400
 
-    # Create listing
+    # Proceed with listing creation if user is verified
     listing = Listing(
         # backend
         owner_id=user.id,
