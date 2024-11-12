@@ -11,7 +11,6 @@ import {
   PriceBox,
   PriceText,
   SellerInfo,
-  SellerAvatar,
   BottomTab,
   ShareInterestButton,
   ModalContent,
