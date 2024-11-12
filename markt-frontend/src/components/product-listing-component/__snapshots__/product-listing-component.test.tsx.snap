@@ -64,12 +64,9 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
         <div
           class="sc-hbtGpV cGulqo"
         >
-          <img
-            alt="Seller Avatar"
-            class="sc-bMTdWJ iIWzow"
-            src="https://via.placeholder.com/50"
-          />
-          <div>
+          <div
+            class="sc-eWPXlR kpyelg"
+          >
             <div />
             <div
               class="sc-jtQUzJ eyljEe"
@@ -217,12 +214,9 @@ exports[`ProductListingComponent renders correctly on mobile 1`] = `
         <div
           class="sc-hbtGpV cGulqo"
         >
-          <img
-            alt="Seller Avatar"
-            class="sc-bMTdWJ iIWzow"
-            src="https://via.placeholder.com/50"
-          />
-          <div>
+          <div
+            class="sc-eWPXlR kpyelg"
+          >
             <div />
             <div
               class="sc-jtQUzJ eyljEe"
