@@ -34,26 +34,32 @@ const ProductListingComponent = () => {
 
   const [data, setData] = useState(null);
   const navigate = useNavigate();
-  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/listing/get/${id}?minimal=false`);
+        const response = await fetch(
+          `${API_BASE_URL}/api/listing/get/${id}?minimal=false`
+        );
         if (!response.ok) {
           navigate("/not-found");
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const result = await response.json();
         setData(result.data);
       } catch (error) {
         navigate("/not-found");
-        console.error('Fetch error:', error);
+        console.error("Fetch error:", error);
       }
     };
     fetchData();
-    console.log(data);
-  }, [data, navigate, id]);
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+    }
+  }, [data]);
 
   const dummySpecifications = {
     basicInfo: {
@@ -99,8 +105,6 @@ const ProductListingComponent = () => {
     );
   };
 
-  // WE HAVE TO CHANGE THIS WITH THE ACTUAL SELLER RATING
-  //USING 3.3 AS PLACEHOLDER
   const sellerRating = 3.3;
 
   const SellerInfoContainer = () => {

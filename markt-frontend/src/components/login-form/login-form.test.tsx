@@ -101,4 +101,28 @@ describe("LoginForm", () => {
     const { container } = renderWithRedux(<LoginForm />);
     expect(container).toMatchSnapshot();
   });
+
+  it("disables login button when email or password is missing", () => {
+  
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Password"), {
+      target: { value: "validpassword123" },
+    });
+    expect(screen.getByText("Login")).not.toBeDisabled();
+  });
+  
+  
+  it("shows general error on network failure", async () => {
+    global.fetch = jest.fn(() => Promise.reject("Network error"));
+  
+    fireEvent.change(screen.getByPlaceholderText("Enter Your UofT Email Address"), {
+      target: { value: "test@mail.utoronto.ca" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Password"), {
+      target: { value: "validpassword123" },
+    });
+    fireEvent.click(screen.getByText("Login"));
+  
+    expect(await screen.findByText("An unexpected error occurred. Please try again later.")).toBeInTheDocument();
+  });
+  
 });

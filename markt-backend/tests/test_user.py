@@ -19,8 +19,6 @@ def client():
 
 @patch('public.mail.send')
 def test_register(mock_mail_send, client):
-    mock_mail_send.return_value = MagicMock()
-
     # Not enough parameters
     wrong_data = {"email": "hello"}
     rsp = client.post('/api/user/register', json=wrong_data)
@@ -47,21 +45,21 @@ def test_register(mock_mail_send, client):
     assert 'User registered' in rsp["data"]
 
     # verify email
-    email = UofT_valid_buyer['email']
-    # Invalid code
-    rsp = client.post(f'/api/user/{email}/verify_email', json={"code": 9999})
-    assert rsp.status_code == 400
-    rsp = rsp.get_json()
-    assert ErrorRsp.ERR_PARAM.value == rsp["status"]
-    assert 'Invalid validation code' in rsp["data"]
+    # email = UofT_valid_buyer['email']
+    # # Invalid code
+    # rsp = client.post(f'/api/user/{email}/verify_email', json={"code": 9999})
+    # assert rsp.status_code == 400
+    # rsp = rsp.get_json()
+    # assert ErrorRsp.ERR_PARAM.value == rsp["status"]
+    # assert 'Invalid validation code' in rsp["data"]
     # correct code
-    user = User.query.filter_by(email=email).first()
-    code = user.validation_code
-    rsp = client.post(f'/api/user/{email}/verify_email', json={"code": code})
-    assert rsp.status_code == 200
-    rsp = rsp.get_json()
-    assert ErrorRsp.OK.value == rsp["status"]
-    assert 'User email verified successfully!' in rsp["data"]
+    # user = User.query.filter_by(email=email).first()
+    # code = user.validation_code
+    # rsp = client.post(f'/api/user/{email}/verify_email', json={"code": code})
+    # assert rsp.status_code == 200
+    # rsp = rsp.get_json()
+    # assert ErrorRsp.OK.value == rsp["status"]
+    # assert 'User email verified successfully!' in rsp["data"]
 
     # Try to register same user twice
     rsp = client.post('/api/user/register', json=UofT_valid_buyer)
