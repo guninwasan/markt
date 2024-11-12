@@ -1,7 +1,7 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import { useNavigate } from "react-router-dom";
 import { ListingContainer } from "./listing-container";
-import { renderWithRouter } from "../../utils/render-with-router";
+import { renderWithRedux } from "../../utils/render-with-redux";
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
@@ -26,7 +26,7 @@ describe("ListingContainer", () => {
   };
 
   it("should render correctly with given props", () => {
-    renderWithRouter(<ListingContainer {...defaultProps} />);
+    renderWithRedux(<ListingContainer {...defaultProps} />);
 
     expect(screen.getByAltText("Test Title")).toHaveAttribute(
       "src",
@@ -39,7 +39,7 @@ describe("ListingContainer", () => {
   });
 
   it("should match snapshot", () => {
-    const { container } = renderWithRouter(
+    const { container } = renderWithRedux(
       <ListingContainer {...defaultProps} />
     );
 
@@ -47,14 +47,14 @@ describe("ListingContainer", () => {
   });
 
   it("should navigate to listing page on click", () => {
-    renderWithRouter(<ListingContainer {...defaultProps} />);
+    renderWithRedux(<ListingContainer {...defaultProps} />);
 
     fireEvent.click(screen.getByTestId("listingContainer"));
     expect(mockNavigate).toHaveBeenCalledWith("/listing?id=1");
   });
 
   it("should toggle wishlist state on wishlist icon click", () => {
-    renderWithRouter(<ListingContainer {...defaultProps} />);
+    renderWithRedux(<ListingContainer {...defaultProps} />);
 
     const wishlistIcon = screen.getByTestId("wishlist-button");
     fireEvent.click(wishlistIcon);

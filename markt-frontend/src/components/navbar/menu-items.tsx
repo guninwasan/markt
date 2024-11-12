@@ -61,9 +61,6 @@ const MenuItems = () => {
       <MenuItem>
         <MenuLink to="/profile">My Profile</MenuLink>
       </MenuItem>
-      <MenuItem>
-        <MenuLink to="/wishlist">Wishlist</MenuLink>
-      </MenuItem>
       <MenuItem onClick={handleLogout}>
         <LogoutButton>Logout</LogoutButton>
       </MenuItem>
@@ -94,9 +91,6 @@ const MenuItems = () => {
           <Dropdown>
             <DropdownItem as={NavLink} to="/profile">
               My Profile
-            </DropdownItem>
-            <DropdownItem as={NavLink} to="/wishlist">
-              Wishlist
             </DropdownItem>
             <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
           </Dropdown>

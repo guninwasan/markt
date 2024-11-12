@@ -29,7 +29,6 @@ describe("MenuItems Component", () => {
 
     expect(screen.getByText("Sell")).toBeInTheDocument();
     expect(screen.getByText("My Profile")).toBeInTheDocument();
-    expect(screen.getByText("Wishlist")).toBeInTheDocument();
     expect(screen.getByText("Logout")).toBeInTheDocument();
   });
 
@@ -55,7 +54,6 @@ describe("MenuItems Component", () => {
 
     fireEvent.click(profileButton);
     expect(screen.getByText("My Profile")).toBeInTheDocument();
-    expect(screen.getByText("Wishlist")).toBeInTheDocument();
     expect(screen.getByText("Logout")).toBeInTheDocument();
   });
 

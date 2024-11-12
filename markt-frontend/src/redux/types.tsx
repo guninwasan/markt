@@ -9,6 +9,7 @@ type UserAuthType = {
 type DeviceSliceType = {
   isLoggedIn: boolean;
   isLoading: boolean;
+  wishList: number[];
 };
 
 export type { UserAuthType, DeviceSliceType };
