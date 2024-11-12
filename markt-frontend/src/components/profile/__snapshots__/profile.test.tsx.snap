@@ -11,19 +11,25 @@ exports[`Profile should match the snapshot 1`] = `
       Hello, 
     </h1>
     <h2
-      class="sc-egkSDF bUZWBq"
+      class="sc-egkSDF iGbrtJ"
     >
-      Profile Details:
+      Profile Details
     </h2>
     <p
       class="sc-gtLWhw dyUeKS"
     >
-      UofT Email Address: 
+      <b>
+        UofT Email Address:
+      </b>
+       
     </p>
     <p
       class="sc-gtLWhw dyUeKS"
     >
-      UofT Student ID: 
+      <b>
+        UofT Student ID:
+      </b>
+       
     </p>
     <div
       class="sc-fAUdSK kWpjus"
