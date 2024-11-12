@@ -19,6 +19,8 @@ import {
   NoteTextArea,
   BottomTabRow,
   Button,
+  PickUpLocationText,
+  PickUpLocationHeader,
 } from "./product-listing-component.styles";
 import { ProductSpecs } from "./product-specifications";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -164,7 +166,10 @@ const ProductListingComponent = () => {
             <TitleAndDescription>
               <h1>{title}</h1>
               <p>{description}</p>
-
+              <p>
+                <PickUpLocationHeader>Pickup Location:</PickUpLocationHeader>
+                <PickUpLocationText>{pickup_location}</PickUpLocationText>
+              </p>
               <ShareInterestButtonContainer />
             </TitleAndDescription>
 

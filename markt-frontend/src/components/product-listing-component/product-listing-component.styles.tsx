@@ -36,6 +36,19 @@ const TitleAndDescription = styled.div`
   gap: 1rem;
 `;
 
+const PickUpLocationHeader = styled.span`
+  color: ${colors.darkerHoverPrimary};
+  font-weight: bold;
+  font-size: 1rem;
+`;
+
+const PickUpLocationText = styled.span`
+  font-size: 1rem;
+  color: ${colors.textBlack};
+  font-weight: 1000;
+  margin-left: 1rem;
+`;
+
 const PriceBox = styled.div`
   flex: 1;
   display: flex;
@@ -223,4 +236,6 @@ export {
   SpecItem,
   BottomTabRow,
   Button,
+  PickUpLocationText,
+  PickUpLocationHeader,
 };
