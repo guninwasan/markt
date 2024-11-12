@@ -69,7 +69,7 @@ const ProductListingComponent = () => {
       }
     };
     fetchData();
-  }, [id, navigate]);
+  }, [id, navigate, dispatch]);
 
   useEffect(() => {
     const handleScroll = () => {
