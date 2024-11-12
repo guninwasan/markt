@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
 import {
@@ -12,7 +13,9 @@ import {
   Condition,
   Location,
 } from "./listing-container.styles";
-import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState, selectors, setWishList } from "../../redux";
+import { useDispatch } from "react-redux";
 
 type ListingContainerProps = {
   id: string;
@@ -33,10 +36,31 @@ const ListingContainer = ({
 }: ListingContainerProps) => {
   const [isWishList, setIsWishList] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { wishList } = useSelector((state: RootState) => ({
+    wishList: selectors.getWishList(state),
+  }));
+
+  useEffect(() => {
+    if (wishList?.includes(parseInt(id))) {
+      setIsWishList(true);
+    }
+  }, [wishList, id]);
 
   const handleWishlistClick = (e: any) => {
-    setIsWishList(!isWishList);
     e.stopPropagation();
+
+    const currentWishList = Array.isArray(wishList) ? wishList : [];
+
+    if (isWishList) {
+      dispatch(
+        setWishList(currentWishList.filter((item) => item !== parseInt(id)))
+      );
+    } else {
+      dispatch(setWishList([...currentWishList, parseInt(id)]));
+    }
+    setIsWishList(!isWishList);
   };
 
   const handleClick = () => {
