@@ -32,7 +32,7 @@ const ProductListingComponent = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [note, setNote] = useState("");
 
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<any>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,35 +53,7 @@ const ProductListingComponent = () => {
       }
     };
     fetchData();
-    console.log("fetching data", data);
   });
-
-  // useEffect(() => {
-  //   if (data) {
-  //     console.log(data);
-  //   }
-  // }, [data]);
-
-  const dummySpecifications = {
-    basicInfo: {
-      condition: "Good",
-      brand: "Brand Name",
-      model: "Model X",
-      yearOfManufacture: "2022",
-    },
-    appearance: {
-      color: "Black",
-      dimensions: "100 x 100 x 100 cm",
-      weight: "500g",
-      material: "Aluminum",
-    },
-    performance: {
-      batteryLife: "10 hours",
-      storageCapacity: "256GB",
-      additionalFeatures: "Water-resistant, Bluetooth-enabled",
-    },
-    warranty: "No warranty",
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -106,13 +78,33 @@ const ProductListingComponent = () => {
     );
   };
 
-  const sellerRating = 3.3;
+  const { buyer, owner, sold } = data?.database ?? {};
+  const { display_image, flairs, pickup_location, price, title } =
+    data?.essential ?? {
+      display_image: "",
+      flairs: { negotiable: false },
+      pickup_location: "St. George - Bahen",
+      price: 0,
+      title: "",
+    };
+
+  const { negotiable } = flairs ?? { negotiable: false };
+
+  const { media_files } = data?.media ?? { media_files: [] };
+
+  const { email, full_name, rating } = owner ?? {
+    email: "",
+    full_name: "",
+    rating: 0,
+  };
+
+  const description = data?.specifications?.description ?? "";
 
   const SellerInfoContainer = () => {
     return (
       <div>
         <div>SELLER ID # 1234</div>
-        <Rating rating={sellerRating} />
+        <Rating rating={rating} />
       </div>
     );
   };
@@ -122,15 +114,11 @@ const ProductListingComponent = () => {
   };
 
   const handleSendEmail = () => {
-    /* NOTE FOR DEVELOPER: PLEASE UPDATE VARIABLES 
-    IN THIS AS WELL WHEN API CALLS MADE */
-
-    const sellerName = "Seller Name";
-    const productTitle = "Product Title";
-    const productId = "Product ID";
-    const productPrice = "Product Price";
-    // const buyerName = "Buyer Name";
-    const sellerEmail = "hello123@example.com";
+    const sellerName = full_name;
+    const productTitle = title;
+    const productId = id;
+    const productPrice = price;
+    const sellerEmail = email;
     const buyerNote = note;
 
     const subject = `Interest in your product listing on Markt: ${productTitle}`;
@@ -169,32 +157,20 @@ const ProductListingComponent = () => {
     <>
       <ProductListingContainer isMobile={isMobile}>
         <ProductImages>
-          <ImageGallery
-            mediaUrls={[
-              "https://images-na.ssl-images-amazon.com/images/I/71g2ednj0JL._AC_SL1500_.jpg",
-              "https://images-na.ssl-images-amazon.com/images/I/81QpkIctqPL._AC_SL1500_.jpg",
-              "https://images-na.ssl-images-amazon.com/images/I/71K7Q4FpguL._AC_SL1500_.jpg",
-              "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-            ]}
-          />
+          <ImageGallery mediaUrls={[display_image, ...media_files]} />
         </ProductImages>
         <ProductDetails isMobile={isMobile}>
           <TitleAndPriceContainer isMobile={isMobile}>
             <TitleAndDescription>
-              <h1>Product Title</h1>
-              <p>
-                Description description description description description
-                description description description description description
-                description description description description description
-                description description description
-              </p>
+              <h1>{title}</h1>
+              <p>{description}</p>
 
               <ShareInterestButtonContainer />
             </TitleAndDescription>
 
             <PriceBox>
-              <PriceText>CAD $$$</PriceText>
-              <div>Negotiable / Non-negotiable</div>
+              <PriceText>CAD {price ?? 0}</PriceText>
+              <div>{negotiable ? "Negotiable" : "Non-negotiable"}</div>
               <SellerInfo>
                 <SellerAvatar
                   src="https://via.placeholder.com/50"
@@ -204,7 +180,7 @@ const ProductListingComponent = () => {
               </SellerInfo>
             </PriceBox>
           </TitleAndPriceContainer>
-          <ProductSpecs specs={dummySpecifications} />
+          <ProductSpecs specs={data?.specifications} />
         </ProductDetails>
       </ProductListingContainer>
 
@@ -235,7 +211,7 @@ const ProductListingComponent = () => {
         <BottomTab isVisible={isBottomTabVisible} test-id="bottom-tab">
           <BottomTabRow>
             <SellerInfoContainer />
-            <PriceText>CAD $$$</PriceText>
+            <PriceText>CAD {price}</PriceText>
           </BottomTabRow>
           <ShareInterestButtonContainer />
         </BottomTab>

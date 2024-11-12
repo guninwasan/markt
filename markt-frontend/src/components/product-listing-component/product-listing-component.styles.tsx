@@ -47,6 +47,7 @@ const PriceBox = styled.div`
 const PriceText = styled.div`
   font-weight: bold;
   font-size: 2.5rem;
+  color: ${colors.darkGrey};
 `;
 
 const SellerInfo = styled.div`

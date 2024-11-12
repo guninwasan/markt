@@ -19,7 +19,7 @@ import {
 const detectMediaType = (url: string): "image" | "video" => {
   // const imageExtensions = [".jpg", ".jpeg", ".png", ".gif"];
   const videoExtensions = [".mp4", ".webm", ".ogg"];
-  const extension = url.split(".").pop()?.toLowerCase();
+  const extension = url?.split(".")?.pop()?.toLowerCase();
   return extension && videoExtensions.includes(`.${extension}`)
     ? "video"
     : "image";
