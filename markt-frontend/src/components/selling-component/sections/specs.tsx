@@ -30,7 +30,6 @@ const Specifications: React.FC<SpecificationsProps> = ({
     {[
       "brand",
       "model",
-      "yearOfManufacture",
       "color",
       "dimensions",
       "weight",
@@ -46,6 +45,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
           placeholder={`Enter ${spec}`}
           value={formData[spec as keyof SpecificationsProps["formData"]] || ""}
           onChange={handleChange}
+          maxLength={190}
         />
       </FormGroup>
     ))}

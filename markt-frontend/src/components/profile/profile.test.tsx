@@ -29,7 +29,7 @@ describe("Profile", () => {
   it("should render the profile component with user information", () => {
     renderWithRedux(<Profile />);
 
-    expect(screen.getByText(/Profile Details:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Profile Details/i)).toBeInTheDocument();
     expect(screen.getByText(/UofT Email Address:/i)).toBeInTheDocument();
     expect(screen.getByText(/UofT Student ID:/i)).toBeInTheDocument();
   });

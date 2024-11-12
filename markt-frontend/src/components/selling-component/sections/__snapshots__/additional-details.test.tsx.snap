@@ -15,11 +15,12 @@ exports[`AdditionalDetails Component should match snapshot 1`] = `
       class="sc-dntaoT bUVQgQ"
       for="additionalDetails"
     >
-      Additional Details
+      Additional Details (Max 200 Chars.)
     </label>
     <textarea
       class="sc-kLhKbu hUWHbh"
       id="additionalDetails"
+      maxlength="190"
       name="additionalDetails"
       placeholder="Add any extra information about the product"
     >

@@ -17,7 +17,7 @@ const UserInfo = styled.p`
 `;
 
 const ProfileDetailsHeading = styled.h2`
-  font-size: 2rem;
+  font-size: 1rem;
   font-weight: semi-bold;
   color: ${colors.darkGrey};
   text-align: left;

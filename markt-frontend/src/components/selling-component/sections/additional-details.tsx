@@ -12,13 +12,16 @@ const AdditionalDetails = ({ formData, handleChange }: any) => (
       Additional Details
     </SectionHeader>
     <FormGroup>
-      <Label htmlFor="additionalDetails">Additional Details</Label>
+      <Label htmlFor="additionalDetails">
+        Additional Details (Max 200 Chars.)
+      </Label>
       <TextArea
         id="additionalDetails"
         name="additionalDetails"
         placeholder="Add any extra information about the product"
         value={formData.additionalDetails}
         onChange={handleChange}
+        maxLength={190}
       />
     </FormGroup>
   </>

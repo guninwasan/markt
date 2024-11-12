@@ -6,35 +6,43 @@ import {
 } from "./product-listing-component.styles";
 
 const ProductSpecs = ({ specs }: any) => {
+  const {
+    additional_details,
+    battery_life,
+    brand,
+    color,
+    dimensions,
+    material,
+    model,
+    quantity,
+    storage_capacity,
+    weight,
+  } = specs ?? {};
   return (
     <ProductSpecsContainer>
       <h2>Product Specifications</h2>
       <SpecGrid>
         <SpecCategory>
           <h3>Basic Information</h3>
-          <SpecItem>Condition: {specs.basicInfo.condition}</SpecItem>
-          <SpecItem>Brand: {specs.basicInfo.brand}</SpecItem>
-          <SpecItem>Model: {specs.basicInfo.model}</SpecItem>
-          <SpecItem>Year: {specs.basicInfo.yearOfManufacture}</SpecItem>
+          <SpecItem>Quantity: {quantity}</SpecItem>
+          <SpecItem>Brand: {brand}</SpecItem>
+          <SpecItem>Model: {model}</SpecItem>
         </SpecCategory>
         <SpecCategory>
           <h3>Appearance</h3>
-          <SpecItem>Color: {specs.appearance.color}</SpecItem>
-          <SpecItem>Dimensions: {specs.appearance.dimensions}</SpecItem>
-          <SpecItem>Weight: {specs.appearance.weight}</SpecItem>
-          <SpecItem>Material: {specs.appearance.material}</SpecItem>
+          <SpecItem>Color: {color}</SpecItem>
+          <SpecItem>Dimensions: {dimensions}</SpecItem>
+          <SpecItem>Weight: {weight}</SpecItem>
+          <SpecItem>Material: {material}</SpecItem>
         </SpecCategory>
         <SpecCategory>
           <h3>Performance</h3>
-          <SpecItem>Battery Life: {specs.performance.batteryLife}</SpecItem>
-          <SpecItem>
-            Storage Capacity: {specs.performance.storageCapacity}
-          </SpecItem>
-          <SpecItem>Features: {specs.performance.additionalFeatures}</SpecItem>
+          <SpecItem>Battery Life: {battery_life}</SpecItem>
+          <SpecItem>Storage Capacity: {storage_capacity}</SpecItem>
         </SpecCategory>
         <SpecCategory>
-          <h3>Warranty</h3>
-          <SpecItem>{specs.warranty}</SpecItem>
+          <h3>Additional Details</h3>
+          <SpecItem>{additional_details}</SpecItem>
         </SpecCategory>
       </SpecGrid>
     </ProductSpecsContainer>

@@ -96,14 +96,16 @@ const SellingComponent = () => {
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    const numericValue = value.replace(/[^0-9.]/g, '');
+    const numericValue = value.replace(/[^0-9.]/g, "");
     const priceAsNumber = parseFloat(numericValue);
-  
+
     if (value === "") {
       setPriceError("");
       setFormData((prevData: any) => ({ ...prevData, price: "" }));
     } else if (priceAsNumber > 10000) {
-      setPriceError("This exceeds the maximum transaction limit on our website (CAD 10,000).");
+      setPriceError(
+        "This exceeds the maximum transaction limit on our website (CAD 10,000)."
+      );
     } else if (!isNaN(priceAsNumber) && priceAsNumber >= 0) {
       setPriceError("");
       setFormData((prevData: any) => ({ ...prevData, price: numericValue }));
@@ -111,7 +113,6 @@ const SellingComponent = () => {
       setPriceError("Please enter a valid positive number for price.");
     }
   };
-  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,9 +133,9 @@ const SellingComponent = () => {
       );
       dispatch(setIsLoading(false));
       const requestData = {
-        owner_email: userEmail, 
+        owner_email: userEmail,
         title: formData.title,
-        price: parseFloat(formData.price), 
+        price: parseFloat(formData.price),
         description: formData.description,
         negotiable: formData.negotiable,
         condition: formData.condition,
@@ -151,9 +152,6 @@ const SellingComponent = () => {
         additional_details: formData.additionalDetails,
         display_image: displayMediaUrl,
         media: getMediaURLs,
-        ...(formData.yearOfManufacture && {
-          year_of_manufacture: parseInt(formData.yearOfManufacture),
-        }),
       };
       dispatch(setIsLoading(true));
       const response = await fetch(`${API_BASE_URL}/api/listing/create`, {

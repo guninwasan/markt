@@ -38,6 +38,5 @@ describe("ProductListingComponent", () => {
   it("renders product details correctly", () => {
     renderWithRedux(<ProductListingComponent />);
     expect(screen.getByText(/CAD/)).toBeInTheDocument();
-    expect(screen.getByText(/SELLER ID/)).toBeInTheDocument();
   });
 });

@@ -25,6 +25,7 @@ const EssentialDetails = ({
         placeholder="Enter the product title"
         value={formData.title}
         onChange={handleChange}
+        maxLength={190}
       />
     </FormGroup>
     <FormGroup style={{ flex: "1 1 45%" }}>
@@ -36,6 +37,7 @@ const EssentialDetails = ({
         placeholder="Enter the product price"
         value={formData.price}
         onChange={handlePriceChange}
+        maxLength={190}
       />
       {priceError && <p style={{ color: "red" }}>{priceError}</p>}
     </FormGroup>
@@ -51,13 +53,14 @@ const EssentialDetails = ({
       </Label>
     </FormGroup>
     <FormGroup>
-      <Label>Description *</Label>
+      <Label>Description (Max 200 Chars.) *</Label>
       <TextArea
         name="description"
         required
         placeholder="Provide a detailed description of the item..."
         value={formData.description}
         onChange={handleChange}
+        maxLength={190}
       />
     </FormGroup>
     <FormGroup>

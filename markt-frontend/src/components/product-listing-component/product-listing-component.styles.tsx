@@ -36,6 +36,19 @@ const TitleAndDescription = styled.div`
   gap: 1rem;
 `;
 
+const PickUpLocationHeader = styled.span`
+  color: ${colors.darkerHoverPrimary};
+  font-weight: bold;
+  font-size: 1rem;
+`;
+
+const PickUpLocationText = styled.span`
+  font-size: 1rem;
+  color: ${colors.textBlack};
+  font-weight: 1000;
+  margin-left: 1rem;
+`;
+
 const PriceBox = styled.div`
   flex: 1;
   display: flex;
@@ -47,6 +60,7 @@ const PriceBox = styled.div`
 const PriceText = styled.div`
   font-weight: bold;
   font-size: 2.5rem;
+  color: ${colors.darkGrey};
 `;
 
 const SellerInfo = styled.div`
@@ -108,6 +122,11 @@ const ShareInterestButton = styled.button`
 
   &:focus {
     outline: none;
+  }
+
+  &:disabled {
+    background-color: ${colors.grey};
+    cursor: not-allowed;
   }
 `;
 
@@ -201,6 +220,20 @@ const Button = styled.button<{ primaryColor?: boolean }>`
   }
 `;
 
+const SoldContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: bold;
+  background-color: red;
+  color: ${colors.white};
+  padding: 1rem;
+  border-radius: 1rem;
+  width: 90%;
+  align-self: center;
+`;
+
 export {
   ProductListingContainer,
   ProductImages,
@@ -222,4 +255,7 @@ export {
   SpecItem,
   BottomTabRow,
   Button,
+  PickUpLocationText,
+  PickUpLocationHeader,
+  SoldContainer,
 };
