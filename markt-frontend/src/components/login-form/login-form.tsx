@@ -105,7 +105,6 @@ const LoginForm = () => {
             })
           );
           dispatch(setIsLoggedIn(true));
-          navigate("/");
         } else {
           const newErrors = { ...errors };
           switch (result.status) {
