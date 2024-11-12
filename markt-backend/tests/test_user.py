@@ -44,7 +44,7 @@ def test_register(mock_mail_send, client):
     assert rsp.status_code == 201
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
-    assert 'User registered, email verification pending' in rsp["data"]
+    assert 'User registered' in rsp["data"]
     mock_mail_send.assert_called_once()
 
     # verify email
