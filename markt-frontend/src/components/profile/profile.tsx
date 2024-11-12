@@ -7,7 +7,14 @@ import {
   Button,
 } from "./profile.styles";
 import { useSelector } from "react-redux";
-import { RootState, selectors, setIsLoading, setIsLoggedIn } from "../../redux";
+import {
+  RootState,
+  selectors,
+  setIsLoading,
+  setIsLoggedIn,
+  setUserDetails,
+  setWishList,
+} from "../../redux";
 import { useDispatch } from "react-redux";
 
 const Profile = () => {
@@ -25,6 +32,11 @@ const Profile = () => {
   const handleLogout = () => {
     dispatch(setIsLoading(true));
     dispatch(setIsLoggedIn(false));
+    dispatch(setWishList([]));
+    dispatch(
+      setUserDetails({ userID: -1, name: "", email: "", phone: "", jwt: "" })
+    );
+
     setTimeout(() => {
       dispatch(setIsLoading(false));
       navigate("/");
