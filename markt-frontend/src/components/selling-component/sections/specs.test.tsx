@@ -7,7 +7,6 @@ describe("Specifications Component", () => {
   const formData = {
     brand: "BrandName",
     model: "ModelName",
-    yearOfManufacture: "2022",
     color: "Red",
     dimensions: "10x10x10",
     weight: "1kg",
@@ -30,7 +29,6 @@ describe("Specifications Component", () => {
     const specs = [
       "brand",
       "model",
-      "yearOfManufacture",
       "color",
       "dimensions",
       "weight",

@@ -21,7 +21,9 @@ describe("AdditionalDetails Component", () => {
   });
 
   it("should render label", () => {
-    expect(screen.getByLabelText("Additional Details")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Additional Details (Max 200 Chars.)")
+    ).toBeInTheDocument();
   });
 
   it("should render text area with correct value", () => {

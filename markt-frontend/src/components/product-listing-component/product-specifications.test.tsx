@@ -3,64 +3,72 @@ import { render, screen } from "@testing-library/react";
 import { ProductSpecs } from "./product-specifications";
 
 const mockSpecs = {
-  basicInfo: {
-    condition: "New",
-    brand: "BrandName",
-    model: "ModelX",
-    yearOfManufacture: "2022",
-  },
-  appearance: {
-    color: "Black",
-    dimensions: "10x5x2 inches",
-    weight: "1.5 lbs",
-    material: "Plastic",
-  },
-  performance: {
-    batteryLife: "10 hours",
-    storageCapacity: "256GB",
-    additionalFeatures: "Waterproof, Bluetooth",
-  },
-  warranty: "2 years",
+  additional_details: "Some additional details",
+  battery_life: "10 hours",
+  brand: "BrandName",
+  color: "Red",
+  dimensions: "10x10x10 cm",
+  material: "Plastic",
+  model: "Model123",
+  quantity: 5,
+  storage_capacity: "256GB",
+  weight: "1kg",
 };
 
-describe("ProductSpecs", () => {
+describe("ProductSpecifications", () => {
   it("should render the Product Specifications title", () => {
     render(<ProductSpecs specs={mockSpecs} />);
     expect(screen.getByText("Product Specifications")).toBeInTheDocument();
   });
 
-  it("should render basic information", () => {
+  it("should render additional details", () => {
     render(<ProductSpecs specs={mockSpecs} />);
-    expect(screen.getByText("Basic Information")).toBeInTheDocument();
-    expect(screen.getByText("Condition: New")).toBeInTheDocument();
-    expect(screen.getByText("Brand: BrandName")).toBeInTheDocument();
-    expect(screen.getByText("Model: ModelX")).toBeInTheDocument();
-    expect(screen.getByText("Year: 2022")).toBeInTheDocument();
+    expect(screen.getByText("Some additional details")).toBeInTheDocument();
   });
 
-  it("should render appearance information", () => {
+  it("should render battery life", () => {
     render(<ProductSpecs specs={mockSpecs} />);
-    expect(screen.getByText("Appearance")).toBeInTheDocument();
-    expect(screen.getByText("Color: Black")).toBeInTheDocument();
-    expect(screen.getByText("Dimensions: 10x5x2 inches")).toBeInTheDocument();
-    expect(screen.getByText("Weight: 1.5 lbs")).toBeInTheDocument();
+    expect(screen.getByText("Battery Life: 10 hours")).toBeInTheDocument();
+  });
+
+  it("should render brand", () => {
+    render(<ProductSpecs specs={mockSpecs} />);
+    expect(screen.getByText("Brand: BrandName")).toBeInTheDocument();
+  });
+
+  it("should render color", () => {
+    render(<ProductSpecs specs={mockSpecs} />);
+    expect(screen.getByText("Color: Red")).toBeInTheDocument();
+  });
+
+  it("should render dimensions", () => {
+    render(<ProductSpecs specs={mockSpecs} />);
+    expect(screen.getByText("Dimensions: 10x10x10 cm")).toBeInTheDocument();
+  });
+
+  it("should render material", () => {
+    render(<ProductSpecs specs={mockSpecs} />);
     expect(screen.getByText("Material: Plastic")).toBeInTheDocument();
   });
 
-  it("should render performance information", () => {
+  it("should render model", () => {
     render(<ProductSpecs specs={mockSpecs} />);
-    expect(screen.getByText("Performance")).toBeInTheDocument();
-    expect(screen.getByText("Battery Life: 10 hours")).toBeInTheDocument();
-    expect(screen.getByText("Storage Capacity: 256GB")).toBeInTheDocument();
-    expect(
-      screen.getByText("Features: Waterproof, Bluetooth")
-    ).toBeInTheDocument();
+    expect(screen.getByText("Model: Model123")).toBeInTheDocument();
   });
 
-  it("should render warranty information", () => {
+  it("should render quantity", () => {
     render(<ProductSpecs specs={mockSpecs} />);
-    expect(screen.getByText("Warranty")).toBeInTheDocument();
-    expect(screen.getByText("2 years")).toBeInTheDocument();
+    expect(screen.getByText("Quantity: 5")).toBeInTheDocument();
+  });
+
+  it("should render storage capacity", () => {
+    render(<ProductSpecs specs={mockSpecs} />);
+    expect(screen.getByText("Storage Capacity: 256GB")).toBeInTheDocument();
+  });
+
+  it("should render weight", () => {
+    render(<ProductSpecs specs={mockSpecs} />);
+    expect(screen.getByText("Weight: 1kg")).toBeInTheDocument();
   });
 
   it("should match snapshot", () => {
