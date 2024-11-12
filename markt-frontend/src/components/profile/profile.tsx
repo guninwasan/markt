@@ -31,8 +31,8 @@ const Profile = () => {
     }, 2000);
   };
 
-  //CHANGE PASSWORD FUNCTIONALITY NEEDS TO BE ADDED
-  const handleChangePassword = () => {};
+  // //CHANGE PASSWORD FUNCTIONALITY NEEDS TO BE ADDED
+  // const handleChangePassword = () => {};
 
   return (
     <div>
@@ -47,9 +47,9 @@ const Profile = () => {
         </UserInfo>
 
         <ButtonContainer>
-          <Button onClick={handleChangePassword} primaryColor>
+          {/* <Button onClick={handleChangePassword} primaryColor>
             Change Password
-          </Button>
+          </Button> */}
           <Button onClick={handleLogout}>Logout</Button>
         </ButtonContainer>
       </div>

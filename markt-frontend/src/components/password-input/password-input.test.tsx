@@ -37,7 +37,7 @@ describe("PasswordInput", () => {
     expect(screen.getByText("An upper case letter (A-Z)")).toBeInTheDocument();
     expect(screen.getByText("A number (i.e. 0-9)")).toBeInTheDocument();
     expect(
-      screen.getByText("A special character (@$!%*?&#-)")
+      screen.getByText("A special character (@$!%*?&#)")
     ).toBeInTheDocument();
   });
 
