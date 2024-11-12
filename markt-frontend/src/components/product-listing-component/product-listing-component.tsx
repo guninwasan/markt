@@ -24,6 +24,7 @@ import {
   SoldContainer,
   SellerInfoDiv,
   BuyerRatingContainer,
+  SellerContainer,
 } from "./product-listing-component.styles";
 import { ProductSpecs } from "./product-specifications";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -117,6 +118,12 @@ const ProductListingComponent = () => {
 
   const description = data?.specifications?.description ?? "";
 
+  const [addBuyerEmail, setAddBuyerEmail] = useState("");
+
+  const handleBuyerEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAddBuyerEmail(e.target.value);
+  };
+
   const SellerInfoContainer = () => {
     return (
       <SellerInfoDiv>
@@ -197,6 +204,31 @@ const ProductListingComponent = () => {
     }
   };
 
+  const submitBuyerEmail = async () => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/listing/update/${id}/`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ buyer_email: addBuyerEmail, sold: true }),
+        }
+      );
+      if (response.ok) {
+        alert("Buyer email submitted successfully!");
+        const result = await response.json();
+        setData(result.data);
+      } else {
+        alert("Failed to submit buyer email.");
+      }
+    } catch (error) {
+      console.error("Error submitting buyer email:", error);
+      alert("Error submitting buyer email. Please try again later.");
+    }
+  };
+
   return (
     <>
       <ProductListingContainer isMobile={isMobile}>
@@ -204,6 +236,22 @@ const ProductListingComponent = () => {
           <ImageGallery mediaUrls={[display_image, ...media_files]} />
         </ProductImages>
         <ProductDetails isMobile={isMobile}>
+          {email === userEmail && !buyer && (
+            <SellerContainer>
+              You are the owner of the product.
+              <br />
+              If the product has been sold, consider updating the status and
+              give an option to the buyer to rate you.
+              <br />
+              <input
+                type="email"
+                placeholder="Enter buyer's email"
+                value={addBuyerEmail}
+                onChange={handleBuyerEmailChange}
+              />
+              <button onClick={submitBuyerEmail}>Submit Buyer Email</button>
+            </SellerContainer>
+          )}
           {sold && <SoldContainer>SOLD</SoldContainer>}
           {sold && buyer === userEmail && (
             <BuyerRatingContainer>

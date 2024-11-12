@@ -263,6 +263,35 @@ const BuyerRatingContainer = styled.div`
   }
 `;
 
+const SellerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  color: ${colors.textBlack};
+  font-size: 1rem;
+  border: 1px solid ${colors.lightGrey};
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: ${colors.white};
+
+  & > button {
+    background-color: ${colors.darkerPrimary};
+    color: ${colors.white};
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  & > input {
+    padding: 0.5rem;
+    border: 1px solid ${colors.lightGrey};
+    border-radius: 5px;
+    justify-self: center;
+  }
+`;
+
 export {
   ProductListingContainer,
   ProductImages,
@@ -289,4 +318,5 @@ export {
   SoldContainer,
   SellerInfoDiv,
   BuyerRatingContainer,
+  SellerContainer,
 };
