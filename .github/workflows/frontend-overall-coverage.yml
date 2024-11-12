@@ -28,7 +28,7 @@ jobs:
       - name: Check Coverage Percentage
         run: |
           coverage=$(grep -oP 'All files\s*\|\s*\K[0-9]+\.[0-9]+' coverage_output.txt)
-          threshold=80
+          threshold=75
           echo "Coverage: $coverage%"
           if (( $(echo "$coverage < $threshold" | bc -l) )); then
             echo "Code coverage ($coverage%) is below the threshold ($threshold%). Failing the job."

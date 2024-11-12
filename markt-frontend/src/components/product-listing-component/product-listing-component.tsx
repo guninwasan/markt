@@ -54,7 +54,7 @@ const ProductListingComponent = () => {
     };
     fetchData();
     console.log("fetching data", data);
-  }, []);
+  });
 
   // useEffect(() => {
   //   if (data) {
