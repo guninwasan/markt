@@ -12,10 +12,6 @@ const createImageFile = (sizeInKB: number): File => {
   return createFile("test-image.jpg", "image/jpeg", sizeInKB);
 };
 
-const createVideoFile = (sizeInKB: number): File => {
-  return createFile("test-video.mp4", "video/mp4", sizeInKB);
-};
-
 describe("MediaSection Component", () => {
   const mockSetMediaFiles = jest.fn();
   const mockSetDisplayImage = jest.fn();
