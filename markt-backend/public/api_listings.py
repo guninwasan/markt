@@ -6,15 +6,18 @@ from database.db import db
 from database.models import Listing, User
 from utils.errors import ErrorRsp
 from schemas.listing_schema import ListingInformationSchema, ListingUpdate, ListingGetSchema, ListingDeleteSchema
+from utils.auth import api_key_required
+
 
 listing_api_bp = Blueprint('listing_api', __name__)
 swagger = Swagger()
 
 """
-    Endpoint: Creating listings
+    Endpoint: Creating listings // add a security key authetication here 
     Route: 'api/listing/create'
 """
 @listing_api_bp.route('/create', methods=['POST'])
+@api_key_required
 # Endpoint parameter specification
 @swag_from('../docs/listing_docs.yml', endpoint='create')
 # API implementation
@@ -133,7 +136,7 @@ def get_all():
                     "data": rsp}), 200
 
 """
-    Endpoint: Update a listing
+    Endpoint: Update a listing 
     Route: 'api/listing/update/<int:id>/'
 """
 @listing_api_bp.route('/update/<int:id>/', methods=['PUT'])
@@ -347,3 +350,4 @@ def search():
         "total_pages": total_pages,
         "current_page": page
     }), 200
+

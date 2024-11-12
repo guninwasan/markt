@@ -6,7 +6,7 @@ from flask_mail import Message
 from marshmallow import ValidationError
 from datetime import datetime, timedelta
 from database.db import db
-from database.models import User, Listing
+from database.models import User, Listing, ApiKey
 from utils.errors import ErrorRsp
 from schemas.user_schema import (
     UserRegistrationSchema,
@@ -24,29 +24,27 @@ from . import mail
 user_api_bp = Blueprint('user_api', __name__, template_folder='templates')
 swagger = Swagger()
 
-"""
-    Endpoint: Registering users
-    Route: 'api/user/register'
-"""
 @user_api_bp.route('/register', methods=['POST'])
-# Endpoint parameter specification
 @swag_from('../docs/user_docs.yml', endpoint='register')
-# API implementation
 def register():
     data = request.get_json()
     schema = UserRegistrationSchema()
     try:
         data = schema.load(data)
     except ValidationError as err:
-        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
-                        "data": "Missing parameters",
-                        "errors": err.messages}), 400
+        return jsonify({
+            "status": ErrorRsp.ERR_PARAM.value,
+            "data": "Missing parameters",
+            "errors": err.messages
+        }), 400
 
     # Check if user already exists
     user = User.query.filter_by(email=data['email']).first()
     if user is not None:
-        return jsonify({"status": ErrorRsp.ERR_PARAM_DUP.value,
-                        "data": "User already exists!"}), 400
+        return jsonify({
+            "status": ErrorRsp.ERR_PARAM_DUP.value,
+            "data": "User already exists!"
+        }), 400
 
     # Store all validation errors
     validation_errors = []
@@ -57,17 +55,22 @@ def register():
 
     # Validate phone number
     if not User.validate_phone_format(data["phone"]):
-        validation_errors.append("Phone number must be of valid format: 123-456-7890, (123) 456-7890, or +1-123-456-7890")
+        validation_errors.append("Phone number must be of valid format.")
 
     # Validate password
     if not User.validate_password_format(data["password"]):
-        validation_errors.append("Password must contain at minimum 8 characters, 1 lowercase and uppercase letter, 1 digit, 1 special character")
+        validation_errors.append(
+            "Password must contain at minimum 8 characters, 1 lowercase and uppercase letter, 1 digit, 1 special character"
+        )
 
     # Return validation errors if any
-    if len(validation_errors):
-        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
-                        "data": validation_errors}), 400
+    if validation_errors:
+        return jsonify({
+            "status": ErrorRsp.ERR_PARAM.value,
+            "data": validation_errors
+        }), 400
 
+    # Create a new user
     user = User(
         full_name=data["full_name"],
         password=data['password'],
@@ -82,6 +85,12 @@ def register():
 
     db.session.add(user)
     db.session.commit()
+
+    # Generate and assign API key for the user
+    api_key = ApiKey(user_id=user.id)
+    db.session.add(api_key)
+    db.session.commit()
+
 
     email_message = Message(
         'Email Verification Code',
@@ -210,42 +219,61 @@ def verify_email(email):
     user.validation_code_expiration = None
     db.session.commit()
 
-    return jsonify({"status": ErrorRsp.OK.value,
-                    "data": "User email verified successfully!"}), 200
+    return jsonify({
+        "status": ErrorRsp.OK.value,
+        "data": "User email verified successfully!",
+    }), 200
 
-
-"""
-    Endpoint: Logging in users
-    Route: 'api/user/login'
-"""
 @user_api_bp.route('/login', methods=['POST'])
-# Endpoint parameter specification
 @swag_from('../docs/user_docs.yml', endpoint='login')
-# API implementation
 def login():
     data = request.get_json()
     schema = UserLoginSchema()
+
     try:
         data = schema.load(data)
     except ValidationError as err:
-        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
-                        "data": "Missing parameters",
-                        "errors": err.messages}), 400
+        return jsonify({
+            "status": ErrorRsp.ERR_PARAM.value,
+            "data": "Missing parameters",
+            "errors": err.messages
+        }), 400
 
     # Check if user exists
     user = User.query.filter_by(email=data['email']).first()
     if user is None:
-        return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
-                        "data": "User does not exist!"}), 404
+        return jsonify({
+            "status": ErrorRsp.ERR_NOT_FOUND.value,
+            "data": "User does not exist!"
+        }), 404
 
     # Validate user's password
     if not user.check_password(data['password']):
-        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
-                        "data": "Incorrect password!"}), 401
+        return jsonify({
+            "status": ErrorRsp.ERR_PARAM.value,
+            "data": "Incorrect password!"
+        }), 401
 
-    return jsonify({"status": ErrorRsp.OK.value,
-                    "data": "User logged in successfully!"}), 200
+    # Fetch the API key for the user (assuming one-to-one relationship)
+    api_key = ApiKey.query.filter_by(user_id=user.id).first()
+    if api_key is None:
+        return jsonify({
+            "status": ErrorRsp.ERR_NOT_FOUND.value,
+            "data": "API key not found for user!"
+        }), 404
 
+    # Return successful login response with user info and API key
+    return jsonify({
+        "status": ErrorRsp.OK.value,
+        "data": "User logged in successfully!",
+        "user": {
+            "id": user.id,
+            "full_name": user.full_name,
+            "email": user.email,
+            "phone": user.phone,
+            "api_key": api_key.key  # API key associated with the user
+        }
+    }), 200
 
 """
     Endpoint: Updating user details
