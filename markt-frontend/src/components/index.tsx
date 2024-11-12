@@ -17,3 +17,4 @@ export * from "./redirect-to-home-route";
 export * from "./password-input";
 export * from "./loading-modal";
 export * from "./footer";
+export * from "./alert-modal";
