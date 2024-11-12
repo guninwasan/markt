@@ -18,7 +18,7 @@ exports[`AdditionalDetails Component should match snapshot 1`] = `
       Additional Details
     </label>
     <textarea
-      class="sc-ghWlax jsMPBP"
+      class="sc-kLhKbu hUWHbh"
       id="additionalDetails"
       name="additionalDetails"
       placeholder="Add any extra information about the product"

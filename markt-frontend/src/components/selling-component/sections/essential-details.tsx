@@ -68,7 +68,7 @@ const EssentialDetails = ({
         value={formData.pickupLocation}
         onChange={handleChange}
       >
-        <option value="St.George - Bahen" disabled>
+        <option value="" disabled>
           Select a pickup location....
         </option>
         <option value="St. George - Bahen">St. George - Bahen</option>

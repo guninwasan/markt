@@ -9,10 +9,11 @@ import {
 } from "./sections";
 import { uploadImage, validateFormData } from "./utils";
 import { useSelector } from "react-redux";
-import { RootState, selectors } from "../../redux";
+import { RootState, selectors, setIsLoading } from "../../redux";
 import { API_BASE_URL } from "../api";
 import { useNavigate } from "react-router-dom";
 import { AlertModal } from "../alert-modal";
+import { useDispatch } from "react-redux";
 
 const initialFormData = {
   title: "",
@@ -48,11 +49,13 @@ const SellingComponent = () => {
   const [alertMessage, setAlertMessage] = useState<string>("");
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const { userEmail, apiKey, userID } = useSelector((state: RootState) => ({
+  const { userEmail, apiKey, userID, isLoading } = useSelector((state: RootState) => ({
     userEmail: selectors.getEmail(state),
     apiKey: selectors.getUserAuthJWT(state),
     userID: selectors.getUserID(state),
+    isLoading: selectors.getIsLoading(state),
   }));
 
   const handleChange = (
@@ -121,13 +124,14 @@ const SellingComponent = () => {
     }
 
     try {
-      // Mock display and media URLs
+      dispatch(setIsLoading(true));
       const displayMediaUrl = await uploadImage(displayImage as File);
       const getMediaURLs = await Promise.all(
         mediaFiles.map(async (file: File) => {
           return await uploadImage(file);
         })
       );
+      dispatch(setIsLoading(false));
       const requestData = {
         owner_email: userEmail, 
         title: formData.title,
@@ -152,7 +156,7 @@ const SellingComponent = () => {
           year_of_manufacture: parseInt(formData.yearOfManufacture),
         }),
       };
-
+      dispatch(setIsLoading(true));
       const response = await fetch(`${API_BASE_URL}/api/listing/create`, {
         method: "POST",
         headers: {
@@ -163,6 +167,7 @@ const SellingComponent = () => {
         body: JSON.stringify(requestData),
       });
       if (response.ok) {
+        dispatch(setIsLoading(false));
         setShowAlert(true);
         setAlertMessage("Listing created successfully!");
         setTimeout(() => {
@@ -170,12 +175,14 @@ const SellingComponent = () => {
           navigate("/");
         }, 3000);
       } else {
+        dispatch(setIsLoading(false));
         const errorData = await response.json();
         setShowAlert(true);
         setAlertMessage(`Error creating listing: ${errorData.data}`);
         console.error("Error:", errorData);
       }
     } catch (error) {
+      dispatch(setIsLoading(false));
       console.error("Error uploading listing:", error);
       setShowAlert(true);
       setAlertMessage("Error uploading listing. Please try again later.");

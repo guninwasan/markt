@@ -17,10 +17,10 @@ exports[`MediaSection Component should match snapshot 1`] = `
       Display Image *
     </label>
     <button
-      class="sc-kLhKbu dwqFqP"
+      class="sc-ixGGxD bpZXHd"
       type="button"
     >
-      Add Display Image (Max 1 MB)
+      Add Display Image (Max 1 MB) *
     </button>
     <input
       accept="image/*"
@@ -39,7 +39,7 @@ exports[`MediaSection Component should match snapshot 1`] = `
        )
     </label>
     <button
-      class="sc-kLhKbu dwqFqP"
+      class="sc-ixGGxD bpZXHd"
       type="button"
     >
       + Add Images or Videos (Max 1 MB)

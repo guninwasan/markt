@@ -1,6 +1,7 @@
 import React from "react";
 import { SellingComponent } from "./selling-component";
 import { renderWithRedux } from "../../utils/render-with-redux";
+import { useSelector } from "react-redux";
 
 jest.mock("./sections", () => ({
   EssentialDetails: () => <div>EssentialDetails Component</div>,
@@ -21,6 +22,12 @@ jest.mock("react-redux", () => ({
 }));
 
 describe("SellingComponent", () => {
+
+  beforeEach(() => {
+    (useSelector as unknown as jest.Mock).mockReturnValue({ email: "email@email.com" });
+    jest.useFakeTimers();
+  });
+
   it("should render all sections", () => {
     const { getByText } = renderWithRedux(<SellingComponent />);
     expect(getByText("EssentialDetails Component")).toBeInTheDocument();
