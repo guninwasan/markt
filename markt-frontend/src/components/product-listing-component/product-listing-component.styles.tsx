@@ -234,14 +234,27 @@ const SoldContainer = styled.div`
   align-self: center;
 `;
 
+const SellerInfoDiv = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-direction: column;
+  color: ${colors.textBlack};
+  font-size: 1rem;
+  font-weight: bold;
+`;
+
 const BuyerRatingContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   gap: 1rem;
   color: ${colors.textBlack};
   font-size: 1rem;
+  border: 1px solid ${colors.lightGrey};
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: ${colors.white};
 
   & > button {
     background-color: ${colors.darkerPrimary};
@@ -250,6 +263,46 @@ const BuyerRatingContainer = styled.div`
     border: none;
     border-radius: 5px;
     cursor: pointer;
+  }
+
+  & > input {
+    padding: 0.5rem;
+    border: 1px solid ${colors.lightGrey};
+    border-radius: 5px;
+    justify-self: center;
+    width: 100px;
+    background-color: ${colors.white};
+    font-size: 1rem;
+    font-weight: bold;
+  }
+`;
+
+const SellerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  color: ${colors.textBlack};
+  font-size: 1rem;
+  border: 1px solid ${colors.lightGrey};
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: ${colors.white};
+
+  & > button {
+    background-color: ${colors.darkerPrimary};
+    color: ${colors.white};
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  & > input {
+    padding: 0.5rem;
+    border: 1px solid ${colors.lightGrey};
+    border-radius: 5px;
+    justify-self: center;
   }
 `;
 
@@ -277,5 +330,7 @@ export {
   PickUpLocationText,
   PickUpLocationHeader,
   SoldContainer,
+  SellerInfoDiv,
   BuyerRatingContainer,
+  SellerContainer,
 };

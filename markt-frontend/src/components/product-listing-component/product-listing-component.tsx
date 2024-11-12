@@ -11,7 +11,6 @@ import {
   PriceBox,
   PriceText,
   SellerInfo,
-  SellerAvatar,
   BottomTab,
   ShareInterestButton,
   ModalContent,
@@ -22,7 +21,9 @@ import {
   PickUpLocationText,
   PickUpLocationHeader,
   SoldContainer,
+  SellerInfoDiv,
   BuyerRatingContainer,
+  SellerContainer,
 } from "./product-listing-component.styles";
 import { ProductSpecs } from "./product-specifications";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -30,6 +31,7 @@ import { API_BASE_URL } from "../api";
 import { useSelector } from "react-redux";
 import { RootState, selectors, setIsLoading } from "../../redux";
 import { useDispatch } from "react-redux";
+import { AlertModal } from "../alert-modal";
 
 const ProductListingComponent = () => {
   const [searchParams] = useSearchParams();
@@ -82,7 +84,13 @@ const ProductListingComponent = () => {
     };
   }, []);
 
+  const [alertMessage, setAlertMessage] = useState("");
+
   const handleShareInterestClick = () => {
+    if (!userEmail) {
+      setAlertMessage("Please login to share interest in the product.");
+      return;
+    }
     setIsModalVisible(true);
   };
 
@@ -116,12 +124,18 @@ const ProductListingComponent = () => {
 
   const description = data?.specifications?.description ?? "";
 
+  const [addBuyerEmail, setAddBuyerEmail] = useState("");
+
+  const handleBuyerEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAddBuyerEmail(e.target.value);
+  };
+
   const SellerInfoContainer = () => {
     return (
-      <div>
+      <SellerInfoDiv>
         <div>{full_name}</div>
         <Rating rating={rating} />
-      </div>
+      </SellerInfoDiv>
     );
   };
 
@@ -153,6 +167,11 @@ const ProductListingComponent = () => {
   Note from buyer:
   ${buyerNote}
   
+  
+  Please contact me on my email address to discuss more - ${userEmail}. 
+  
+  Thanks!
+
   --------------------------------
   Note For the seller:
 
@@ -175,7 +194,7 @@ const ProductListingComponent = () => {
     setSellerRating(value);
   };
 
-  const [sellerRating, setSellerRating] = useState<number>(0);
+  const [sellerRating, setSellerRating] = useState<number>(1);
 
   const submitRating = async () => {
     try {
@@ -187,34 +206,84 @@ const ProductListingComponent = () => {
         body: JSON.stringify({ email: email, rating: sellerRating }),
       });
       if (response.ok) {
-        alert("Rating submitted successfully!");
+        setAlertMessage("Rating submitted successfully!");
       } else {
-        alert("Failed to submit rating.");
+        setAlertMessage(
+          "Failed to submit rating. Make sure rating is between 1 and 5."
+        );
       }
     } catch (error) {
-      alert("Error submitting rating. Please try again later.");
+      setAlertMessage("Error submitting rating. Please try again later.");
+    }
+  };
+
+  const submitBuyerEmail = async () => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/listing/update/${id}/`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ buyer_email: addBuyerEmail, sold: true }),
+        }
+      );
+      if (response.ok) {
+        setAlertMessage("Buyer email submitted successfully!");
+        const result = await response.json();
+        setData(result.data);
+      } else {
+        setAlertMessage("Failed to submit buyer email.");
+      }
+    } catch (error) {
+      console.error("Error submitting buyer email:", error);
+      setAlertMessage("Error submitting buyer email. Please try again later.");
     }
   };
 
   return (
     <>
       <ProductListingContainer isMobile={isMobile}>
+        <AlertModal
+          isOpen={!!alertMessage}
+          message={alertMessage}
+          onClose={() => setAlertMessage("")}
+        />
         <ProductImages>
           <ImageGallery mediaUrls={[display_image, ...media_files]} />
         </ProductImages>
         <ProductDetails isMobile={isMobile}>
+          {email === userEmail && !buyer && (
+            <SellerContainer>
+              You are the owner of the product.
+              <br />
+              If the product has been sold, consider updating the status and
+              give an option to the buyer to rate you.
+              <br />
+              <input
+                type="email"
+                placeholder="Enter buyer's email"
+                value={addBuyerEmail}
+                onChange={handleBuyerEmailChange}
+              />
+              <button onClick={submitBuyerEmail}>Submit Buyer Email</button>
+            </SellerContainer>
+          )}
           {sold && <SoldContainer>SOLD</SoldContainer>}
-          {sold && buyer === userEmail && (
+          {sold && buyer?.email === userEmail && (
             <BuyerRatingContainer>
-              It seems like you have purchased this product. Feel free to give a
-              Feel free to give a rating to the seller.
+              It seems like you have purchased this product.
+              <span>
+                Feel free to give <b> a rating to the seller from 1-5. </b>
+              </span>
               <br />
               Give your rating now:
               <input
                 type="number"
                 value={sellerRating}
                 onChange={handleRatingChange}
-                min="0"
+                min="1"
                 max="5"
               />
               <button onClick={submitRating}>Submit Rating</button>
@@ -235,10 +304,6 @@ const ProductListingComponent = () => {
               <PriceText>CAD {price ?? 0}</PriceText>
               <div>{negotiable ? "Negotiable" : "Non-negotiable"}</div>
               <SellerInfo>
-                <SellerAvatar
-                  src="https://via.placeholder.com/50"
-                  alt="Seller Avatar"
-                />
                 <SellerInfoContainer />
               </SellerInfo>
             </PriceBox>

@@ -25,7 +25,7 @@ const AlertModal = ({
   onClose,
   onConfirm,
   confirmText = "Confirm",
-  cancelText = "Cancel",
+  cancelText = "Ok / Cancel",
   timeout = 3000,
 }: AlertModalProps) => {
   useEffect(() => {
