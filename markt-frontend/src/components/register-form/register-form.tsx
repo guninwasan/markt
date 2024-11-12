@@ -74,7 +74,11 @@ const RegisterForm = () => {
         : formFields.password === formFields.confirmPassword
         ? ""
         : "Passwords do not match.",
-      phone: formFields.phone ? "" : "UofT Student ID is a required field.",
+      phone: formFields.phone
+        ? !/^\d+$/.test(formFields.phone)
+          ? "UofT Student ID must contain only numeric characters."
+          : ""
+        : "UofT Student ID is a required field.",
       form: "",
     };
     setErrors(newErrors);
