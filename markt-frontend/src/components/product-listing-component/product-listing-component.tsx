@@ -22,6 +22,7 @@ import {
   PickUpLocationText,
   PickUpLocationHeader,
   SoldContainer,
+  SellerInfoDiv,
 } from "./product-listing-component.styles";
 import { ProductSpecs } from "./product-specifications";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -105,10 +106,10 @@ const ProductListingComponent = () => {
 
   const SellerInfoContainer = () => {
     return (
-      <div>
+      <SellerInfoDiv>
         <div>{full_name}</div>
         <Rating rating={rating} />
-      </div>
+      </SellerInfoDiv>
     );
   };
 
@@ -180,10 +181,6 @@ const ProductListingComponent = () => {
               <PriceText>CAD {price ?? 0}</PriceText>
               <div>{negotiable ? "Negotiable" : "Non-negotiable"}</div>
               <SellerInfo>
-                <SellerAvatar
-                  src="https://via.placeholder.com/50"
-                  alt="Seller Avatar"
-                />
                 <SellerInfoContainer />
               </SellerInfo>
             </PriceBox>

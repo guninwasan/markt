@@ -234,6 +234,16 @@ const SoldContainer = styled.div`
   align-self: center;
 `;
 
+const SellerInfoDiv = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-direction: column;
+  color: ${colors.textBlack};
+  font-size: 1rem;
+  font-weight: bold;
+`;
+
 export {
   ProductListingContainer,
   ProductImages,
@@ -258,4 +268,5 @@ export {
   PickUpLocationText,
   PickUpLocationHeader,
   SoldContainer,
+  SellerInfoDiv,
 };
