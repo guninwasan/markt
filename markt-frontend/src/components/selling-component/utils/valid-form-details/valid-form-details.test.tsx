@@ -20,6 +20,7 @@ describe("validateFormData", () => {
     storageCapacity: "128GB",
     additionalFeatures: "Waterproof",
     additionalDetails: "None",
+    pickupLocation: "SampleLocation",
   };
 
   it("should return no errors for valid form data", () => {
