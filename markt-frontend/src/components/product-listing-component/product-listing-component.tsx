@@ -53,13 +53,14 @@ const ProductListingComponent = () => {
       }
     };
     fetchData();
+    console.log("fetching data", data);
   }, []);
 
-  useEffect(() => {
-    if (data) {
-      console.log(data);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     console.log(data);
+  //   }
+  // }, [data]);
 
   const dummySpecifications = {
     basicInfo: {
