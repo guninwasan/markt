@@ -114,7 +114,7 @@ const RegisterForm = () => {
 
         if (response.ok) {
           dispatch(setIsLoading(false));
-          alert("Registration successful - redirecting to Login!");
+          setShowAlert(true);
           setErrors({
             fullName: "",
             email: "",
@@ -123,7 +123,6 @@ const RegisterForm = () => {
             phone: "",
             form: "",
           });
-          navigate("/login");
         } else {
           dispatch(setIsLoading(false));
           handleErrors(result);

@@ -5,6 +5,7 @@ import {
   TextInput,
   TextArea,
   SectionHeader,
+  DropDown,
 } from "../selling-component.styles";
 
 const EssentialDetails = ({
@@ -61,13 +62,22 @@ const EssentialDetails = ({
     </FormGroup>
     <FormGroup>
       <Label>Pickup Location *</Label>
-      <TextArea
+      <DropDown
         name="pickupLocation"
         required
-        placeholder="Provide a pickup location..."
         value={formData.pickupLocation}
         onChange={handleChange}
-      />
+      >
+        <option value="" disabled>
+          Select a pickup location....
+        </option>
+        <option value="St. George - Bahen">St. George - Bahen</option>
+        <option value="St. George - Myhal">St. George - Myhal</option>
+        <option value="St. George - GB">St. George - GB</option>
+        <option value="St. George - SF">St. George - SF</option>
+        <option value="UTM">UTM</option>
+        <option value="UTSC">UTSC</option>
+      </DropDown>
     </FormGroup>
   </>
 );

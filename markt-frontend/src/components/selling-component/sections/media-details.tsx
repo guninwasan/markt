@@ -81,7 +81,7 @@ const MediaSection = ({
           type="button"
           onClick={() => displayImageInputRef.current?.click()}
         >
-          Add Display Image (Max 1 MB)
+          Add Display Image (Max 1 MB) *
         </AddMediaButton>
         <input
           id="displayImageInput"

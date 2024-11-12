@@ -9,6 +9,11 @@ import {
 } from "./sections";
 import { uploadImage, validateFormData } from "./utils";
 import { useSelector } from "react-redux";
+import { RootState, selectors, setIsLoading } from "../../redux";
+import { API_BASE_URL } from "../api";
+import { useNavigate } from "react-router-dom";
+import { AlertModal } from "../alert-modal";
+import { useDispatch } from "react-redux";
 
 const initialFormData = {
   title: "",
@@ -40,8 +45,17 @@ const SellingComponent = () => {
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
   const [priceError, setPriceError] = useState<string>("");
 
-  // Access email from Redux store
-  const userEmail = useSelector((state: any) => state.user.email);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>("");
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { userEmail, apiKey, userID } = useSelector((state: RootState) => ({
+    userEmail: selectors.getEmail(state),
+    apiKey: selectors.getUserAuthJWT(state),
+    userID: selectors.getUserID(state),
+  }));
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -82,14 +96,22 @@ const SellingComponent = () => {
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    const priceAsNumber = parseFloat(value);
-    if (!isNaN(priceAsNumber) && priceAsNumber >= 0) {
+    const numericValue = value.replace(/[^0-9.]/g, '');
+    const priceAsNumber = parseFloat(numericValue);
+  
+    if (value === "") {
       setPriceError("");
-      setFormData((prevData: any) => ({ ...prevData, price: value }));
+      setFormData((prevData: any) => ({ ...prevData, price: "" }));
+    } else if (priceAsNumber > 10000) {
+      setPriceError("This exceeds the maximum transaction limit on our website (CAD 10,000).");
+    } else if (!isNaN(priceAsNumber) && priceAsNumber >= 0) {
+      setPriceError("");
+      setFormData((prevData: any) => ({ ...prevData, price: numericValue }));
     } else {
       setPriceError("Please enter a valid positive number for price.");
     }
   };
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,26 +123,23 @@ const SellingComponent = () => {
     }
 
     try {
-      // Mock display and media URLs
+      dispatch(setIsLoading(true));
       const displayMediaUrl = await uploadImage(displayImage as File);
       const getMediaURLs = await Promise.all(
         mediaFiles.map(async (file: File) => {
           return await uploadImage(file);
         })
       );
-      console.log("Display Media URL:", displayMediaUrl);
-      console.log("Media URLs:", getMediaURLs);
-      // Prepare the data to send to the backend, ensuring keys align with backend schema
+      dispatch(setIsLoading(false));
       const requestData = {
-        owner_email: userEmail, // replace with dynamic email as needed
+        owner_email: userEmail, 
         title: formData.title,
-        price: parseFloat(formData.price), // ensure price is a number
+        price: parseFloat(formData.price), 
         description: formData.description,
         negotiable: formData.negotiable,
         condition: formData.condition,
         flairs: formData.flairs,
         pickup_location: formData.pickupLocation,
-        media: formData.media,
         brand: formData.brand,
         model: formData.model,
         color: formData.color,
@@ -131,34 +150,51 @@ const SellingComponent = () => {
         storage_capacity: formData.storageCapacity,
         additional_details: formData.additionalDetails,
         display_image: displayMediaUrl,
-        ...(formData.yearOfManufacture && { year_of_manufacture: parseInt(formData.yearOfManufacture) })
-    };
-          
-      console.log("Request Data:", requestData); // Debugging: Log requestData
-      // Make the POST request using fetch
-      const response = await fetch("http://localhost:5000/api/listing/create", {
+        media: getMediaURLs,
+        ...(formData.yearOfManufacture && {
+          year_of_manufacture: parseInt(formData.yearOfManufacture),
+        }),
+      };
+      dispatch(setIsLoading(true));
+      const response = await fetch(`${API_BASE_URL}/api/listing/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "API-Key": `${apiKey}`,
+          "User-ID": `${userID}`,
         },
         body: JSON.stringify(requestData),
       });
       if (response.ok) {
-        const result = await response.json();
-        alert("Listing created successfully!");
-        console.log("Listing created:", result);
+        dispatch(setIsLoading(false));
+        setShowAlert(true);
+        setAlertMessage("Listing created successfully!");
+        setTimeout(() => {
+          setShowAlert(false);
+          navigate("/");
+        }, 3000);
       } else {
+        dispatch(setIsLoading(false));
         const errorData = await response.json();
-        alert(`Error creating listing: ${errorData.data}`);
+        setShowAlert(true);
+        setAlertMessage(`Error creating listing: ${errorData.data}`);
         console.error("Error:", errorData);
       }
     } catch (error) {
+      dispatch(setIsLoading(false));
       console.error("Error uploading listing:", error);
+      setShowAlert(true);
+      setAlertMessage("Error uploading listing. Please try again later.");
     }
   };
 
   return (
     <SellingFormContainer>
+      <AlertModal
+        isOpen={showAlert}
+        message={alertMessage}
+        onClose={() => setShowAlert(false)}
+      />
       <h1>List Your Product</h1>
       <form onSubmit={handleSubmit}>
         <EssentialDetails

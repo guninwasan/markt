@@ -52,6 +52,20 @@ const Label = styled.label`
   color: ${colors.textBlack};
 `;
 
+const DropDown = styled.select`
+  width: 90%;
+  padding: 14px;
+  font-size: 16px;
+  border: 1px solid ${colors.lightGrey};
+  border-radius: 8px;
+  transition: all 0.3s;
+  &:focus {
+    outline: none;
+    border-color: #0066cc;
+    box-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
+  }
+`;
+
 const TextInput = styled.input`
   width: 90%;
   padding: 14px;
@@ -191,4 +205,5 @@ export {
   RemoveButton,
   StyledImage,
   StyledVideo,
+  DropDown,
 };

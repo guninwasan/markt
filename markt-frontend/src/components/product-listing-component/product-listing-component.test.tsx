@@ -1,8 +1,9 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { ProductListingComponent } from "./product-listing-component";
 import { useIsMobile } from "../../hooks";
 import { ProductSpecs } from "./product-specifications";
+import { renderWithRedux } from "../../utils/render-with-redux";
 
 jest.mock("../../hooks", () => ({
   useIsMobile: jest.fn(),
@@ -24,18 +25,18 @@ describe("ProductListingComponent", () => {
   });
 
   it("renders correctly on desktop", () => {
-    const { container } = render(<ProductListingComponent />);
+    const { container } = renderWithRedux(<ProductListingComponent />);
     expect(container.firstChild).toMatchSnapshot();
   });
 
   it("renders correctly on mobile", () => {
     mockUseIsMobile.mockReturnValue({ isMobile: true });
-    const { container } = render(<ProductListingComponent />);
+    const { container } = renderWithRedux(<ProductListingComponent />);
     expect(container.firstChild).toMatchSnapshot();
   });
 
   it("renders product details correctly", () => {
-    render(<ProductListingComponent />);
+    renderWithRedux(<ProductListingComponent />);
     expect(screen.getByText(/CAD/)).toBeInTheDocument();
     expect(screen.getByText(/SELLER ID/)).toBeInTheDocument();
   });
