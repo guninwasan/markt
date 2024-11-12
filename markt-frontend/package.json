@@ -57,6 +57,9 @@
       "last 1 safari version"
     ]
   },
+  "engines": {
+    "node": "22.x"
+  },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
     "@types/react-redux": "^7.1.34",
