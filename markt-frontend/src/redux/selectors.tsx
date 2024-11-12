@@ -8,6 +8,7 @@ const selectors = {
   getUserAuthJWT: (state: RootState) => state.userAuth.jwt,
   getIsLoggedIn: (state: RootState) => state.device.isLoggedIn,
   getIsLoading: (state: RootState) => state.device.isLoading,
+  getWishList: (state: RootState) => state.device.wishList,
 };
 
 export { selectors };

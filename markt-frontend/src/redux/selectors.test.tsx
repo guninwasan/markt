@@ -13,6 +13,7 @@ describe("Selectors", () => {
     device: {
       isLoggedIn: false,
       isLoading: false,
+      wishList: [],
     },
     _persist: {
       version: 1,
@@ -53,5 +54,10 @@ describe("Selectors", () => {
   it("should return if the app is loading", () => {
     const isLoading = selectors.getIsLoading(mockState);
     expect(isLoading).toBe(false);
+  });
+
+  it("should return the wish list", () => {
+    const wishList = selectors.getWishList(mockState);
+    expect(wishList).toEqual([]);
   });
 });
