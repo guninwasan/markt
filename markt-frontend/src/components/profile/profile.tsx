@@ -32,7 +32,9 @@ const Profile = () => {
   };
 
   //CHANGE PASSWORD FUNCTIONALITY NEEDS TO BE ADDED
-  const handleChangePassword = () => {};
+  const handleChangePassword = () => {
+    navigate("/change-password");
+  };
 
   return (
     <div>

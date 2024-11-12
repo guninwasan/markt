@@ -12,7 +12,8 @@ import {
   SupportPage,
   AboutPage,
   TermsOfUsePage,
-  PrivacyPolicyPage
+  PrivacyPolicyPage, 
+  ChangePasswordPage
 } from "./pages";
 import {
   Footer,
@@ -33,7 +34,7 @@ function App() {
       {isLoading && <LoadingModal />}
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<ProfilePage />} />
           <Route
             path="/login"
             element={<RedirectToHomeRoute element={<LoginPage />} />}
@@ -47,6 +48,9 @@ function App() {
           <Route path="/support" element={<SupportPage/>} />
           <Route path="/terms-of-use" element={<TermsOfUsePage/>} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage/>} />
+
+          <Route path="/change-password" element={<ChangePasswordPage/>} />
+
           <Route
             path="/sell"
             element={<ProtectedRoute element={<SellPage />} />}
