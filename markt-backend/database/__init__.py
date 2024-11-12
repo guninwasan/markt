@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 from flask import Flask
-from .db import init_db, db
+from .db import init_db, db, migrate
 
 def create_app_db(testing):
     app = Flask(__name__)
@@ -16,6 +16,7 @@ def create_app_db(testing):
     app.config['TESTING'] = testing
 
     init_db(app)
+    migrate.init_app(app, db)
 
     from .models import User, Listing
 
