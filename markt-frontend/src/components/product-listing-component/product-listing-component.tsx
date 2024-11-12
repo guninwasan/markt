@@ -106,7 +106,7 @@ const ProductListingComponent = () => {
   const SellerInfoContainer = () => {
     return (
       <div>
-        <div>SELLER ID # 1234</div>
+        <div>{full_name}</div>
         <Rating rating={rating} />
       </div>
     );

@@ -70,9 +70,7 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
             src="https://via.placeholder.com/50"
           />
           <div>
-            <div>
-              SELLER ID # 1234
-            </div>
+            <div />
             <div
               class="sc-jtQUzJ eyljEe"
             >
@@ -225,9 +223,7 @@ exports[`ProductListingComponent renders correctly on mobile 1`] = `
             src="https://via.placeholder.com/50"
           />
           <div>
-            <div>
-              SELLER ID # 1234
-            </div>
+            <div />
             <div
               class="sc-jtQUzJ eyljEe"
             >
