@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navbar } from "../../components";
-import { PageContainer, SupportHeading, SupportText } from "./support-page.styles";
+import {
+  PageContainer,
+  SupportHeading,
+  SupportText,
+} from "./support-page.styles";
 import { colors } from "../../utils";
+import { useDispatch } from "react-redux";
+import { setIsLoading } from "../../redux";
 
 const SupportPage = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setIsLoading(false));
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -16,10 +27,15 @@ const SupportPage = () => {
       >
         <SupportHeading>Support</SupportHeading>
         <SupportText>
-          Need assistance? We are here to help! Whether you are experiencing issues with our platform or have questions, our team is ready to provide support.
-          <br /><br />
-          Please fill out the form below to share any concerns you may have. We appreciate your feedback and will get back to you soon!
-          <br /><br />
+          Need assistance? We are here to help! Whether you are experiencing
+          issues with our platform or have questions, our team is ready to
+          provide support.
+          <br />
+          <br />
+          Please fill out the form below to share any concerns you may have. We
+          appreciate your feedback and will get back to you soon!
+          <br />
+          <br />
           If the form does not open, please{" "}
           <a
             href="https://docs.google.com/forms/d/e/1FAIpQLSeJgGzouA1OvvQ-_mrEWQ40brS4W7_uKVaq5LqrZSFEMVzd-w/viewform?usp=sf_link"
