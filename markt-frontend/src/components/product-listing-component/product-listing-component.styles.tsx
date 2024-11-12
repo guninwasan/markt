@@ -248,10 +248,13 @@ const BuyerRatingContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   gap: 1rem;
   color: ${colors.textBlack};
   font-size: 1rem;
+  border: 1px solid ${colors.lightGrey};
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: ${colors.white};
 
   & > button {
     background-color: ${colors.darkerPrimary};
@@ -260,6 +263,17 @@ const BuyerRatingContainer = styled.div`
     border: none;
     border-radius: 5px;
     cursor: pointer;
+  }
+
+  & > input {
+    padding: 0.5rem;
+    border: 1px solid ${colors.lightGrey};
+    border-radius: 5px;
+    justify-self: center;
+    width: 100px;
+    background-color: ${colors.white};
+    font-size: 1rem;
+    font-weight: bold;
   }
 `;
 
