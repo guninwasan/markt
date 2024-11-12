@@ -22,7 +22,7 @@ jest.mock("../../components", () => ({
       <input type="text" placeholder="Full Name" />
       <input type="email" placeholder="UofT Email Address" />
       <input type="password" placeholder="Password" />
-      <input type="tel" placeholder="Phone No." />
+      <input type="tel" placeholder="UofT Student ID" />
       <input type="text" placeholder="UofT Student ID (for verification)" />
       <button type="submit">Create Account</button>
     </form>
@@ -48,7 +48,7 @@ describe("RegisterPage", () => {
       screen.getByPlaceholderText("UofT Email Address")
     ).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Phone No.")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("UofT Student ID")).toBeInTheDocument();
     expect(
       screen.getByPlaceholderText("UofT Student ID (for verification)")
     ).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe("RegisterPage", () => {
       "Password"
     ) as HTMLInputElement;
     const phoneInput = screen.getByPlaceholderText(
-      "Phone No."
+      "UofT Student ID"
     ) as HTMLInputElement;
 
     // Simulate typing in the input fields

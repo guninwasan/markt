@@ -74,7 +74,7 @@ const RegisterForm = () => {
         : formFields.password === formFields.confirmPassword
         ? ""
         : "Passwords do not match.",
-      phone: formFields.phone ? "" : "Phone number is a required field.",
+      phone: formFields.phone ? "" : "UofT Student ID is a required field.",
       form: "",
     };
     setErrors(newErrors);
@@ -222,7 +222,7 @@ const RegisterForm = () => {
 
       <InputField
         type="tel"
-        placeholder="Enter Your Phone No."
+        placeholder="Enter Your UofT Student ID"
         onChange={handleInputChange("phone")}
         errorMessage={showErrors ? errors.phone : ""}
       />

@@ -9,7 +9,7 @@ const placeholders = {
   email: "Enter Your UofT Email Address",
   password: "Enter Your Password",
   confirmPassword: "Confirm Your Password",
-  phone: "Enter Your Phone No.",
+  phone: "Enter Your UofT Student ID",
 };
 
 const fillFormFields = (fields: Partial<typeof placeholders>) => {
@@ -68,7 +68,7 @@ describe("RegisterForm", () => {
       screen.getByText("Confirm Password is a required field.")
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Phone number is a required field.")
+      screen.getByText("UofT Student ID is a required field.")
     ).toBeInTheDocument();
   });
 
