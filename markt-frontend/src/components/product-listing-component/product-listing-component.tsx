@@ -55,7 +55,7 @@ const ProductListingComponent = () => {
       }
     };
     fetchData();
-  });
+  }, [id, navigate]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,7 +80,7 @@ const ProductListingComponent = () => {
     );
   };
 
-  const { buyer, owner, sold } = data?.database ?? {};
+  const { owner, sold } = data?.database ?? {};
   const { display_image, flairs, pickup_location, price, title } =
     data?.essential ?? {
       display_image: "",
