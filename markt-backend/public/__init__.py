@@ -13,7 +13,7 @@ from .api_listings import listing_api_bp
 def create_app_api(testing):
     load_dotenv()
     app = create_app_db(testing)
-    CORS(app, resources={r"/api/*": {"origins": "https://mizzica.netlify.app"}})
+    CORS(app)
 
     app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
     app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')

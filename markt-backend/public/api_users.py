@@ -79,9 +79,9 @@ def register():
     )
 
     # Get validation code
-    code = format(random.randint(0,999999), "06d")
-    expiration_time = datetime.now(pytz.timezone('America/Toronto')) + timedelta(minutes=10)
-    user.set_validation_code(code, expiration_time)
+    # code = format(random.randint(0,999999), "06d")
+    # expiration_time = datetime.now(pytz.timezone('America/Toronto')) + timedelta(minutes=10)
+    # user.set_validation_code(code, expiration_time)
 
     db.session.add(user)
     db.session.commit()
@@ -90,22 +90,22 @@ def register():
     db.session.add(api_key)
     db.session.commit()
 
-    email_message = Message(
-        'Email Verification Code',
-        recipients=[user.email]
-    )
-    email_content = render_template('email.html',
-                              user_name=user.full_name,
-                              validation_code=code,
-                              current_year=datetime.now().year)
+    # email_message = Message(
+    #     'Email Verification Code',
+    #     recipients=[user.email]
+    # )
+    # email_content = render_template('email.html',
+    #                           user_name=user.full_name,
+    #                           validation_code=code,
+    #                           current_year=datetime.now().year)
 
-    email_message.html = email_content
+    # email_message.html = email_content
 
     try:
-        mail.send(email_message)
+        # mail.send(email_message)
 
         return jsonify({"status": ErrorRsp.OK.value,
-                        "data": "User registered, email verification pending"}), 201
+                        "data": "User registered"}), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({"status": ErrorRsp.ERR.value,

@@ -9,6 +9,8 @@ import {
 } from "./sections";
 import { uploadImage, validateFormData } from "./utils";
 import { useSelector } from "react-redux";
+import { RootState, selectors } from "../../redux";
+import { API_BASE_URL } from "../api";
 
 const initialFormData = {
   title: "",
@@ -40,8 +42,11 @@ const SellingComponent = () => {
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
   const [priceError, setPriceError] = useState<string>("");
 
-  // Access email from Redux store
-  const userEmail = useSelector((state: any) => state.user.email);
+  const { userEmail, apiKey, userID } = useSelector((state: RootState) => ({
+    userEmail: selectors.getEmail(state),
+    apiKey: selectors.getUserAuthJWT(state),
+    userID: selectors.getUserID(state),
+  }));
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -131,15 +136,18 @@ const SellingComponent = () => {
         storage_capacity: formData.storageCapacity,
         additional_details: formData.additionalDetails,
         display_image: displayMediaUrl,
-        ...(formData.yearOfManufacture && { year_of_manufacture: parseInt(formData.yearOfManufacture) })
-    };
-          
+        ...(formData.yearOfManufacture && {
+          year_of_manufacture: parseInt(formData.yearOfManufacture),
+        }),
+      };
+
       console.log("Request Data:", requestData); // Debugging: Log requestData
-      // Make the POST request using fetch
-      const response = await fetch("http://localhost:5000/api/listing/create", {
+      const response = await fetch(`${API_BASE_URL}/api/listing/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "API-Key": `${apiKey}`,
+          "User-ID": `${userID}`,
         },
         body: JSON.stringify(requestData),
       });
@@ -154,6 +162,7 @@ const SellingComponent = () => {
       }
     } catch (error) {
       console.error("Error uploading listing:", error);
+      alert("Error uploading listing. Please try again later.");
     }
   };
 

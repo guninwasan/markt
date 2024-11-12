@@ -97,11 +97,11 @@ const LoginForm = () => {
           setShowAlert(true);
           dispatch(
             setUserDetails({
-              userID: result.userID,
-              name: result.name,
-              email: result.email,
-              phone: result.phone,
-              jwt: result.token,
+              userID: result.user.id,
+              name: result.user.full_name,
+              email: result.user.email,
+              phone: result.user.phone,
+              jwt: result.user.api_key,
             })
           );
           dispatch(setIsLoggedIn(true));

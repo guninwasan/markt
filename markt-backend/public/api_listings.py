@@ -36,9 +36,9 @@ def create():
     if user is None:
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
-    if not user.email_verified:
-        return jsonify({"status": ErrorRsp.ERR.value,
-                        "data": "User email has not been verified"}), 400
+    # if not user.email_verified:
+    #     return jsonify({"status": ErrorRsp.ERR.value,
+    #                     "data": "User email has not been verified"}), 400
 
     # Create listing
     listing = Listing(
