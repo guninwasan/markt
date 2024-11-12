@@ -87,24 +87,14 @@ def create():
 @swag_from('../docs/listing_docs.yml', endpoint='get')
 # API implementation
 def get(id):
-    data = request.get_json()
-    schema = ListingGetSchema()
-    try:
-        data = schema.load(data)
-    except ValidationError as err:
-        return jsonify({"status": ErrorRsp.ERR_PARAM.value,
-                        "data": "Missing parameters",
-                        "errors": err.messages}), 400
-
-    # Check if listing exists
     listing = db.session.get(Listing, id)
     if listing is None:
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "Listing does not exist!"}), 404
 
-    rsp = listing.get_json_min() if data['minimal'] else listing.get_json_full()
-    return jsonify({"status": ErrorRsp.OK.value,
-                    "data": rsp}), 200
+    minimal = request.args.get("minimal", "false").lower() == "true"
+    rsp = listing.get_json_min() if minimal else listing.get_json_full()
+    return jsonify({"status": ErrorRsp.OK.value, "data": rsp}), 200
 
 """
     Endpoint: Retrieve all listings
