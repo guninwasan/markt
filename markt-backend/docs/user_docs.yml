@@ -219,29 +219,53 @@ forgot_password:
 add_interest:
   responses:
     200:
-      description: "Listings added successfully!",
-                   "No listings provided, nothing changed!"
+      description: "Listings added successfully or no listings provided."
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "success"
+              message:
+                type: string
+                examples:
+                  listings_added: "Listings added successfully!"
+                  no_change: "No listings provided, nothing changed!"
     404:
-      description: "User does not exist!"
+      description: "User does not exist."
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "error"
+              message:
+                type: string
+                example: "User does not exist!"
   parameters:
-    - name: "user_email"
-      in: "query"
-      required: True
+    - name: user_email
+      in: query
+      required: true
       schema:
-        type: "object"
-        properties:
-          email: "string"
-    - name: "listings"
-      in: "body"
-      required: True
-      schema:
-        type: "object"
-        properties:
-          listing_ids:
-            type: array
-            items:
-              type: integer
-
+        type: string
+        example: "user@example.com"
+    - name: listings
+      in: body
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              listing_ids:
+                type: array
+                items:
+                  type: integer
+                example: [1, 2, 3]
 get_info:
   responses:
     200:

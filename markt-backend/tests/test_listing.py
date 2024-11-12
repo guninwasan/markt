@@ -189,6 +189,16 @@ def test_update_listing(client):
     rsp_json = rsp.get_json()
     assert rsp_json['data']['essential']['title'] == "New Laptop"
 
+    # owner cannot be buyer
+    update_data_invalid = {
+        "sold": True,
+        "buyer_email": test_user.email,
+    }
+    rsp = client.put(f'/api/listing/update/{listing.id}/', json=update_data_invalid)
+    assert rsp.status_code == 400
+    rsp_json = rsp.get_json()
+    assert rsp_json['status'] == ErrorRsp.ERR_PARAM_EMAIL.value
+
 def test_sell_listing(client):
     # Create a verified user and buyer
     test_user = User(full_name="Test User", password="abC$9082",

@@ -177,9 +177,23 @@ def update(id):
         if listing.buyer is not None:
             return jsonify({"status": ErrorRsp.ERR_NOT_ALLOWED.value,
                             "data": "Listing already has a buyer"}), 405
+        
+        # Owner cannot be buyer
+        if data['buyer_email'] == listing.owner.email:
+            return jsonify({"status": ErrorRsp.ERR_PARAM_EMAIL.value,
+                            "data": "Listing owner cannot be the buyer"}), 400
 
         listing.buyer_id = buyer.id
         listing.sold = data['sold']
+
+        # Update other user's interested lists
+        all_interested = listing.interested_buyers
+        for user in all_interested:
+            try:
+                user.listings_of_interest.remove(listing)
+            except Exception as e:
+                print(f"Error processing {user.email}: {e}")
+        listing.interested_buyers.clear()
 
     # Essential
     if 'title' in data:
