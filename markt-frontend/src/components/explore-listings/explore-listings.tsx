@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Header,
@@ -7,19 +7,47 @@ import {
   ListingsContainer,
 } from "./explore-listings.styles";
 import { ListingContainer } from "../listing-container";
-import { dummyData1, dummyData2, dummyData3 } from "../dummy-listing-data";
+import { dummyData1, dummyData2 } from "../dummy-listing-data";
+import { API_BASE_URL } from "../api";
 
-type SectionType = "featured" | "new" | "priceDrops";
+type SectionType = "featured" | "hot";
 
 const ExploreListings = () => {
   const [selectedSection, setSelectedSection] =
     useState<SectionType>("featured");
 
+  const [exploreListings, setExploreListings] = useState<any>([]);
+  const [cheapestListings, setCheapestListings] = useState<any>([]);
+
   const listings = {
-    featured: dummyData1,
-    new: dummyData2,
-    priceDrops: dummyData3,
+    featured: exploreListings || dummyData1,
+    hot: cheapestListings || dummyData2,
   };
+
+  useEffect(() => {
+    const fetchData = async (cheapest?: boolean) => {
+      const cheapestURL = `${API_BASE_URL}/api/listing/search?query=e&filter=top_price_low&page=1&page_size=5&deepSearch=true`;
+      const exploreURL = `${API_BASE_URL}/api/listing/search?query=e&filter=top_rated&page=1&page_size=5&deepSearch=true`;
+      const response = await fetch(cheapest ? cheapestURL : exploreURL);
+
+      try {
+        if (response.ok) {
+          const data = await response.json();
+          if (cheapest) {
+            setCheapestListings(data?.data);
+          } else {
+            setExploreListings(data?.data);
+          }
+        } else {
+          console.error("Error fetching listings");
+        }
+      } catch (error) {
+        console.error("Error fetching listings:", error);
+      }
+    };
+    fetchData();
+    fetchData(true);
+  }, []);
 
   return (
     <Container>
@@ -33,29 +61,23 @@ const ExploreListings = () => {
           Featured Listings
         </Subheader>
         <Subheader
-          isSelected={selectedSection === "new"}
-          onClick={() => setSelectedSection("new")}
+          isSelected={selectedSection === "hot"}
+          onClick={() => setSelectedSection("hot")}
         >
-          New to the Market
-        </Subheader>
-        <Subheader
-          isSelected={selectedSection === "priceDrops"}
-          onClick={() => setSelectedSection("priceDrops")}
-        >
-          Price Drops
+          Hot
         </Subheader>
       </SubheaderContainer>
 
       <ListingsContainer>
-        {listings[selectedSection].map((listing) => (
+        {listings[selectedSection].map((listing: any) => (
           <ListingContainer
             key={listing.id}
             id={listing.id}
-            image={listing.image}
+            image={listing.display_image}
             title={listing.title}
             price={listing.price}
-            condition={listing.condition}
-            location={listing.location}
+            condition={listing?.flairs?.negotiable}
+            location={listing.pickup_location}
           />
         ))}
       </ListingsContainer>
