@@ -6,10 +6,10 @@ exports[`App should match the snapshot 1`] = `
     Markt Home Page
   </div>
   <footer
-    class="sc-jYWXzj hBVjyy"
+    class="sc-kvmDxl iAva"
   >
     <p
-      class="sc-kvmDxl dIGPhI"
+      class="sc-ZVgAE cEyIYj"
     >
       MARKT by 
       <i>
@@ -20,28 +20,28 @@ exports[`App should match the snapshot 1`] = `
       aria-label="Footer navigation"
     >
       <div
-        class="sc-ZVgAE hMqknR"
+        class="sc-dspCDH eFjVDu"
       >
         <a
-          class="sc-dspCDH gmRzEQ"
+          class="sc-fmtPfW hIZkS"
           href="/about"
         >
           About
         </a>
         <a
-          class="sc-dspCDH gmRzEQ"
+          class="sc-fmtPfW hIZkS"
           href="/privacy-policy"
         >
           Privacy Policy
         </a>
         <a
-          class="sc-dspCDH gmRzEQ"
+          class="sc-fmtPfW hIZkS"
           href="/terms-of-use"
         >
           Terms of Use
         </a>
         <a
-          class="sc-dspCDH gmRzEQ"
+          class="sc-fmtPfW hIZkS"
           href="/support"
         >
           Support / Report an issue
@@ -49,7 +49,7 @@ exports[`App should match the snapshot 1`] = `
       </div>
     </nav>
     <p
-      class="sc-fmtPfW erMGiP"
+      class="sc-kUiVwB iCkLIl"
     >
       © 2024 All rights reserved.
     </p>
