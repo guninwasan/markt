@@ -244,6 +244,25 @@ const SellerInfoDiv = styled.div`
   font-weight: bold;
 `;
 
+const BuyerRatingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  color: ${colors.textBlack};
+  font-size: 1rem;
+
+  & > button {
+    background-color: ${colors.darkerPrimary};
+    color: ${colors.white};
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+`;
+
 export {
   ProductListingContainer,
   ProductImages,
@@ -269,4 +288,5 @@ export {
   PickUpLocationHeader,
   SoldContainer,
   SellerInfoDiv,
+  BuyerRatingContainer,
 };

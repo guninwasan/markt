@@ -23,10 +23,14 @@ import {
   PickUpLocationHeader,
   SoldContainer,
   SellerInfoDiv,
+  BuyerRatingContainer,
 } from "./product-listing-component.styles";
 import { ProductSpecs } from "./product-specifications";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { API_BASE_URL } from "../api";
+import { useSelector } from "react-redux";
+import { RootState, selectors, setIsLoading } from "../../redux";
+import { useDispatch } from "react-redux";
 
 const ProductListingComponent = () => {
   const [searchParams] = useSearchParams();
@@ -39,12 +43,20 @@ const ProductListingComponent = () => {
   const [data, setData] = useState<any>(null);
   const navigate = useNavigate();
 
+  const { userEmail } = useSelector((state: RootState) => ({
+    userEmail: selectors.getEmail(state),
+  }));
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const fetchData = async () => {
+      dispatch(setIsLoading(true));
       try {
         const response = await fetch(
           `${API_BASE_URL}/api/listing/get/${id}?minimal=false`
         );
+        dispatch(setIsLoading(false));
         if (!response.ok) {
           navigate("/not-found");
           throw new Error("Network response was not ok");
@@ -52,12 +64,13 @@ const ProductListingComponent = () => {
         const result = await response.json();
         setData(result.data);
       } catch (error) {
+        dispatch(setIsLoading(false));
         navigate("/not-found");
         console.error("Fetch error:", error);
       }
     };
     fetchData();
-  }, [id, navigate]);
+  }, [id, navigate, dispatch]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,7 +95,7 @@ const ProductListingComponent = () => {
     );
   };
 
-  const { owner, sold } = data?.database ?? {};
+  const { buyer, owner, sold } = data?.database ?? {};
   const { display_image, flairs, pickup_location, price, title } =
     data?.essential ?? {
       display_image: "",
@@ -158,6 +171,32 @@ const ProductListingComponent = () => {
     window.location.href = mailtoLink;
   };
 
+  const handleRatingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.max(0, Math.min(5, Number(e.target.value)));
+    setSellerRating(value);
+  };
+
+  const [sellerRating, setSellerRating] = useState<number>(0);
+
+  const submitRating = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/user/rate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email, rating: sellerRating }),
+      });
+      if (response.ok) {
+        alert("Rating submitted successfully!");
+      } else {
+        alert("Failed to submit rating.");
+      }
+    } catch (error) {
+      alert("Error submitting rating. Please try again later.");
+    }
+  };
+
   return (
     <>
       <ProductListingContainer isMobile={isMobile}>
@@ -166,6 +205,22 @@ const ProductListingComponent = () => {
         </ProductImages>
         <ProductDetails isMobile={isMobile}>
           {sold && <SoldContainer>SOLD</SoldContainer>}
+          {sold && buyer === userEmail && (
+            <BuyerRatingContainer>
+              It seems like you have purchased this product. Feel free to give a
+              Feel free to give a rating to the seller.
+              <br />
+              Give your rating now:
+              <input
+                type="number"
+                value={sellerRating}
+                onChange={handleRatingChange}
+                min="0"
+                max="5"
+              />
+              <button onClick={submitRating}>Submit Rating</button>
+            </BuyerRatingContainer>
+          )}
           <TitleAndPriceContainer isMobile={isMobile}>
             <TitleAndDescription>
               <h1>{title}</h1>
