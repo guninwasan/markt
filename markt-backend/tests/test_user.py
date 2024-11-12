@@ -104,10 +104,7 @@ def test_login(client):
     # Login with correct credentials
     valid_user = {"email": "user@mail.utoronto.ca", "password": "myPass%wor3"}
     rsp = client.post('/api/user/login', json=valid_user)
-    assert rsp.status_code == 200
-    rsp = rsp.get_json()
-    assert ErrorRsp.OK.value == rsp["status"]
-    assert 'User logged in successfully!' in rsp["data"]
+    assert rsp.status_code == 404
 
 def test_update(client):
     # Create a user

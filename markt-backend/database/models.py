@@ -6,6 +6,10 @@ from enum import Enum
 from sqlalchemy.dialects.postgresql import JSON
 from datetime import datetime
 
+import uuid
+
+def generate_api_key():
+    return str(uuid.uuid4())
 
 # Association table - manage buyers interested in listings
 user_listing_interest_table = db.Table('user_listing_interest',
@@ -51,6 +55,8 @@ class User(db.Model):
     # Listings that the User is interested in
     listings_of_interest = db.relationship('Listing', secondary=user_listing_interest_table,
                                            back_populates='interested_buyers', lazy='dynamic')
+
+    api_keys = db.relationship('ApiKey', back_populates='user', lazy='dynamic')
 
     def __init__(self, full_name, password, email, phone, email_verified=False):
         # Data Validation
@@ -237,3 +243,15 @@ class Listing(db.Model):
             },
             "owner_rating": self.owner.get_average_rating()
         }
+
+class ApiKey(db.Model):
+    __tablename__ = 'api_keys'
+
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(64), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user = db.relationship('User', back_populates='api_keys')
+
+    def __init__(self, user_id):
+        self.user_id = user_id
+        self.key = generate_api_key()  # Use the generate_api_key function to create a new key
