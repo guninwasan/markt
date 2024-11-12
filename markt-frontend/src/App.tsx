@@ -11,7 +11,8 @@ import {
   ProductListingPage,
   SupportPage,
   AboutPage,
-  TermsOfUsePage
+  TermsOfUsePage,
+  PrivacyPolicyPage
 } from "./pages";
 import {
   Footer,
@@ -45,6 +46,7 @@ function App() {
           <Route path="/about" element={<AboutPage/>} />
           <Route path="/support" element={<SupportPage/>} />
           <Route path="/terms-of-use" element={<TermsOfUsePage/>} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage/>} />
           <Route
             path="/sell"
             element={<ProtectedRoute element={<SellPage />} />}

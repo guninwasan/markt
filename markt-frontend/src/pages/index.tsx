@@ -9,3 +9,4 @@ export * from "./search-page";
 export * from "./aboutus-page";
 export * from "./support-page";
 export * from "./terms-of-use-page";
+export * from "./privacy-policy-page";
