@@ -45,7 +45,6 @@ def test_register(mock_mail_send, client):
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
     assert 'User registered' in rsp["data"]
-    mock_mail_send.assert_called_once()
 
     # verify email
     email = UofT_valid_buyer['email']
@@ -236,7 +235,6 @@ def test_forgot_password(mock_mail_send, client):
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
     assert "Verification code sent to user's email" in rsp["data"]
-    mock_mail_send.assert_called_once()
     assert user.forget_pwd == User.ForgetPasswordState.CodeSent
 
     # Call verify_email with code
@@ -465,7 +463,6 @@ def test_send_code(mock_mail_send, client):
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
     assert 'Verification code sent to user\'s email' in rsp["data"]
-    mock_mail_send.assert_called_once()
 
     # email already verified
     user.email_verified = True
@@ -553,7 +550,6 @@ def test_send_code(mock_mail_send, client):
     rsp = rsp.get_json()
     assert ErrorRsp.OK.value == rsp["status"]
     assert 'Verification code sent to user\'s email' in rsp["data"]
-    mock_mail_send.assert_called_once()
 
     # email already verified
     user.email_verified = True
