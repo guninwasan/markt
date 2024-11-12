@@ -24,6 +24,22 @@ exports[`ProductListingComponent renders correctly on desktop 1`] = `
     class="sc-gQaihK fyYRag"
   >
     <div
+      class="sc-lnsxGb jfOrEo"
+    >
+      You are the owner of the product.
+      <br />
+      If the product has been sold, consider updating the status and give an option to the buyer to rate you.
+      <br />
+      <input
+        placeholder="Enter buyer's email"
+        type="email"
+        value=""
+      />
+      <button>
+        Submit Buyer Email
+      </button>
+    </div>
+    <div
       class="sc-iuUfFv fdtKHa"
     >
       <div
@@ -173,6 +189,22 @@ exports[`ProductListingComponent renders correctly on mobile 1`] = `
   <div
     class="sc-gQaihK fyYRag"
   >
+    <div
+      class="sc-lnsxGb jfOrEo"
+    >
+      You are the owner of the product.
+      <br />
+      If the product has been sold, consider updating the status and give an option to the buyer to rate you.
+      <br />
+      <input
+        placeholder="Enter buyer's email"
+        type="email"
+        value=""
+      />
+      <button>
+        Submit Buyer Email
+      </button>
+    </div>
     <div
       class="sc-iuUfFv htQkEW"
     >
