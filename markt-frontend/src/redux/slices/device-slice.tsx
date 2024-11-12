@@ -4,6 +4,7 @@ import { DeviceSliceType } from "../types";
 const initialState: DeviceSliceType = {
   isLoggedIn: false,
   isLoading: false,
+  wishList: [],
 };
 
 const deviceSlice = createSlice({
@@ -16,10 +17,13 @@ const deviceSlice = createSlice({
     setIsLoading: (state, action) => {
       state.isLoading = action.payload;
     },
+    setWishList: (state, action) => {
+      state.wishList = action.payload;
+    },
   },
 });
 
-export const { setIsLoggedIn, setIsLoading } = deviceSlice.actions;
+export const { setIsLoggedIn, setIsLoading, setWishList } = deviceSlice.actions;
 
 export default deviceSlice.reducer;
 
