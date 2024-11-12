@@ -34,7 +34,15 @@ Database: PostgreSQL (https://www.postgresql.org/)
 
 Database Management: pgAdmin (https://www.pgadmin.org/)
 
-**Note**: The team is also using generative AI tools like ChatGPT and copilot to reduce the workload. The team is also willing to provide any prompts if needed.
+Hosting front-end on Netlify: https://mizzica.netlify.app/
+
+Hosting back-end on Render:https://project-1-web-application-design-group15.onrender.com/
+
+ChatGPT: https://chatgpt.com/
+
+GitHub Copilot: https://github.com/features/copilot
+
+**Note**: The team is using generative AI tools like ChatGPT and copilot to reduce the workload. The team is willing to provide any prompts if needed.
 
 ### Team Members & Roles
 
