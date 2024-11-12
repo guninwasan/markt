@@ -123,6 +123,11 @@ const ShareInterestButton = styled.button`
   &:focus {
     outline: none;
   }
+
+  &:disabled {
+    background-color: ${colors.grey};
+    cursor: not-allowed;
+  }
 `;
 
 const ModalBackdrop = styled.div`
@@ -215,6 +220,20 @@ const Button = styled.button<{ primaryColor?: boolean }>`
   }
 `;
 
+const SoldContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: bold;
+  background-color: red;
+  color: ${colors.white};
+  padding: 1rem;
+  border-radius: 1rem;
+  width: 90%;
+  align-self: center;
+`;
+
 export {
   ProductListingContainer,
   ProductImages,
@@ -238,4 +257,5 @@ export {
   Button,
   PickUpLocationText,
   PickUpLocationHeader,
+  SoldContainer,
 };

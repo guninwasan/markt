@@ -21,6 +21,7 @@ import {
   Button,
   PickUpLocationText,
   PickUpLocationHeader,
+  SoldContainer,
 } from "./product-listing-component.styles";
 import { ProductSpecs } from "./product-specifications";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -74,7 +75,7 @@ const ProductListingComponent = () => {
 
   const ShareInterestButtonContainer = () => {
     return (
-      <ShareInterestButton onClick={handleShareInterestClick}>
+      <ShareInterestButton onClick={handleShareInterestClick} disabled={sold}>
         Share Interest
       </ShareInterestButton>
     );
@@ -163,6 +164,7 @@ const ProductListingComponent = () => {
           <ImageGallery mediaUrls={[display_image, ...media_files]} />
         </ProductImages>
         <ProductDetails isMobile={isMobile}>
+          {sold && <SoldContainer>SOLD</SoldContainer>}
           <TitleAndPriceContainer isMobile={isMobile}>
             <TitleAndDescription>
               <h1>{title}</h1>
