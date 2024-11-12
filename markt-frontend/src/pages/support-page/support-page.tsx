@@ -13,7 +13,7 @@ const SupportPage = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setIsLoading(false));
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
