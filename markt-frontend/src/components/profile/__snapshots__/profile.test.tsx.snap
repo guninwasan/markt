@@ -35,11 +35,6 @@ exports[`Profile should match the snapshot 1`] = `
       class="sc-fAUdSK kWpjus"
     >
       <button
-        class="sc-dntaoT jPTEBr"
-      >
-        Change Password
-      </button>
-      <button
         class="sc-dntaoT jxYeMt"
       >
         Logout
