@@ -10,7 +10,8 @@ import {
   SearchPage,
   ProductListingPage,
   SupportPage,
-  AboutPage
+  AboutPage,
+  TermsOfUsePage
 } from "./pages";
 import {
   Footer,
@@ -43,6 +44,7 @@ function App() {
           <Route path="/listing" element={<ProductListingPage />} />
           <Route path="/about" element={<AboutPage/>} />
           <Route path="/support" element={<SupportPage/>} />
+          <Route path="/terms-of-use" element={<TermsOfUsePage/>} />
           <Route
             path="/sell"
             element={<ProtectedRoute element={<SellPage />} />}
