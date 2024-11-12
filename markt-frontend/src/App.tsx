@@ -11,6 +11,7 @@ import {
   ProductListingPage,
 } from "./pages";
 import {
+  Footer,
   LoadingModal,
   ProtectedRoute,
   RedirectToHomeRoute,
@@ -50,6 +51,7 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
+      <Footer />
     </>
   );
 }

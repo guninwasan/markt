@@ -7,3 +7,4 @@ export * from "./profile-page";
 export * from "./notfound-page";
 export * from "./search-page";
 export * from "./aboutus-page";
+export * from "./support-page";

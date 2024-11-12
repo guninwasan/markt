@@ -3,7 +3,7 @@ const passwordCheck = (password: string) => {
   const hasLowerCase = /[a-z]/.test(password);
   const hasUpperCase = /[A-Z]/.test(password);
   const hasNumber = /\d/.test(password);
-  const hasSpecialChar = /[@$!%*?&#]/.test(password);
+  const hasSpecialChar = /[@$!%*?&#-]/.test(password);
 
   return (
     isAtLeast8Chars &&
