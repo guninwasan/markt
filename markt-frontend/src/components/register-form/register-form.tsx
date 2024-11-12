@@ -14,6 +14,7 @@ import { InputField } from "../input-field";
 import { passwordCheck } from "../../utils/password-check";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "../../redux";
+import { AlertModal } from "../alert-modal";
 
 const REGISTER_URL = `${API_BASE_URL}/api/user/register`;
 
@@ -54,6 +55,7 @@ const RegisterForm = () => {
   });
 
   const [showErrors, setShowErrors] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -182,6 +184,15 @@ const RegisterForm = () => {
 
   return (
     <FormContainer onSubmit={handleSubmit}>
+      <AlertModal
+        isOpen={showAlert}
+        message="Registration successful - redirecting to Login!"
+        onClose={() => {
+          setShowAlert(false);
+          navigate("/login");
+        }}
+        timeout={3000}
+      />
       <InputField
         type="text"
         placeholder="Enter Your Full Name"

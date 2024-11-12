@@ -14,11 +14,12 @@ import {
 } from "./login-form.styles";
 import { PasswordInput } from "../password-input";
 import { passwordCheck } from "../../utils/password-check";
+import { AlertModal } from "../alert-modal";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [showAlert, setShowAlert] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -93,7 +94,7 @@ const LoginForm = () => {
 
         if (response.ok) {
           dispatch(setIsLoading(false));
-          alert("Login successful! Redirecting to Home...");
+          setShowAlert(true);
           dispatch(
             setUserDetails({
               userID: result.userID,
@@ -134,6 +135,14 @@ const LoginForm = () => {
 
   return (
     <FormContainer onSubmit={handleSubmit}>
+      <AlertModal
+        isOpen={showAlert}
+        message="Login successful! Redirecting to Home...."
+        onClose={() => {
+          setShowAlert(false);
+          navigate("/");
+        }}
+      />
       <InputField
         type="email"
         placeholder="Enter Your UofT Email Address"
