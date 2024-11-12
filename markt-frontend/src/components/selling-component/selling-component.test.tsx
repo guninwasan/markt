@@ -1,6 +1,6 @@
 import React from "react";
-import { render } from "@testing-library/react";
 import { SellingComponent } from "./selling-component";
+import { renderWithRedux } from "../../utils/render-with-redux";
 
 jest.mock("./sections", () => ({
   EssentialDetails: () => <div>EssentialDetails Component</div>,
@@ -15,9 +15,14 @@ jest.mock("axios", () => ({
   post: jest.fn(),
 }));
 
+jest.mock("react-redux", () => ({
+  ...jest.requireActual("react-redux"),
+  useSelector: jest.fn(),
+}));
+
 describe("SellingComponent", () => {
   it("should render all sections", () => {
-    const { getByText } = render(<SellingComponent />);
+    const { getByText } = renderWithRedux(<SellingComponent />);
     expect(getByText("EssentialDetails Component")).toBeInTheDocument();
     expect(getByText("MediaSection Component")).toBeInTheDocument();
     expect(getByText("ProductFlairs Component")).toBeInTheDocument();
@@ -26,7 +31,7 @@ describe("SellingComponent", () => {
   });
 
   it("should match snapshot", () => {
-    const { container } = render(<SellingComponent />);
+    const { container } = renderWithRedux(<SellingComponent />);
     expect(container).toMatchSnapshot();
   });
 });
