@@ -40,7 +40,6 @@ const Profile = () => {
         <GreetingText>Hello, {userName}</GreetingText>
         <ProfileDetailsHeading>Profile Details:</ProfileDetailsHeading>
         <UserInfo>UofT Email Address: {userEmail}</UserInfo>
-        {/* <UserInfo>Phone No.: {userPhone}</UserInfo> */}
         <UserInfo>UofT Student ID: {userPhone}</UserInfo>
 
         <ButtonContainer>
