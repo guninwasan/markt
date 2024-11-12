@@ -21,15 +21,39 @@ import {
   Button,
 } from "./product-listing-component.styles";
 import { ProductSpecs } from "./product-specifications";
-// import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { API_BASE_URL } from "../api";
 
 const ProductListingComponent = () => {
-  // const [searchParams] = useSearchParams();
-  // const id = searchParams.get("id");
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
   const { isMobile } = useIsMobile();
   const [isBottomTabVisible, setBottomTabVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [note, setNote] = useState("");
+
+  const [data, setData] = useState(null);
+  const navigate = useNavigate();
+  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/listing/get/${id}?minimal=false`);
+        if (!response.ok) {
+          navigate("/not-found");
+          throw new Error('Network response was not ok');
+        }
+        const result = await response.json();
+        setData(result.data);
+      } catch (error) {
+        navigate("/not-found");
+        console.error('Fetch error:', error);
+      }
+    };
+    fetchData();
+    console.log(data);
+  }, [data, navigate, id]);
 
   const dummySpecifications = {
     basicInfo: {

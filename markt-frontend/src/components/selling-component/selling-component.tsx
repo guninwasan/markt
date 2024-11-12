@@ -51,11 +51,10 @@ const SellingComponent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { userEmail, apiKey, userID, isLoading } = useSelector((state: RootState) => ({
+  const { userEmail, apiKey, userID } = useSelector((state: RootState) => ({
     userEmail: selectors.getEmail(state),
     apiKey: selectors.getUserAuthJWT(state),
     userID: selectors.getUserID(state),
-    isLoading: selectors.getIsLoading(state),
   }));
 
   const handleChange = (
