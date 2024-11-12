@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { InputField } from "../input-field";
 import { ErrorRsp } from "../../errorCodes";
-import { setIsLoggedIn } from "../../redux";
+import { setIsLoading, setIsLoggedIn, setUserDetails } from "../../redux";
 import { useDispatch } from "react-redux";
-import { setUserDetails } from "../../redux/slices/user-auth-slice";
 import { API_BASE_URL } from "../api";
 import {
   LoginButton,
@@ -15,11 +14,12 @@ import {
 } from "./login-form.styles";
 import { PasswordInput } from "../password-input";
 import { passwordCheck } from "../../utils/password-check";
+import { AlertModal } from "../alert-modal";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [showAlert, setShowAlert] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -58,7 +58,12 @@ const LoginForm = () => {
       (!passwordCheck(password) && email) ||
       (!validateEmail(email) && password && email)
     ) {
-      // we can also load here for a couple of seconds
+      dispatch(setIsLoading(true));
+
+      setTimeout(() => {
+        dispatch(setIsLoading(false));
+      }, 1000);
+
       newErrors.form = standardErrorMessage;
     }
 
@@ -78,6 +83,7 @@ const LoginForm = () => {
 
     if (!checkErrors) {
       try {
+        dispatch(setIsLoading(true));
         const response = await fetch(`${API_BASE_URL}/api/user/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -87,7 +93,8 @@ const LoginForm = () => {
         const result = await response.json();
 
         if (response.ok) {
-          alert("Login successful! Redirecting to Home...");
+          dispatch(setIsLoading(false));
+          setShowAlert(true);
           dispatch(
             setUserDetails({
               userID: result.userID,
@@ -97,9 +104,8 @@ const LoginForm = () => {
               jwt: result.token,
             })
           );
-
           dispatch(setIsLoggedIn(true));
-          navigate("/"); // Redirect to home
+          navigate("/");
         } else {
           const newErrors = { ...errors };
           switch (result.status) {
@@ -114,8 +120,10 @@ const LoginForm = () => {
               break;
           }
           setErrors({ ...errors, ...newErrors });
+          dispatch(setIsLoading(false));
         }
       } catch (error) {
+        dispatch(setIsLoading(false));
         console.error("Login failed:", error);
         setErrors({
           ...errors,
@@ -127,6 +135,14 @@ const LoginForm = () => {
 
   return (
     <FormContainer onSubmit={handleSubmit}>
+      <AlertModal
+        isOpen={showAlert}
+        message="Login successful! Redirecting to Home...."
+        onClose={() => {
+          setShowAlert(false);
+          navigate("/");
+        }}
+      />
       <InputField
         type="email"
         placeholder="Enter Your UofT Email Address"

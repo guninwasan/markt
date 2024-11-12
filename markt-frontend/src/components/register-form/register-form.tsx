@@ -12,6 +12,9 @@ import {
 import { PasswordInput } from "../password-input";
 import { InputField } from "../input-field";
 import { passwordCheck } from "../../utils/password-check";
+import { useDispatch } from "react-redux";
+import { setIsLoading } from "../../redux";
+import { AlertModal } from "../alert-modal";
 
 const REGISTER_URL = `${API_BASE_URL}/api/user/register`;
 
@@ -52,7 +55,9 @@ const RegisterForm = () => {
   });
 
   const [showErrors, setShowErrors] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const validateEmail = (email: string) =>
     /^[^\s@]+@(mail\.)?utoronto\.ca$/.test(email);
@@ -93,6 +98,7 @@ const RegisterForm = () => {
 
     if (validateFields()) {
       try {
+        dispatch(setIsLoading(true));
         const response = await fetch(REGISTER_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -107,6 +113,7 @@ const RegisterForm = () => {
         const result = await response.json();
 
         if (response.ok) {
+          dispatch(setIsLoading(false));
           alert("Registration successful - redirecting to Login!");
           setErrors({
             fullName: "",
@@ -118,15 +125,18 @@ const RegisterForm = () => {
           });
           navigate("/login");
         } else {
+          dispatch(setIsLoading(false));
           handleErrors(result);
         }
       } catch (error) {
+        dispatch(setIsLoading(false));
         setErrors((prev) => ({
           ...prev,
           form: "An unexpected error occurred. Please try again later.",
         }));
       }
     } else {
+      dispatch(setIsLoading(false));
       setErrors((prev) => ({
         ...prev,
         form: "Please fill in all fields correctly before submitting.",
@@ -174,6 +184,15 @@ const RegisterForm = () => {
 
   return (
     <FormContainer onSubmit={handleSubmit}>
+      <AlertModal
+        isOpen={showAlert}
+        message="Registration successful - redirecting to Login!"
+        onClose={() => {
+          setShowAlert(false);
+          navigate("/login");
+        }}
+        timeout={3000}
+      />
       <InputField
         type="text"
         placeholder="Enter Your Full Name"

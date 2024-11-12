@@ -37,7 +37,7 @@ def create():
         return jsonify({"status": ErrorRsp.ERR.value,
                         "data": "User email has not been verified"}), 400
 
-    # Proceed with listing creation if user is verified
+    # Create listing
     listing = Listing(
         # backend
         owner_id=user.id,

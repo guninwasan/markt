@@ -1,8 +1,9 @@
 import bcrypt
+import pytz
 import re
 from .db import db
+from enum import Enum
 from sqlalchemy.dialects.postgresql import JSON
-from sqlalchemy import Date
 from datetime import datetime
 
 
@@ -21,6 +22,17 @@ class User(db.Model):
     phone = db.Column(db.String(15), nullable=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
     email_verified = db.Column(db.Boolean, default=False)
+
+    # Email validation
+    validation_code = db.Column(db.Integer, nullable=True)
+    validation_code_expiration = db.Column(db.DateTime, nullable=True)
+    email_verified = db.Column(db.Boolean, nullable=False, default=False)
+
+    class ForgetPasswordState(Enum):
+        Unset = 0,
+        CodeSent = 1,
+        CodeVerified = 2
+    forget_pwd = db.Column(db.Enum(ForgetPasswordState), nullable=False, default=ForgetPasswordState.Unset)
 
     total_ratings = db.Column(db.Float, default=0.0)
     number_of_ratings = db.Column(db.Integer, default=0)
@@ -53,7 +65,7 @@ class User(db.Model):
         self.full_name = full_name
         self.email = email
         self.phone = phone
-        self.set_password(password)
+        self.set_password(password) # Encrypt password
         self.email_verified = email_verified
 
     """
@@ -91,6 +103,10 @@ class User(db.Model):
         if ("@utoronto.ca" not in email) and (".utoronto.ca" not in email):
             return False
         return True
+    
+    def set_validation_code(self, code, expiry):
+        self.validation_code = code
+        self.validation_code_expiration = expiry
 
     """
     Phone Helpers
@@ -143,7 +159,7 @@ class Listing(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     sold = db.Column(db.Boolean, default=False)
-    datetime_created = db.Column(Date, default=(((datetime.now()).strftime("%d/%m/%Y %H:%M:%S"))), nullable=False)
+    datetime_created = db.Column(db.DateTime, default=((datetime.now(pytz.timezone('America/Toronto'))).strftime("%d/%m/%Y %H:%M:%S")), nullable=False)
 
     # Essential Details
     title = db.Column(db.String(100), nullable=False)

@@ -1,2 +1,0 @@
-FLASK_APP=public
-FLASK_DEBUG=True

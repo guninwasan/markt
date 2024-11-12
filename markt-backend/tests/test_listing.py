@@ -76,7 +76,7 @@ def test_create_listing(client):
     invalid_price_data = {
         "title": "Math Textbook",
         "description": "A great MAT188 textbook",
-        "price": -4848,
+        "price": 38,
         "pickup_location": "UofT Mississauga",
         "display_image": "temp_url.png",
         "quantity": 1,
@@ -84,6 +84,26 @@ def test_create_listing(client):
         "owner_email": test_user.email
     }
     rsp = client.post('/api/listing/create', json=invalid_price_data)
+    assert rsp.status_code == 400
+    rsp = rsp.get_json()
+    assert rsp['status'] == ErrorRsp.ERR.value
+    assert "User email has not been verified" in rsp["data"]
+    # set user verified
+    test_user.email_verified = True
+    db.session.commit()
+
+    # Invalid price
+    invalid_price = {
+        "title": "Math Textbook",
+        "description": "A great MAT188 textbook",
+        "price": -4848,
+        "pickup_location": "UofT Mississauga",
+        "display_image": "temp_url.png",
+        "quantity": 1,
+        "used": True,
+        "owner_email": test_user.email
+    }
+    rsp = client.post('/api/listing/create', json=invalid_price)
     assert rsp.status_code == 400
     rsp = rsp.get_json()
     assert rsp['status'] == ErrorRsp.ERR_PARAM.value
