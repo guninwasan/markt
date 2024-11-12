@@ -5,23 +5,23 @@ const dummyData1 = [
     title: "Sofa",
     price: "CAD 100.00",
     condition: "Brand New",
-    location: "St. George",
+    location: "St. George - Bahen",
   },
   {
     id: "2",
     image: "/cover-image3.jpg",
-    title: "Table",
+    title: "Books",
     price: "CAD 100.00",
     condition: "Brand New",
-    location: "Mississauga",
+    location: "UTM",
   },
   {
     id: "3",
     image: "/cover-image.jpg",
-    title: "Books",
+    title: "Sofa",
     price: "CAD 1000.00",
     condition: "Brand New",
-    location: "Scarborough",
+    location: "UTSC",
   },
 ];
 
@@ -32,7 +32,7 @@ const dummyData2 = [
     title: "Chair",
     price: "CAD 50.00",
     condition: "Used",
-    location: "St. George",
+    location: "St. George - Myhal",
   },
 ];
 

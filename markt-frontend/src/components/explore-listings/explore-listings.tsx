@@ -34,9 +34,9 @@ const ExploreListings = () => {
         if (response.ok) {
           const data = await response.json();
           if (cheapest) {
-            setCheapestListings(data?.data);
+            setCheapestListings(data?.data ?? dummyData2);
           } else {
-            setExploreListings(data?.data);
+            setExploreListings(data?.data ?? dummyData1);
           }
         } else {
           console.error("Error fetching listings");
