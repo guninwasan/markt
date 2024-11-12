@@ -9,6 +9,8 @@ import {
   NotFoundPage,
   SearchPage,
   ProductListingPage,
+  SupportPage,
+  AboutPage
 } from "./pages";
 import {
   Footer,
@@ -39,6 +41,8 @@ function App() {
             element={<RedirectToHomeRoute element={<RegisterPage />} />}
           />
           <Route path="/listing" element={<ProductListingPage />} />
+          <Route path="/about" element={<AboutPage/>} />
+          <Route path="/support" element={<SupportPage/>} />
           <Route
             path="/sell"
             element={<ProtectedRoute element={<SellPage />} />}
