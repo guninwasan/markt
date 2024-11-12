@@ -13,15 +13,15 @@ const PrivacyPolicyPage = () => {
       <PageContainer>
         <PrivacyHeading>Privacy Policy</PrivacyHeading>
         <PrivacyText>
-          At Markt, your privacy is important to us. This Privacy
-          Policy explains how we collect, use, disclose, and safeguard your
-          information when you visit our platform. By using our platform, you
-          agree to the terms outlined below.
+          At Markt, your privacy is important to us. This Privacy Policy
+          explains how we collect, use, disclose, and safeguard your information
+          when you visit our platform. By using our platform, you agree to the
+          terms outlined below.
           <br />
           <br />
           <strong>1. Information We Collect</strong>
           <br />
-          - Personal Information: Name, email address, and phone number.
+          - Personal Information: Name, email address, and UofT Student ID.
           <br />
           <br />
           <strong>2. How We Use Your Information</strong>
@@ -36,7 +36,8 @@ const PrivacyPolicyPage = () => {
           <br />
           <strong>4. Security of Your Information</strong>
           <br />
-          - We do our best to keep your data secure. However, no transmission over the internet is 100% secure.
+          - We do our best to keep your data secure. However, no transmission
+          over the internet is 100% secure.
           <br />
           <br />
           <strong>5. Your Choices</strong>
@@ -44,7 +45,6 @@ const PrivacyPolicyPage = () => {
           - You can update or delete your account at any time.
           <br />
           <br />
-
           <strong>6. Changes to This Privacy Policy</strong>
           <br />
           - We may update this policy periodically. Users will be notified of

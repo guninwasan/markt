@@ -108,7 +108,7 @@ exports[`RegisterForm should match snapshot 1`] = `
         <input
           class="sc-cHqXqK boHNTT"
           errormessage=""
-          placeholder="Enter Your Phone No."
+          placeholder="Enter Your UofT Student ID"
           type="tel"
           value=""
         />
@@ -246,7 +246,7 @@ exports[`RegisterForm should match snapshot 2`] = `
         <input
           class="sc-cHqXqK boHNTT"
           errormessage=""
-          placeholder="Enter Your Phone No."
+          placeholder="Enter Your UofT Student ID"
           type="tel"
           value=""
         />
