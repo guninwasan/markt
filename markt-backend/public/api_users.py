@@ -569,3 +569,36 @@ def delete_user(email):
 
     return jsonify({"status": ErrorRsp.OK.value,
                     "data": "Deleted user successfully!"}), 200
+
+@user_api_bp.route('/rate', methods=['POST'])
+def rate_user():
+    data = request.get_json()
+    
+    # Extract email and rating from the JSON request
+    email = data.get('email')
+    rating = data.get('rating')
+
+    # Validate input
+    if not email or not rating:
+        return jsonify({"error": "Email and rating are required"}), 400
+    if not isinstance(rating, (int, float)) or rating < 0 or rating > 5:
+        return jsonify({"error": "Rating must be a number between 1 and 5"}), 400
+
+    # Find the user by email
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    # Update the user's total rating and count
+    try:
+        user.update_total_rating(rating)
+        db.session.commit()
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+
+    # Return only a success status code without any JSON response
+    return jsonify({
+        "status": "success",
+        "message": "Rating updated successfully",
+        "status_code": 200
+    }), 200
