@@ -38,9 +38,13 @@ const Profile = () => {
     <div>
       <div style={{ padding: "20px", textAlign: "center" }}>
         <GreetingText>Hello, {userName}</GreetingText>
-        <ProfileDetailsHeading>Profile Details:</ProfileDetailsHeading>
-        <UserInfo>UofT Email Address: {userEmail}</UserInfo>
-        <UserInfo>UofT Student ID: {userPhone}</UserInfo>
+        <ProfileDetailsHeading>Profile Details</ProfileDetailsHeading>
+        <UserInfo>
+          <b>UofT Email Address:</b> {userEmail}
+        </UserInfo>
+        <UserInfo>
+          <b>UofT Student ID:</b> {userPhone}
+        </UserInfo>
 
         <ButtonContainer>
           <Button onClick={handleChangePassword} primaryColor>
