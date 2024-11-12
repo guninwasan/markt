@@ -25,7 +25,7 @@ class User(db.Model):
     password_encryp = db.Column(db.String(1000), nullable=False)
     phone = db.Column(db.String(15), nullable=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    email_verified = db.Column(db.Boolean, nullable=True)
+    email_verified = db.Column(db.Boolean, default=False, nullable=False)
 
     # Email validation
     validation_code = db.Column(db.Integer, nullable=True)

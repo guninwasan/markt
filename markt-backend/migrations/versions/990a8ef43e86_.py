@@ -46,10 +46,10 @@ def upgrade():
                nullable=True)
 
     with op.batch_alter_table('users', schema=None) as batch_op:
-        batch_op.add_column(sa.Column('email_verified', sa.Boolean(), nullable=False))
+        batch_op.add_column(sa.Column('email_verified', sa.Boolean(), nullable=False, server_default='false'))
         batch_op.add_column(sa.Column('validation_code', sa.Integer(), nullable=True))
         batch_op.add_column(sa.Column('validation_code_expiration', sa.DateTime(), nullable=True))
-        batch_op.add_column(sa.Column('forget_pwd', sa.Enum('Unset', 'CodeSent', 'CodeVerified', name='forgetpasswordstate'), nullable=False))
+        batch_op.add_column(sa.Column('forget_pwd', sa.Enum('Unset', 'CodeSent', 'CodeVerified', name='forgetpasswordstate'), nullable=False, server_default='Unset'))
 
     # ### end Alembic commands ###
 
