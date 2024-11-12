@@ -130,7 +130,8 @@ const ProductListingComponent = () => {
   
   I am interested in a product listed by you on Markt!
   
-  Product details:
+  The details of the Product are as follows:
+
   Product title: ${productTitle}
   Product ID: ${productId}
   Listed price: ${productPrice}
@@ -138,13 +139,13 @@ const ProductListingComponent = () => {
   Note from buyer:
   ${buyerNote}
   
-  For the seller:
+  --------------------------------
+  Note For the seller:
 
   Please reply to the buyer on this email. 
-  
   Please remove the listing if the product is no longer available.
   
-  Regards,
+  Best Regards,
   Team Markt
     `;
 
