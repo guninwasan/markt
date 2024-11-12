@@ -28,13 +28,11 @@ def create():
                         "data": "Missing parameters",
                         "errors": err.messages}), 400
 
-    # Check if user exists
+    # Check if user exists and email is verified
     user = User.query.filter_by(email=data['owner_email']).first()
     if user is None:
         return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                         "data": "User does not exist!"}), 404
-
-    # Check if user email is verified
     if not user.email_verified:
         return jsonify({"status": ErrorRsp.ERR.value,
                         "data": "User email has not been verified"}), 400
@@ -50,29 +48,26 @@ def create():
         price=data['price'],
         pickup_location=data['pickup_location'],
         display_image=data['display_image'],
-        price_negotiable=data['price_negotiable'],
-        like_new=data['like_new'],
-        used=data['used'],
-        limited_edition=data['limited_edition'],
-        popular=data['popular'],
+        negotiable=data.get('negotiable', False),
+        condition=data.get('condition', None),
+        flairs=data.get('flairs', []),
 
         # media
-        images=data['images'] if 'images' in data else None,
-        videos=data['videos'] if 'videos' in data else None,
+        media=data.get('media', []),
 
         # additional
-        description=data['description'] if 'description' in data else None,
-        quantity=data['quantity'] if 'quantity' in data else None,
-        brand=data['brand'] if 'brand' in data else None,
-        model=data['model'] if 'model' in data else None,
-        year_of_manufacture=data['year_of_manufacture'] if 'year_of_manufacture' in data else None,
-        color=data['color'] if 'color' in data else None,
-        dimensions=data['dimensions'] if 'dimensions' in data else None,
-        weight=data['weight'] if 'weight' in data else None,
-        material=data['material'] if 'material' in data else None,
-        battery_life=data['battery_life'] if 'battery_life' in data else None,
-        storage_capacity=data['storage_capacity'] if 'storage_capacity' in data else None,
-        additional_details=data['additional_details'] if 'additional_details' in data else None,
+        description=data.get('description', None),
+        quantity=data.get('quantity', None),
+        brand=data.get('brand', None),
+        model=data.get('model', None),
+        year_of_manufacture=data.get('year_of_manufacture', None),
+        color=data.get('color', None),
+        dimensions=data.get('dimensions', None),
+        weight=data.get('weight', None),
+        material=data.get('material', None),
+        battery_life=data.get('battery_life', None),
+        storage_capacity=data.get('storage_capacity', None),
+        additional_details=data.get('additional_details', None),
     )
     db.session.add(listing)
     db.session.commit()
@@ -169,33 +164,25 @@ def update(id):
                         "data": "Buyer email is needed to mark listing as sold"}), 400
 
     if 'buyer_email' in data:
-        if data['sold'] == False:
-            # Do not allow marking listing as unsold if already sold
-            if listing.sold == True:
-                return jsonify({"status": ErrorRsp.ERR_PARAM.value,
-                                "data": "Cannot mark listing as unsold, it has been sold already"}), 400
-
-            # Make sure sold is set to true in the request
+        if data['sold'] == False and listing.sold == True:
             return jsonify({"status": ErrorRsp.ERR_PARAM.value,
-                            "data": "Request does not mark listing as sold, but provides buyer email"}), 400
+                            "data": "Cannot mark listing as unsold, it has been sold already"}), 400
 
-        # Sanity check: Does listing already have a buyer
-        if listing.buyer is not None:
-            return jsonify({"status": ErrorRsp.ERR_NOT_ALLOWED.value,
-                            "data": "Listing already has a buyer"}), 405
-
-        # Check if buyer exists
         buyer = User.query.filter_by(email=data['buyer_email']).first()
         if buyer is None:
             return jsonify({"status": ErrorRsp.ERR_NOT_FOUND.value,
                             "data": "Buyer does not exist!"}), 404
 
+        # Sanity check: Does listing already have a buyer
+        if listing.buyer is not None:
+            return jsonify({"status": ErrorRsp.ERR_NOT_ALLOWED.value,
+                            "data": "Listing already has a buyer"}), 405
+        
         # Owner cannot be buyer
         if data['buyer_email'] == listing.owner.email:
             return jsonify({"status": ErrorRsp.ERR_PARAM_EMAIL.value,
-                            "data": "Listing owner cannot be buyer"}), 400
+                            "data": "Listing owner cannot be the buyer"}), 400
 
-        # Update listing
         listing.buyer_id = buyer.id
         listing.sold = data['sold']
 
@@ -209,56 +196,50 @@ def update(id):
         listing.interested_buyers.clear()
 
     # Essential
-    if 'title'in data:
-        listing.title = str(data['title'])
-    if 'price'in data:
-        listing.price = data['price']
-    if 'pickup_location'in data:
-        listing.pickup_location = data['pickup_location']
-    if 'display_image'in data:
-        listing.display_image = data['display_image']
-    if 'price_negotiable'in data:
-        listing.price_negotiable = data['price_negotiable']
-    if 'like_new'in data:
-        listing.like_new = data['like_new']
-    if 'used'in data:
-        listing.used = data['used']
-    if 'limited_edition'in data:
-        listing.limited_edition = data['limited_edition']
-    if 'popular'in data:
-        listing.popular = data['popular']
+    if 'title' in data:
+        listing.title = data.get('title', listing.title)
+    if 'price' in data:
+        listing.price = data.get('price', listing.price)
+    if 'pickup_location' in data:
+        listing.pickup_location = data.get('pickup_location', listing.pickup_location)
+    if 'display_image' in data:
+        listing.display_image = data.get('display_image', listing.display_image)
+    if 'negotiable' in data:
+        listing.negotiable = data.get('negotiable', listing.negotiable)
+    if 'condition' in data:
+        listing.condition = data.get('condition', listing.condition)
+    if 'flairs' in data:
+        listing.flairs = data.get('flairs', listing.flairs)
 
     # Media
-    if 'images'in data:
-        listing.images = data['images']
-    if 'videos'in data:
-        listing.videos = data['videos']
+    if 'media' in data:
+        listing.media = data.get('media', listing.media)
 
     # Additional
-    if 'description'in data:
-        listing.description = data['description']
-    if 'quantity'in data:
-        listing.quantity = data['quantity']
-    if 'brand'in data:
-        listing.brand = data['brand']
-    if 'model'in data:
-        listing.model = data['model']
-    if 'year_of_manufacture'in data:
-        listing.year_of_manufacture = data['year_of_manufacture']
-    if 'color'in data:
-        listing.color = data['color']
-    if 'dimensions'in data:
-        listing.dimensions = data['dimensions']
-    if 'weight'in data:
-        listing.weight = data['weight']
-    if 'material'in data:
-        listing.material = data['material']
-    if 'battery_life'in data:
-        listing.battery_life = data['battery_life']
-    if 'storage_capacity'in data:
-        listing.storage_capacity = data['storage_capacity']
-    if 'additional_details'in data:
-        listing.additional_details = data['additional_details']    
+    if 'description' in data:
+        listing.description = data.get('description', listing.description)
+    if 'quantity' in data:
+        listing.quantity = data.get('quantity', listing.quantity)
+    if 'brand' in data:
+        listing.brand = data.get('brand', listing.brand)
+    if 'model' in data:
+        listing.model = data.get('model', listing.model)
+    if 'year_of_manufacture' in data:
+        listing.year_of_manufacture = data.get('year_of_manufacture', listing.year_of_manufacture)
+    if 'color' in data:
+        listing.color = data.get('color', listing.color)
+    if 'dimensions' in data:
+        listing.dimensions = data.get('dimensions', listing.dimensions)
+    if 'weight' in data:
+        listing.weight = data.get('weight', listing.weight)
+    if 'material' in data:
+        listing.material = data.get('material', listing.material)
+    if 'battery_life' in data:
+        listing.battery_life = data.get('battery_life', listing.battery_life)
+    if 'storage_capacity' in data:
+        listing.storage_capacity = data.get('storage_capacity', listing.storage_capacity)
+    if 'additional_details' in data:
+        listing.additional_details = data.get('additional_details', listing.additional_details)    
 
     db.session.commit()
 
@@ -327,23 +308,23 @@ def search():
             "data": "Query parameter is required"
         }), 400
 
-    # Set sorting conditions (no rating included here, will handle it after fetching)
+    # Set sorting conditions
     sort_condition = {
         'price_high': Listing.price.desc(),
         'price_low': Listing.price.asc()
-    }.get(filter_type, Listing.price.asc())  # Default sorting is price_low
+    }.get(filter_type, Listing.price.asc())
 
-    # Filter listings by query if provided, and ensure it's checked based on deepSearch
+    # Filter listings based on search criteria
     listings_query = Listing.query
-    if not deep_search:  # Only search by title if deepSearch is False
+    if not deep_search:
         listings_query = listings_query.filter(Listing.title.ilike(f"%{query}%"))
-    else:  # Search both title and description if deepSearch is True
+    else:
         listings_query = listings_query.filter(
             (Listing.title.ilike(f"%{query}%")) | 
             (Listing.description.ilike(f"%{query}%"))
         )
 
-    # Apply sorting by price and pagination to fetch listings first
+    # Apply sorting and pagination
     listings = (listings_query
                 .order_by(sort_condition)
                 .offset((page - 1) * page_size)
@@ -354,13 +335,10 @@ def search():
     total_listings = listings_query.count()
     total_pages = (total_listings + page_size - 1) // page_size
 
-    # Now, sort listings based on the seller's rating (get_average_rating)
+    # Sorting by seller rating (if applicable)
     listings = sorted(listings, key=lambda listing: listing.owner.get_average_rating(), reverse=True)
 
-    # Build the response
-    rsp = []
-    for listing in listings:
-        rsp.append(listing.get_json_min())
+    rsp = [listing.get_json_min() for listing in listings]
 
     return jsonify({
         "status": ErrorRsp.OK.value,

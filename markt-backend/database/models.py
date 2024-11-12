@@ -21,6 +21,7 @@ class User(db.Model):
     password_encryp = db.Column(db.String(1000), nullable=False)
     phone = db.Column(db.String(15), nullable=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
+    email_verified = db.Column(db.Boolean, default=False)
 
     # Email validation
     validation_code = db.Column(db.Integer, nullable=True)
@@ -49,7 +50,7 @@ class User(db.Model):
                                     lazy='dynamic', overlaps="listings_not_sold")
     # Listings that the User is interested in
     listings_of_interest = db.relationship('Listing', secondary=user_listing_interest_table,
-                                           back_populates='interested_buyers', lazy='dynamic') # many-to-many
+                                           back_populates='interested_buyers', lazy='dynamic')
 
     def __init__(self, full_name, password, email, phone, email_verified=False):
         # Data Validation
@@ -88,7 +89,7 @@ class User(db.Model):
 
     def set_password(self, password):
         passwordHash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        self.password_encryp = passwordHash.decode('utf-8') #prevent dublicate encoding from PSQL
+        self.password_encryp = passwordHash.decode('utf-8')
 
     def check_password(self, password):
         # Convert the stored hash back to bytes
@@ -165,16 +166,12 @@ class Listing(db.Model):
     price = db.Column(db.Float, nullable=False)
     pickup_location = db.Column(db.String(100), nullable=False)
     display_image = db.Column(JSON, nullable=True)
-    # Flairs
-    price_negotiable = db.Column(db.Boolean, default=False)
-    like_new = db.Column(db.Boolean, default=False)
-    used = db.Column(db.Boolean, default=False)
-    limited_edition = db.Column(db.Boolean, default=False)
-    popular = db.Column(db.Boolean, default=False)
+    negotiable = db.Column(db.Boolean, default=False)
+    condition = db.Column(db.String(50), nullable=True)
+    flairs = db.Column(JSON, nullable=True)  # Store flairs as JSON array
 
     # Additional Media
-    images = db.Column(JSON, nullable=True)
-    videos = db.Column(JSON, nullable=True)
+    media = db.Column(JSON, nullable=True)  # Consolidates images and videos
 
     # Additional Specifications
     description = db.Column(db.Text, nullable=True)
@@ -193,8 +190,7 @@ class Listing(db.Model):
     # Relationships
     owner = db.relationship('User', back_populates='listings_not_sold', foreign_keys=[owner_id], overlaps="listings_sold")
     buyer = db.relationship('User', back_populates='listings_bought', foreign_keys=[buyer_id])
-    # All buyers intersted in this listing
-    interested_buyers = db.relationship('User', secondary=user_listing_interest_table, back_populates='listings_of_interest') # many-to-many
+    interested_buyers = db.relationship('User', secondary=user_listing_interest_table, back_populates='listings_of_interest')
 
     """
     JSON helpers
@@ -210,8 +206,7 @@ class Listing(db.Model):
                 "datetime_created": self.datetime_created,
             },
             "media": {
-                "images": self.images if self.images else [],
-                "videos": self.videos if self.videos else [],
+                "media_files": self.media if self.media else [],
             },
             "specifications": {
                 "description": self.description,
@@ -236,11 +231,9 @@ class Listing(db.Model):
             "pickup_location": self.pickup_location,
             "display_image": self.display_image,
             "flairs": {
-                "price_negotiable": self.price_negotiable,
-                "like_new": self.like_new,
-                "used": self.used,
-                "limited_edition": self.limited_edition,
-                "popular": self.popular,
+                "negotiable": self.negotiable,
+                "condition": self.condition,
+                "flairs": self.flairs,
             },
             "owner_rating": self.owner.get_average_rating()
         }

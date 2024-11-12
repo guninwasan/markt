@@ -59,6 +59,16 @@ const EssentialDetails = ({
         onChange={handleChange}
       />
     </FormGroup>
+    <FormGroup>
+      <Label>Pickup Location *</Label>
+      <TextArea
+        name="pickupLocation"
+        required
+        placeholder="Provide a pickup location..."
+        value={formData.pickupLocation}
+        onChange={handleChange}
+      />
+    </FormGroup>
   </>
 );
 
