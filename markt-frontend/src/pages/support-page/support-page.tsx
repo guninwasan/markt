@@ -1,6 +1,6 @@
 import React from "react";
 import { Navbar } from "../../components";
-import { PageContainer, SupportHeading, SupportText, SupportLink } from "./support-page.styles";
+import { PageContainer, SupportHeading, SupportText } from "./support-page.styles";
 import { colors } from "../../utils";
 
 const SupportPage = () => {
